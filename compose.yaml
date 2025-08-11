@@ -1,0 +1,6 @@
+﻿services:
+  parentee_be:
+    image: parentee_be
+    build:
+      context: .
+      dockerfile: Parentee_BE/Dockerfile
