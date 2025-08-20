@@ -8,7 +8,6 @@ public class PasswordHelper
 {
     private static readonly PasswordHasher<object> PasswordHasher = new();
 
-    // Simple SHA256 hasher (you can replace with ASP.NET Identity PasswordHasher if needed)
     public static string HashPassword(string password)
     {
         return PasswordHasher.HashPassword(null, password);
