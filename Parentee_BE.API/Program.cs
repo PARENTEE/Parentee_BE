@@ -7,16 +7,31 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Parentee_BE.BLL.Helpers;
+using Parentee_BE.BLL.Services.Implements;
+using Parentee_BE.BLL.Services.Interfaces;
 using Parentee_BE.DAL.Data.Entities;
 using Parentee_BE.DAL.Data.Exceptions;
 using Parentee_BE.DAL.Data.Repositories;
 using Parentee_BE.DAL.Data.Repositories.Interfaces;
+using Parentee_BE.Middlewares;
+
+var builder = WebApplication.CreateBuilder(args);
+
+#region Handle Environment Variables
 
 DotNetEnv.Env.Load();
-var builder = WebApplication.CreateBuilder(args);
+builder.Configuration.AddEnvironmentVariables();
+
+#endregion
 
 builder.Services.AddControllers();
 builder.Services.AddHttpContextAccessor();
+
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.AllowSynchronousIO = true;
+});
 
 #region Configuration
 
@@ -26,22 +41,16 @@ builder.Configuration
     .AddUserSecrets<Program>();
 #endregion
 
-#region Handle Environment Variables
-foreach (var (key, value) in Environment.GetEnvironmentVariables().Cast<DictionaryEntry>())
-{
-    builder.Configuration[key.ToString()] = value?.ToString();
-}
-#endregion
-
 #region Implement Swagger
+
 builder.Services.AddEndpointsApiExplorer(); // Required for Swagger UI
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo()
     {
-        Title = "CS-Base-Project",
+        Title = "PARENTEE Backend",
         Version = "v1",
-        Description = "A base project for .NET applications"
+        Description = "API for PARENTEE."
     });
     
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -70,11 +79,17 @@ builder.Services.AddSwaggerGen(options =>
 });
 
 
-
 #endregion
 
 #region Add database context
 
+// Hash Password
+foreach (var account in SeedingData.Accounts)
+{
+    account.Password = PasswordHelper.HashPassword(account.Password);
+}
+
+// Configure DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
     options
         .UseNpgsql(
@@ -86,9 +101,12 @@ builder.Services.AddDbContext<AppDbContext>(options =>
                     errorCodesToAdd: null
                 )
         ) 
+        .UseSeeding((context, _) => SeedingData.Seed(context))
+        .UseAsyncSeeding(
+            async (context, _, cancellationToken) => await SeedingData.SeedAsync(context, cancellationToken)
+        )
         .LogTo(Console.WriteLine, LogLevel.Information)
 );
-
 
 #endregion
 
@@ -104,8 +122,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            ValidIssuer = builder.Configuration.GetSection("JWT:ValidIssuers").Get<string[]>()?[0],
-            ValidAudience = builder.Configuration.GetSection("JWT:ValidAudiences").Get<string[]>()?[0],
+            ValidIssuers = builder.Configuration.GetSection("JWT:ValidIssuers").Get<string[]>(),
+            ValidAudiences = builder.Configuration.GetSection("JWT:ValidAudiences").Get<string[]>(),
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"])),
             
             NameClaimType = ClaimTypes.NameIdentifier,
@@ -151,18 +169,19 @@ builder.Services.AddCors(options =>
     
 # region Implement DI for Project Services
 
-builder.Services.AddScoped<IUnitOfWork, UnitOfWork<AppDbContext>>();
+builder.Services.AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>));
 
+builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+
+builder.Services.AddScoped<TokenHelper>();
 #endregion
 
 #region Other services
 
 // Add AutoMapper
 // Scan the whole assembly for profiles
-// builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-// builder.Services.AddHttpContextAccessor();
-
-// builder.Services.AddAutoMapper(typeof(MappingProfile));
+builder.Services.AddAutoMapper(cfg => { }, AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services.AddLogging(loggingBuilder =>
 {
@@ -194,10 +213,10 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUi();
+    app.UseSwaggerUI();
 }
 
-// app.UseMiddleware<ExceptionHandlerMiddleware>();
+app.UseMiddleware<ExceptionHandlerMiddleware>();
 
 app.UseHttpsRedirection();
 app.UseCors("AllowAll");

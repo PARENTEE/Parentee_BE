@@ -13,6 +13,15 @@ public class AppDbContext : DbContext
     {
     }
 
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    {
+        optionsBuilder
+            .UseSeeding((context, _) => SeedingData.Seed(context))
+            .UseAsyncSeeding(
+                async (context, _, cancellationToken) => await SeedingData.SeedAsync(context, cancellationToken)
+            );
+        base.OnConfiguring(optionsBuilder);
+    }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);

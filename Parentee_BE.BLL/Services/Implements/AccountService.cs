@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Parentee_BE.BLL.Helpers;
 
 namespace Parentee_BE.BLL.Services.Implements;
 
@@ -19,8 +20,6 @@ public class AccountService(
     IMapper mapper)
     : BaseService<AccountEntity>(unitOfWork, logger, httpContextAccessor), IAccountService
 {
-    private readonly PasswordHasher<object> _passwordHasher = new();
-    
     public Task<AccountEntity> GetAccount()
     {
         throw new NotImplementedException();
@@ -68,7 +67,7 @@ public class AccountService(
             account.RoleEntity = findRoleResult;
             
             // Hash Password
-            var hashedPassword = _passwordHasher.HashPassword(null, requestDto.Password);
+            var hashedPassword = PasswordHelper.HashPassword(requestDto.Password);
             account.Password = hashedPassword;
             
             // Add Account
