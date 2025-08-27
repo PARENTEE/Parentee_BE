@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parentee_BE.BLL", "Parentee
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parentee_BE.DAL", "Parentee_BE.DAL\Parentee_BE.DAL.csproj", "{3CD48F75-0579-486D-8FBE-959D7D26EEB1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parentee_BE.AI", "Parentee_BE.AI\Parentee_BE.AI.csproj", "{9BC9DB6C-195F-446E-8844-E740A66B168D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,5 +28,9 @@ Global
 		{3CD48F75-0579-486D-8FBE-959D7D26EEB1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3CD48F75-0579-486D-8FBE-959D7D26EEB1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3CD48F75-0579-486D-8FBE-959D7D26EEB1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9BC9DB6C-195F-446E-8844-E740A66B168D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9BC9DB6C-195F-446E-8844-E740A66B168D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9BC9DB6C-195F-446E-8844-E740A66B168D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9BC9DB6C-195F-446E-8844-E740A66B168D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
