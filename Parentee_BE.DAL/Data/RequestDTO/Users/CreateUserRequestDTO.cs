@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Parentee_BE.DAL.Data.RequestDTO.Accounts;
+namespace Parentee_BE.DAL.Data.RequestDTO.Users;
 
-public class CreateAccountRequestDTO
+public class CreateUserRequestDTO
 {
     [Required(ErrorMessage = "Email is required")]
     [MaxLength(100, ErrorMessage = "Email length cannot be more than 100 characters")]

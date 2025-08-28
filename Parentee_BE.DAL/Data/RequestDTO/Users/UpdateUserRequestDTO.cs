@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Parentee_BE.DAL.Data.ResponseDTO.Accounts;
+namespace Parentee_BE.DAL.Data.RequestDTO.Users;
 
-public class UpdateAccountRequestDTO
+public class UpdateUserRequestDTO
 {
     [Required(ErrorMessage = "First name is required")]
     [MaxLength(50, ErrorMessage = "First name length cannot be more than 50 characters")]

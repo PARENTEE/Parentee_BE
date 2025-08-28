@@ -10,6 +10,7 @@ using Microsoft.OpenApi.Models;
 using Parentee_BE.BLL.Helpers;
 using Parentee_BE.BLL.Services.Implements;
 using Parentee_BE.BLL.Services.Interfaces;
+using Parentee_BE.DAL.Context;
 using Parentee_BE.DAL.Data.Entities;
 using Parentee_BE.DAL.Data.Exceptions;
 using Parentee_BE.DAL.Data.Repositories;
@@ -84,7 +85,7 @@ builder.Services.AddSwaggerGen(options =>
 #region Add database context
 
 // Hash Password
-foreach (var account in SeedingData.Accounts)
+foreach (var account in SeedingData.Users)
 {
     account.Password = PasswordHelper.HashPassword(account.Password);
 }
@@ -100,7 +101,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
                     maxRetryDelay: TimeSpan.FromSeconds(30),
                     errorCodesToAdd: null
                 )
-        ) 
+        )
         .UseSeeding((context, _) => SeedingData.Seed(context))
         .UseAsyncSeeding(
             async (context, _, cancellationToken) => await SeedingData.SeedAsync(context, cancellationToken)
@@ -171,7 +172,7 @@ builder.Services.AddCors(options =>
 
 builder.Services.AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>));
 
-builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
 builder.Services.AddScoped<TokenHelper>();

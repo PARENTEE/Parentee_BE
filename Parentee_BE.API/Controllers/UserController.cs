@@ -1,26 +1,24 @@
 ﻿using Parentee_BE.ActionFilters;
 using Parentee_BE.BLL.Services.Interfaces;
 using Parentee_BE.Constants;
-using Parentee_BE.DAL.Data.Entities;
 using Parentee_BE.DAL.Data.Exceptions;
 using Parentee_BE.DAL.Data.Metadatas;
-using Parentee_BE.DAL.Data.RequestDTO.Accounts;
-using Parentee_BE.DAL.Data.ResponseDTO.Accounts;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Parentee_BE.DAL.Data.RequestDTO.Users;
 
 namespace Parentee_BE.Controllers;
 
-public class AccountController : BaseController<AccountController>
+public class UserController : BaseController<UserController>
 {
     #region Create Class Reference
-    private readonly IAccountService _accountService;
+    private readonly IUserService _userService;
     #endregion
     
     #region Constructors
-    public AccountController (ILogger<AccountController> logger, IAccountService accountService) : base(logger)
+    public UserController (ILogger<UserController> logger, IUserService accountService) : base(logger)
     {
-        _accountService = accountService;
+        _userService = accountService;
     }
 
     #endregion
@@ -40,12 +38,12 @@ public class AccountController : BaseController<AccountController>
                 statusCode: StatusCodes.Status201Created,
                 isSuccess: true,
                 message: "Get current account successfully",
-                data:  await _accountService.GetCurrentAccount()
+                data:  await _userService.GetCurrentUser()
             )
         );
     }
     
-    [Authorize(Roles = $"{RoleEntity.Admin}, {RoleEntity.User}")]
+    [Authorize]
     [HttpGet(APIEndpointsConstant.AccountEndpoints.GET_MANY_ACCOUNTS_ENDPOINT)]
     public async Task<IActionResult> GetMany(
         [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10
@@ -55,12 +53,12 @@ public class AccountController : BaseController<AccountController>
                 statusCode: StatusCodes.Status201Created,
                 isSuccess: true,
                 message: "Get many accounts successfully",
-                data:  await _accountService.GetManyAccounts(pageSize: pageSize, pageNumber: pageNumber)
+                data:  await _userService.GetManyUsers(pageSize: pageSize, pageNumber: pageNumber)
             )
         );
     }
     
-    [Authorize(Roles = $"{RoleEntity.Admin}, {RoleEntity.User}")]
+    [Authorize]
     [HttpGet(APIEndpointsConstant.AccountEndpoints.GET_ACCOUNT_BY_ID_ENDPOINT)]
     public async Task<IActionResult> GetAccountById([FromRoute] Guid id)
     {
@@ -68,7 +66,7 @@ public class AccountController : BaseController<AccountController>
                 statusCode: StatusCodes.Status201Created,
                 isSuccess: true,
                 message: "Account created successfully",
-                data:  await _accountService.GetAccountById(id)
+                data:  await _userService.GetUserById(id)
                 )
         );
     }
@@ -78,13 +76,13 @@ public class AccountController : BaseController<AccountController>
     
     [HttpPost(APIEndpointsConstant.AccountEndpoints.CREATE_ACCOUNT_ENDPOINT)]
     [ValidAttributeActionFilter]
-    public async Task<IActionResult> CreateAccount([FromBody] CreateAccountRequestDTO requestDto)
+    public async Task<IActionResult> CreateAccount([FromBody] CreateUserRequestDTO requestDto)
     {
         return Ok(ApiResponseBuilder.BuildResponse(
             statusCode: StatusCodes.Status201Created,
             isSuccess: true,
             message: "Account created successfully",
-            data: await _accountService.CreateAccount(requestDto)
+            data: await _userService.CreateUser(requestDto)
             )
         );
     }
@@ -96,13 +94,13 @@ public class AccountController : BaseController<AccountController>
     [ValidAttributeActionFilter]
     public async Task<IActionResult> UpdateAccount(
         [FromRoute] Guid id,
-        [FromBody] UpdateAccountRequestDTO account)
+        [FromBody] UpdateUserRequestDTO user)
     {
         return Ok(ApiResponseBuilder.BuildResponse(
             statusCode: StatusCodes.Status200OK,
             isSuccess: true,
             message: "Account updated successfully",
-            data: await _accountService.UpdateAccount(id, account)
+            data: await _userService.UpdateUser(id, user)
             )
         );
     }
@@ -116,7 +114,7 @@ public class AccountController : BaseController<AccountController>
             statusCode: StatusCodes.Status200OK,
             isSuccess: true,
             message: "Account deleted successfully",
-            data: await _accountService.DeleteAccount(id)
+            data: await _userService.DeleteUser(id)
             )
         );
     }

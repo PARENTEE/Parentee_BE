@@ -1,6 +1,6 @@
-﻿namespace Parentee_BE.DAL.Data.ResponseDTO.Accounts;
+﻿namespace Parentee_BE.DAL.Data.ResponseDTO.Users;
 
-public class GetAccountResponseDTO
+public class GetUserResponseDTO
 {
     public Guid Id { get; set; }
     
@@ -8,10 +8,8 @@ public class GetAccountResponseDTO
     
     public string Role { get; set; }
     
-    public string FirstName { get; set; }
+    public string FullName { get; set; }
     
-    public string LastName { get; set; }
-
     public DateTime CreatedAt { get; set; }
     
     public DateTime UpdatedAt { get; set; }
