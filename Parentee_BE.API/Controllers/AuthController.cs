@@ -3,14 +3,18 @@ using Parentee_BE.Constants;
 using Parentee_BE.DAL.Data.Metadatas;
 using Parentee_BE.DAL.Data.RequestDto.Auth;
 using Microsoft.AspNetCore.Mvc;
+using Parentee_BE.BLL.Services.Implements.OtpImplement;
 
 namespace Parentee_BE.Controllers;
 
 public class AuthController(
     ILogger<AuthController> logger,
+    OtpService service,
     IAuthService authService
 ) : BaseController<AuthController>(logger)
 {
+    
+    
     [HttpPost(APIEndpointsConstant.AuthEndpoints.LOGIN_ENDPOINT)]
     public async Task<IActionResult> Login([FromBody] LoginRequestDTO requestDto)
     {
