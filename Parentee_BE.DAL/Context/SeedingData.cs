@@ -55,6 +55,12 @@ public static class SeedingData
         {
             Code = "premium",
             Name = "Parentee Premium",
+            Prices = new List<PriceEntity>
+            {
+                new () { Id = Guid.NewGuid(), PriceType = PriceType.RecurringMonth, Amount = 129000, Currency = "VND", IsActive = true, CreatedAt = DateTime.UtcNow },
+                new () { Id = Guid.NewGuid(), PriceType = PriceType.RecurringMonth, Amount = 999000, Currency = "VND", IsActive = true, CreatedAt = DateTime.UtcNow },
+                new () { Id = Guid.NewGuid(), PriceType = PriceType.RecurringMonth, Amount = 4990000, Currency = "VND", IsActive = true, CreatedAt = DateTime.UtcNow }
+            },
             Description = "Mở khoá tính năng nâng cao"
         }
     ];

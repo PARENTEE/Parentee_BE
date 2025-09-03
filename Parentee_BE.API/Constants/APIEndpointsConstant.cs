@@ -6,6 +6,11 @@ public class APIEndpointsConstant
     public const string API_VERSION = "/v1";
     public const string API_ENDPOINT = ROOT_ENDPOINT + API_VERSION;
     
+    public static class AiEndpoints
+    {
+        public const string CHAT_ENDPOINT = API_ENDPOINT + "/chat";
+    }
+    
     public static class AuthEndpoints
     {
         public const string AUTH_ENDPOINT = API_ENDPOINT + "/auth";
