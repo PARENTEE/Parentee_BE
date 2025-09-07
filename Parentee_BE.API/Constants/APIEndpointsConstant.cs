@@ -15,6 +15,8 @@ public class APIEndpointsConstant
     {
         public const string AUTH_ENDPOINT = API_ENDPOINT + "/auth";
         public const string LOGIN_ENDPOINT = AUTH_ENDPOINT + "/login";
+        public const string SIGNIN_GOOGLE = AUTH_ENDPOINT + "/signin-google";
+        public const string GOOGLE_RESPONSE = AUTH_ENDPOINT + "/google-response";
     }
     
     public static class AccountEndpoints

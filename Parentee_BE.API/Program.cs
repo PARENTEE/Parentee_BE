@@ -1,5 +1,7 @@
 using System.Security.Claims;
 using System.Text;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -113,7 +115,11 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 #region Implement Authentication and Authorization
 
 // Add Authentication and Authorization using JWT
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+    })
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters()
@@ -142,6 +148,13 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             },
             OnForbidden = _ => throw new ForbiddenException("You do not have permission to access this resource.")
         };
+    })
+    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddGoogle(GoogleDefaults.AuthenticationScheme, options =>
+    {
+      options.ClientId = builder.Configuration["Google:ClientId"];
+      options.ClientSecret = builder.Configuration["Google:ClientSecret"];
+      options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme; 
     });
 
 // Add Roles for Authorization
@@ -187,11 +200,6 @@ builder.Services.AddLogging(loggingBuilder =>
 {
     loggingBuilder.AddConsole();
     loggingBuilder.AddDebug();
-});
-
-builder.Services.AddHttpClient("GeocodeClient", client =>
-{
-    client.DefaultRequestHeaders.Add("User-Agent", "BloodDonationSystem/1.0 (support@blooddonation.com)");
 });
 
 // Add Semantic Kernal

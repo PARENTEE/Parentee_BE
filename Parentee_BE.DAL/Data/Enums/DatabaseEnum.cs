@@ -1,5 +1,7 @@
 ﻿namespace Parentee_BE.DAL.Data.Enums
 {
+    public enum SigninMethod { App, Google }
+
     public enum DiaperType { Wet, Dirty, Mixed, Dry }
 
     public enum EntitlementStatus { Active, Expired, Revoked }

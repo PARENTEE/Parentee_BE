@@ -73,6 +73,14 @@ public partial class AppDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         #region Enums
+        // User
+        modelBuilder.Entity<UserEntity>(entity =>
+        {
+            entity.Property(e => e.SigninMethod)
+                .HasColumnType("text")
+                .HasConversion<string>()
+                .IsRequired();
+        });
         
         // Feeding
         modelBuilder.Entity<FeedingEntity>(entity =>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
+using Parentee_BE.DAL.Data.Enums;
 
 namespace Parentee_BE.DAL.Data.Entities;
 
@@ -26,6 +27,12 @@ public partial class UserEntity
     
     [Column("password")]
     public string Password { get; set; }
+    
+    [Column("signup_method")]
+    public SigninMethod SigninMethod { get; set; }
+    
+    [Column("dob")]
+    public DateOnly Dob { get; set; }
 
     [Column("avatar_image_id")]
     public Guid? AvatarImageId { get; set; }
