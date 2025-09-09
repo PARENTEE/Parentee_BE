@@ -5,14 +5,17 @@ using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Microsoft.SemanticKernel;
+using Net.payOS;
 using Parentee_BE.BLL.Helpers;
 using Parentee_BE.BLL.Services.Implements;
 using Parentee_BE.BLL.Services.Interfaces;
 using Parentee_BE.DAL.Context;
 using Parentee_BE.DAL.Data.Exceptions;
+using Parentee_BE.DAL.Data.PaymentDTO;
 using Parentee_BE.DAL.Data.Repositories;
 using Parentee_BE.DAL.Data.Repositories.Interfaces;
 using Parentee_BE.Middlewares;
@@ -188,6 +191,16 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
 builder.Services.AddScoped<TokenHelper>();
+
+builder.Services.Configure<PayOSOptions>(builder.Configuration.GetSection("PayOS"));
+
+builder.Services.AddSingleton(sp =>
+{
+    var cfg = sp.GetRequiredService<IOptions<PayOSOptions>>().Value;
+    return new PayOS(cfg.ClientId, cfg.ApiKey, cfg.ChecksumKey);
+});
+
+
 #endregion
 
 #region Other services

@@ -30,4 +30,12 @@ public class APIEndpointsConstant
         public const string UPDATE_ACCOUNT_ENDPOINT = ACCOUNT_ENDPOINT + "/{id}";
         public const string DELETE_ACCOUNT_ENDPOINT = ACCOUNT_ENDPOINT + "/{id}";
     }
+    
+    public static class PaymentEndpoints
+    {
+        public const string PAYMENT_ENGPOINT = API_ENDPOINT + "/payment";
+        public const string GET_ORDER = PAYMENT_ENGPOINT + "/{orderCode}";
+        public const string CREATE_LINK = PAYMENT_ENGPOINT + "/create-link";
+        public const string CANCEL_PAYMENT = PAYMENT_ENGPOINT + "/{orderCode}/cancel";
+    }
 }

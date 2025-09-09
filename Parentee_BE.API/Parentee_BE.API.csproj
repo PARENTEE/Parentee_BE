@@ -22,6 +22,7 @@
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.NetTopologySuite" Version="9.0.4" />
+        <PackageReference Include="payOS" Version="1.0.9" />
         <PackageReference Include="Pinecone.Client" Version="4.0.2" />
         <PackageReference Include="SwaggerUi" Version="1.1.0" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.3" />
