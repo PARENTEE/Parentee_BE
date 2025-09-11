@@ -188,6 +188,8 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
 builder.Services.AddScoped<TokenHelper>();
+
+builder.Services.AddScoped<IChildService, ChildService>();
 #endregion
 
 #region Other services

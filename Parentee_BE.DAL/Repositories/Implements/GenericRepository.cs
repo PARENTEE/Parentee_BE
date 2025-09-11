@@ -196,6 +196,11 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEnt
         _dbSet.RemoveRange(entities);
     }
 
+    public async Task<TEntity> DeleteAsync(TEntity entity)
+    {
+        return await DeleteAsync(entity);
+    }
+
     #endregion
     
     public IQueryable<TEntity> CreateBaseQuery(

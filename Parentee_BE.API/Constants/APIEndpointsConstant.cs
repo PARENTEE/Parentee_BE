@@ -30,4 +30,13 @@ public class APIEndpointsConstant
         public const string UPDATE_ACCOUNT_ENDPOINT = ACCOUNT_ENDPOINT + "/{id}";
         public const string DELETE_ACCOUNT_ENDPOINT = ACCOUNT_ENDPOINT + "/{id}";
     }
+
+    public static class ChildEndpoints
+    {
+        public const string CREATE_CHILD_ENDPOINT = API_ENDPOINT + "/create";
+        public const string VIEW_CHILD_ENDPOINT = API_ENDPOINT + "/view";
+        public const string GET_CHILD_BY_ID_ENDPOINT = API_ENDPOINT + "/{id}";
+        public const string UPDATE_CHILD_ENDPOINT = API_ENDPOINT + "/{id}";
+        public const string DELETE_CHILD_ENDPOINT = API_ENDPOINT + "/{id}";
+    }
 }

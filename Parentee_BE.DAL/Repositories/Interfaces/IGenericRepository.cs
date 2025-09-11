@@ -87,6 +87,8 @@ public interface IGenericRepository<TEntity> where TEntity : class
     void Delete(TEntity entity);
     
     void DeleteRange(IEnumerable<TEntity> entities);
+    
+    Task<TEntity> DeleteAsync(TEntity entity);
 
     #endregion
     
