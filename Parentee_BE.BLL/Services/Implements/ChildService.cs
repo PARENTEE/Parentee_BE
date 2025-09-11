@@ -38,6 +38,8 @@ public class ChildService(
     {
         var childRepository = unitOfWork.GetRepository<ChildEntity>();
         var children = await childRepository.GetListAsync();
+        // return children;
+        
         return mapper.Map<IEnumerable<CreateChildResponseDTO>>(children);
     }
 

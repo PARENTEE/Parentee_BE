@@ -1,4 +1,5 @@
-﻿using Parentee_BE.DAL.Data.RequestDTO.Children;
+﻿using Parentee_BE.DAL.Data.Entities;
+using Parentee_BE.DAL.Data.RequestDTO.Children;
 using Parentee_BE.DAL.Data.ResponseDTO.Children;
 
 namespace Parentee_BE.BLL.Services.Interfaces;

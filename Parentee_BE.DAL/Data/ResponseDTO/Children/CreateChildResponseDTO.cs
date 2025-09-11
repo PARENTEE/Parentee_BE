@@ -2,7 +2,7 @@
 
 public class CreateChildResponseDTO
 {
-    public Guid ChildId { get; set; }
+    public Guid Id { get; set; }
     public Guid FamilyId { get; set; }
     public string FullName { get; set; }
     public DateOnly BirthDate { get; set; }
