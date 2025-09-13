@@ -33,10 +33,16 @@ public class APIEndpointsConstant
 
     public static class ChildEndpoints
     {
-        public const string CREATE_CHILD_ENDPOINT = API_ENDPOINT + "/create";
+        public const string CREATE_CHILD_ENDPOINT = API_ENDPOINT + "/child";
         public const string VIEW_CHILD_ENDPOINT = API_ENDPOINT + "/view";
         public const string GET_CHILD_BY_ID_ENDPOINT = API_ENDPOINT + "/{id}";
         public const string UPDATE_CHILD_ENDPOINT = API_ENDPOINT + "/{id}";
         public const string DELETE_CHILD_ENDPOINT = API_ENDPOINT + "/{id}";
+    }
+    
+    public static class DiaperEnpoints
+    {
+        public const string CREATE_DIAPER_CHANGE_ENDPOINT = API_ENDPOINT + "/diaper";
+        public const string UPDATE_DIAPER_CHANGE_ENDPOINT = API_ENDPOINT + "/diaper/{id}";
     }
 }

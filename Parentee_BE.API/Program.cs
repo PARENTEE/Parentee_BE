@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Microsoft.SemanticKernel;
 using Parentee_BE.BLL.Helpers;
@@ -17,6 +18,7 @@ using Parentee_BE.DAL.Data.Repositories;
 using Parentee_BE.DAL.Data.Repositories.Interfaces;
 using Parentee_BE.Middlewares;
 using PineconeClient = Pinecone.PineconeClient;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,7 +29,10 @@ builder.Configuration.AddEnvironmentVariables();
 
 #endregion
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter());
+});
 builder.Services.AddHttpContextAccessor();
 
 builder.WebHost.ConfigureKestrel(options =>
@@ -54,6 +59,8 @@ builder.Services.AddSwaggerGen(options =>
         Version = "v1",
         Description = "API for PARENTEE."
     });
+    
+    options.SchemaFilter<EnumSchemaFilter>();
     
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
@@ -190,6 +197,7 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<TokenHelper>();
 
 builder.Services.AddScoped<IChildService, ChildService>();
+builder.Services.AddScoped<IDiaperChangeService, DiaperChangeService>();
 #endregion
 
 #region Other services
@@ -259,3 +267,19 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.Run();
+
+public class EnumSchemaFilter : ISchemaFilter
+{
+    public void Apply(OpenApiSchema schema, SchemaFilterContext context)
+    {
+        if (context.Type.IsEnum)
+        {
+            schema.Enum.Clear();
+            foreach (var name in Enum.GetNames(context.Type))
+            {
+                schema.Enum.Add(new OpenApiString(name));
+            }
+            schema.Type = "string"; // Quan trọng: để Swagger hiện dropdown string
+        }
+    }
+}
