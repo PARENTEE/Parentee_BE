@@ -8,6 +8,10 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Microsoft.SemanticKernel;
+using Microsoft.SemanticKernel.Connectors.Google;
+using Microsoft.SemanticKernel.Connectors.OpenAI;
+using Microsoft.SemanticKernel.Embeddings;
+using Parentee_BE.AI.Services;
 using Parentee_BE.BLL.Helpers;
 using Parentee_BE.BLL.Services.Implements;
 using Parentee_BE.BLL.Services.Interfaces;
@@ -16,6 +20,7 @@ using Parentee_BE.DAL.Data.Exceptions;
 using Parentee_BE.DAL.Data.Repositories;
 using Parentee_BE.DAL.Data.Repositories.Interfaces;
 using Parentee_BE.Middlewares;
+using Qdrant.Client;
 using PineconeClient = Pinecone.PineconeClient;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -186,6 +191,7 @@ builder.Services.AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>));
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IAiService, AiService>();
 
 builder.Services.AddScoped<TokenHelper>();
 
@@ -204,22 +210,57 @@ builder.Services.AddLogging(loggingBuilder =>
     loggingBuilder.AddDebug();
 });
 
-// Add Semantic Kernal
+// Add Semantic Kernel
 
 #pragma warning disable SKEXP0010
 var llmModel = "gemini-2.0-flash";
 var llmApiKey = "AIzaSyCmtp4ctiu7RcF_Gij0bZILzDM5ZvbkoK4";
-var embeddingModel = "text-embedding-3-small";
-var embeddingApiKey = "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";
+var embeddingModel = "gemini-embedding-001";
+var embeddingApiKey = "AIzaSyCmtp4ctiu7RcF_Gij0bZILzDM5ZvbkoK4";
 var vectoreStoreConnectionString = "";
-var vectoreStoreApiKey = "pcsk_rhMqu_SftDzZcQNjYgZFffuHP5iZxSVnakK3qBGzzxkN9shCvyB7raDZ5eqVzK3RZjLge";
+var vectoreStoreApiKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3MiOiJtIn0.JUla-V8J09Gi_3vThJBKnRTGKDhWOv9X5RCgRcGjN4U";
 
-
+// LLM
 builder.Services.AddGoogleAIGeminiChatCompletion(llmModel, llmApiKey);
-builder.Services.AddOpenAIEmbeddingGenerator(embeddingModel, embeddingApiKey);
-builder.Services.AddSingleton<PineconeClient>(
-    sp => new PineconeClient(vectoreStoreApiKey));
-builder.Services.AddPineconeVectorStore();
+
+// Embedding
+builder.Services.AddScoped<ITextEmbeddingGenerationService>(sp =>
+{
+    return new GoogleAITextEmbeddingGenerationService(
+        modelId: embeddingModel,
+        apiKey: embeddingApiKey
+    );
+});
+
+// Pinecone
+// builder.Services.AddSingleton<PineconeClient>(
+//     sp => new PineconeClient(vectoreStoreApiKey));
+// builder.Services.AddPineconeVectorStore();
+
+// Qdrant
+builder.Services.AddSingleton<QdrantClient>(sp => 
+    new QdrantClient(
+        host: "620048c6-bd62-406b-b7c5-a52007362054.us-east4-0.gcp.cloud.qdrant.io", // cloud URL
+        https: true,                                   // cloud uses HTTPS
+        apiKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3MiOiJtIn0.C-hVUMuh_KQ-TMi6zfqEjv8HTWZsRexXlRXgAnUs30I"                  // from Qdrant Cloud dashboard
+    )
+);
+
+builder.Services.AddQdrantVectorStore();
+
+// Semantic Kernel
+builder.Services.AddScoped<Kernel>(sp =>
+{
+    var kernelBuilder = Kernel.CreateBuilder();
+
+    kernelBuilder.AddGoogleAIGeminiChatCompletion(llmModel, llmApiKey);
+    kernelBuilder.AddGoogleAIEmbeddingGenerator(embeddingModel, embeddingApiKey);
+    
+    return kernelBuilder.Build();
+});
+
+// RAGChatService
+builder.Services.AddScoped<RAGChatService>();
 
 #endregion
 

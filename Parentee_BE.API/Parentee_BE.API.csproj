@@ -19,6 +19,7 @@
         <PackageReference Include="Microsoft.SemanticKernel" Version="1.64.0" />
         <PackageReference Include="Microsoft.SemanticKernel.Connectors.Google" Version="1.64.0-alpha" />
         <PackageReference Include="Microsoft.SemanticKernel.Connectors.Pinecone" Version="1.64.0-preview" />
+        <PackageReference Include="Microsoft.SemanticKernel.Connectors.Qdrant" Version="1.65.0-preview" />
         <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.NetTopologySuite" Version="9.0.4" />

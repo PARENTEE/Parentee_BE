@@ -8,6 +8,7 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\Parentee_BE.AI\Parentee_BE.AI.csproj" />
       <ProjectReference Include="..\Parentee_BE.DAL\Parentee_BE.DAL.csproj" />
     </ItemGroup>
 
