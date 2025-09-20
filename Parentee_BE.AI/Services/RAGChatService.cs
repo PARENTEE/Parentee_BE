@@ -40,7 +40,7 @@ public class RAGChatService(
     }
 
 
-    private async Task<List<VectorSearchResult<DataModel>>> HybridSearchData(string collectionName, string question)
+    private async Task<List<VectorSearchResult<DocumentVectorModel>>> HybridSearchData(string collectionName, string question)
     {
         // Generate embeddings
         var embeddings = await textEmbeddingGenerationService.GenerateEmbeddingsAsync([question],kernel);
@@ -51,8 +51,8 @@ public class RAGChatService(
             throw new InvalidOperationException("Generated embedding is empty or invalid.");
 
         // Perform hybrid search
-        var collection = (IKeywordHybridSearchable<DataModel>) vectorStore.GetCollection<ulong, DataModel>(collectionName);
-        var options = new HybridSearchOptions<DataModel>
+        var collection = (IKeywordHybridSearchable<DocumentVectorModel>) vectorStore.GetCollection<ulong, DocumentVectorModel>(collectionName);
+        var options = new HybridSearchOptions<DocumentVectorModel>
         {
             VectorProperty = r => r.TextEmbedding,
             AdditionalProperty = r => r.Text,

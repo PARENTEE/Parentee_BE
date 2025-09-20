@@ -9,7 +9,6 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Connectors.Google;
-using Microsoft.SemanticKernel.Connectors.OpenAI;
 using Microsoft.SemanticKernel.Embeddings;
 using Parentee_BE.AI.Services;
 using Parentee_BE.BLL.Helpers;
@@ -21,7 +20,6 @@ using Parentee_BE.DAL.Data.Repositories;
 using Parentee_BE.DAL.Data.Repositories.Interfaces;
 using Parentee_BE.Middlewares;
 using Qdrant.Client;
-using PineconeClient = Pinecone.PineconeClient;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -224,6 +222,10 @@ var vectoreStoreApiKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3MiOiJtI
 builder.Services.AddGoogleAIGeminiChatCompletion(llmModel, llmApiKey);
 
 // Embedding
+builder.Services.AddGoogleAIEmbeddingGenerator(
+    modelId: embeddingModel,
+    apiKey: embeddingApiKey
+);
 builder.Services.AddScoped<ITextEmbeddingGenerationService>(sp =>
 {
     return new GoogleAITextEmbeddingGenerationService(
@@ -240,8 +242,8 @@ builder.Services.AddScoped<ITextEmbeddingGenerationService>(sp =>
 // Qdrant
 builder.Services.AddSingleton<QdrantClient>(sp => 
     new QdrantClient(
-        host: "620048c6-bd62-406b-b7c5-a52007362054.us-east4-0.gcp.cloud.qdrant.io", // cloud URL
-        https: true,                                   // cloud uses HTTPS
+        host: "620048c6-bd62-406b-b7c5-a52007362054.us-east4-0.gcp.cloud.qdrant.io", 
+        https: true, 
         apiKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3MiOiJtIn0.C-hVUMuh_KQ-TMi6zfqEjv8HTWZsRexXlRXgAnUs30I"                  // from Qdrant Cloud dashboard
     )
 );
@@ -261,6 +263,7 @@ builder.Services.AddScoped<Kernel>(sp =>
 
 // RAGChatService
 builder.Services.AddScoped<RAGChatService>();
+builder.Services.AddScoped<IVectorStoreService, QdrantVectorStoreService>();
 
 #endregion
 

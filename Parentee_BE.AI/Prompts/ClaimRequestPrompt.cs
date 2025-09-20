@@ -44,7 +44,7 @@ public class ClaimRequestPrompt
     public static KernelArguments CreatePromptArugments(
         UserArgument userArguments,
         string question,
-       List<VectorSearchResult<DataModel>> searchResult)
+       List<VectorSearchResult<DocumentVectorModel>> searchResult)
     {
         return new KernelArguments
         {
@@ -63,7 +63,7 @@ public class ClaimRequestPrompt
                 }
             },
             {
-                "searchResult", searchResult.Select<VectorSearchResult<DataModel>, object>(result => new
+                "searchResult", searchResult.Select<VectorSearchResult<DocumentVectorModel>, object>(result => new
                 {
                     Title = result.Record.Title,
                     Text = result.Record.Text

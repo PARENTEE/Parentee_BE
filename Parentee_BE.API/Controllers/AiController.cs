@@ -1,10 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Parentee_BE.BLL.Services.Interfaces;
 using Parentee_BE.Constants;
+using Parentee_BE.Controllers;
 using Parentee_BE.DAL.Data.Metadatas;
 using Parentee_BE.DAL.Data.RequestDTO.Ai;
 
-namespace Parentee_BE.Controllers;
+namespace Parentee_BE.API.Controllers;
 
 public class AiController(ILogger<AiController> logger, IAiService aiService) : BaseController<AiController>(logger)
 {
