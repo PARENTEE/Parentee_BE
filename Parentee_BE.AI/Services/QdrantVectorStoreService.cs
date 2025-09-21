@@ -35,7 +35,35 @@ public class QdrantVectorStoreService : IVectorStoreService
     {
         await _qdrantClient.CreateCollectionAsync(
             collectionName: collectionName,
-            vectorsConfig: new VectorParams() { Size = dimension, Distance = Distance.Cosine }
+            vectorsConfig: new VectorParams
+            {
+                Size = dimension,
+                Distance = Distance.Cosine
+            }
+        );
+
+        // Keyword index for exact match (good for filtering)
+        await _qdrantClient.CreatePayloadIndexAsync(
+            collectionName: collectionName,
+            fieldName: "title",
+            schemaType: PayloadSchemaType.Keyword
+        );
+
+        // Full-text index for semantic / hybrid search
+        await _qdrantClient.CreatePayloadIndexAsync(
+            collectionName: collectionName,
+            fieldName: "text",
+            schemaType: PayloadSchemaType.Text,
+            indexParams: new PayloadIndexParams
+            {
+                TextIndexParams = new TextIndexParams
+                {
+                    Tokenizer = TokenizerType.Word,
+                    MinTokenLen = 2,
+                    MaxTokenLen = 10,
+                    Lowercase = true
+                }
+            }
         );
     }
 
@@ -77,7 +105,36 @@ public class QdrantVectorStoreService : IVectorStoreService
     }
 
     #endregion
-    
+
+    #region Chat
+
+    // public async Task<RetrievedPoint?> HybridSearch (string collectionName, ulong id)
+    // {
+    //     await _qdrantClient.QueryAsync(
+    //         collectionName: collectionName,
+    //         prefetch: new List < PrefetchQuery > {
+    //             new() {
+    //                 Query = new(float, uint)[] {
+    //                     (0.22f, 1), (0.8f, 42),
+    //                 },
+    //                 Using = "sparse",
+    //                 Limit = 20
+    //             },
+    //             new() {
+    //                 Query = new float[] {
+    //                     0.01f, 0.45f, 0.67f
+    //                 },
+    //                 Using = "dense",
+    //                 Limit = 20
+    //             }
+    //         },
+    //         query: Fusion.Rrf
+    //     );
+    //
+    //     return results.FirstOrDefault();
+    // }
+
+    #endregion
     
     
 }

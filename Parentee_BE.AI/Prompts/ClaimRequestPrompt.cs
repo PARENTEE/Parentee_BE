@@ -41,15 +41,14 @@ public class ClaimRequestPrompt
             """;
     }
 
-    public static KernelArguments CreatePromptArugments(
+    public static KernelArguments CreatePromptArguments(
         UserArgument userArguments,
         string question,
        List<VectorSearchResult<DocumentVectorModel>> searchResult)
     {
         return new KernelArguments
         {
-            {
-                "user", new
+            { "user", new
                 {
                     name = userArguments.Name,
                     email = userArguments.Email,

@@ -1,6 +1,7 @@
 ﻿#pragma warning disable SKEXP0001
 
 using System.Text.RegularExpressions;
+using Microsoft.Extensions.AI;
 using Microsoft.Extensions.VectorData;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.Embeddings;
@@ -11,10 +12,10 @@ using Parentee_BE.AI.Prompts;
 
 namespace Parentee_BE.AI.Services;
 
-public class RAGChatService(
+public class RagChatService(
     VectorStore vectorStore,
     Kernel kernel,
-    ITextEmbeddingGenerationService textEmbeddingGenerationService)
+    IEmbeddingGenerator<string, Embedding<float>> _textEmbeddingGenerator )
 {
     private ICollection<string> ExtractKeywords(string query)
     {
@@ -43,9 +44,9 @@ public class RAGChatService(
     private async Task<List<VectorSearchResult<DocumentVectorModel>>> HybridSearchData(string collectionName, string question)
     {
         // Generate embeddings
-        var embeddings = await textEmbeddingGenerationService.GenerateEmbeddingsAsync([question],kernel);
+        var embeddings = await _textEmbeddingGenerator.GenerateAsync(question);
 
-        ReadOnlyMemory<float> searchVector = embeddings.FirstOrDefault();
+        var searchVector = embeddings.Vector;
 
         if (searchVector.IsEmpty)
             throw new InvalidOperationException("Generated embedding is empty or invalid.");
@@ -68,7 +69,7 @@ public class RAGChatService(
         return await EnumeratorToList(searchResult);
     }
 
-    public async Task<string> Answer(UserArgument userArugments, string question)
+    public async Task<string> Answer(UserArgument userArgument, string question)
     {
         const string collectionName = "parentee";
         
@@ -76,13 +77,14 @@ public class RAGChatService(
         var searchResultList = await HybridSearchData(collectionName, question);
         
         // Add prompt template
-        var arguments = ClaimRequestPrompt.CreatePromptArugments(userArugments, question, searchResultList);
+        var arguments = ClaimRequestPrompt.CreatePromptArguments(userArgument, question, searchResultList);
         
         var promptTemplateConfig = new PromptTemplateConfig
         {
             Template = ClaimRequestPrompt.GetPromptTemplate(),
             TemplateFormat = "handlebars",
             Name = "ClaimRequestChatPrompt",
+            AllowDangerouslySetContent = true
         };
         
         // Invoke the prompt function
@@ -93,4 +95,5 @@ public class RAGChatService(
         
         return templateResponse.ToString();
     }
+
 }

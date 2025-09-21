@@ -8,7 +8,7 @@ using Parentee_BE.DAL.Data.RequestDTO.Ai;
 
 namespace Parentee_BE.BLL.Services.Implements;
 
-public class AiService(RAGChatService ragChatService, IUnitOfWork<AppDbContext> unitOfWork, ILogger<AiService> logger)
+public class AiService(RagChatService ragChatService, IUnitOfWork<AppDbContext> unitOfWork, ILogger<AiService> logger)
     : BaseService<AiService>(unitOfWork, logger), IAiService
 {
     public async Task<string> HandleChat(ChatRequestDTO chatRequestDto)
