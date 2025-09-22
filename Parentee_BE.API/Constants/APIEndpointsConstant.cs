@@ -66,5 +66,14 @@ public class APIEndpointsConstant
         public const string UPDATE_MEASUREMENT_ENDPOINT = MEASUREMENT_ENDPOINT + "/{id}";
         public const string DELETE_MEASUREMENT_ENDPOINT = MEASUREMENT_ENDPOINT + "/{id}";
     }
+    
+    public static class SleepEndpoints
+    {
+        public const string SLEEP_ENDPOINT = API_ENDPOINT + "/sleep";
+        public const string CREATE_SLEEP_ENDPOINT = SLEEP_ENDPOINT;
+        public const string GET_SLEEP_BY_ID_ENDPOINT = SLEEP_ENDPOINT + "/{id}";
+        public const string UPDATE_SLEEP_ENDPOINT = SLEEP_ENDPOINT + "/{id}";
+        public const string DELETE_SLEEP_ENDPOINT = SLEEP_ENDPOINT + "/{id}";
+    }
 
 }
