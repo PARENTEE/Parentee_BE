@@ -75,5 +75,14 @@ public class APIEndpointsConstant
         public const string UPDATE_SLEEP_ENDPOINT = SLEEP_ENDPOINT + "/{id}";
         public const string DELETE_SLEEP_ENDPOINT = SLEEP_ENDPOINT + "/{id}";
     }
+    
+    public static class TaskEndpoints
+    {
+        public const string TASK_ENDPOINT = API_ENDPOINT + "/task";
+        public const string CREATE_TASK_ENDPOINT = TASK_ENDPOINT;
+        public const string GET_TASK_BY_ID_ENDPOINT = TASK_ENDPOINT + "/{id}";
+        public const string UPDATE_TASK_ENDPOINT = TASK_ENDPOINT + "/{id}";
+        public const string DELETE_TASK_ENDPOINT = TASK_ENDPOINT + "/{id}";
+    }
 
 }
