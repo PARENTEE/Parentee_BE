@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Parentee_BE.DAL.Data.Entities;
 using Parentee_BE.DAL.Data.RequestDTO.DiaperChange;
 using Parentee_BE.DAL.Data.ResponseDTO.DiaperChange;
 
@@ -9,10 +10,10 @@ public class DiaperChangeMapper : Profile
     public DiaperChangeMapper()
     {
         // Request -> Entity
-        CreateMap<CreateDiaperChangeRequest, DiaperChangeMapper>();
-        CreateMap<UpdateDiaperChangeRequest, DiaperChangeMapper>();
+        CreateMap<CreateDiaperChangeRequest, DiaperChangeEntity>();
+        CreateMap<UpdateDiaperChangeRequest, DiaperChangeEntity>();
 
         // Entity -> Response
-        CreateMap<DiaperChangeMapper, GetDiaperChangeResponse>();
+        CreateMap<DiaperChangeEntity, GetDiaperChangeResponse>();
     }
 }

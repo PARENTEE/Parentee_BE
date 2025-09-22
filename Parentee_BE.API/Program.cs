@@ -189,6 +189,12 @@ builder.Services.AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>));
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IAiService, AiService>();
+builder.Services.AddScoped<IFamilyService, FamilyService>();
+builder.Services.AddScoped<IFeedingService, FeedingService>();
+builder.Services.AddScoped<IDiaperChangeService, DiaperChangeService>();
+builder.Services.AddScoped<IMeasurementService, MeasurementService>();
+builder.Services.AddScoped<ISleepService, SleepService>();
+builder.Services.AddScoped<ITaskService, TaskService>();
 
 builder.Services.AddScoped<TokenHelper>();
 
