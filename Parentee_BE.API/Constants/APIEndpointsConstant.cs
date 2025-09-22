@@ -39,4 +39,14 @@ public class APIEndpointsConstant
         public const string UPDATE_CHILD_ENDPOINT = API_ENDPOINT + "/{id}";
         public const string DELETE_CHILD_ENDPOINT = API_ENDPOINT + "/{id}";
     }
+    
+    public static class FeedingEndpoints
+    {
+        public const string FEEDING_ENDPOINT = API_ENDPOINT + "/feeding";
+        public const string CREATE_FEEDING_ENDPOINT = API_ENDPOINT;
+        public const string GET_FEEDING_BY_ID_ENDPOINT = API_ENDPOINT + "/{id}";
+        public const string UPDATE_FEEDING_ENDPOINT = API_ENDPOINT + "/{id}";
+        public const string DELETE_FEEDING_ENDPOINT = API_ENDPOINT + "/{id}";
+    }
+
 }
