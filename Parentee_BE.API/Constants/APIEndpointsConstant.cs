@@ -48,5 +48,14 @@ public class APIEndpointsConstant
         public const string UPDATE_FEEDING_ENDPOINT = API_ENDPOINT + "/{id}";
         public const string DELETE_FEEDING_ENDPOINT = API_ENDPOINT + "/{id}";
     }
+    
+    public static class DiaperChangeEndpoints
+    {
+        public const string DIAPERCHANGE_ENDPOINT = API_ENDPOINT + "/diaperchange";
+        public const string CREATE_DIAPERCHANGE_ENDPOINT = DIAPERCHANGE_ENDPOINT;
+        public const string GET_DIAPERCHANGE_BY_ID_ENDPOINT = DIAPERCHANGE_ENDPOINT + "/{id}";
+        public const string UPDATE_DIAPERCHANGE_ENDPOINT = DIAPERCHANGE_ENDPOINT + "/{id}";
+        public const string DELETE_DIAPERCHANGE_ENDPOINT = DIAPERCHANGE_ENDPOINT + "/{id}";
+    }
 
 }
