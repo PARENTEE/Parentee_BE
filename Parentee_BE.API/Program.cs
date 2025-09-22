@@ -8,9 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.Connectors.Google;
-using Microsoft.SemanticKernel.Embeddings;
 using Parentee_BE.AI.Services;
+using Parentee_BE.API.OpenAPI;
 using Parentee_BE.BLL.Helpers;
 using Parentee_BE.BLL.Services.Implements;
 using Parentee_BE.BLL.Services.Interfaces;
@@ -80,6 +79,8 @@ builder.Services.AddSwaggerGen(options =>
             []
         }
     });
+    
+    options.DocumentFilter<OrderHttpMethodsFilter>();
 });
 
 #endregion
