@@ -2,12 +2,12 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Parentee_BE.BLL.Services.Interfaces;
-using Parentee_BE.Constants;
+using Parentee_BE.API.Constants;
 using Parentee_BE.DAL.Data.Metadatas;
 using Parentee_BE.DAL.Data.RequestDto.Auth;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Parentee_BE.Controllers;
+namespace Parentee_BE.API.Controllers;
 
 public class AuthController(
     ILogger<AuthController> logger,

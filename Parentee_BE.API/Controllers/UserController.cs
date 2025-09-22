@@ -1,13 +1,13 @@
 ﻿using Parentee_BE.ActionFilters;
 using Parentee_BE.BLL.Services.Interfaces;
-using Parentee_BE.Constants;
+using Parentee_BE.API.Constants;
 using Parentee_BE.DAL.Data.Exceptions;
 using Parentee_BE.DAL.Data.Metadatas;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Parentee_BE.DAL.Data.RequestDTO.Users;
 
-namespace Parentee_BE.Controllers;
+namespace Parentee_BE.API.Controllers;
 
 public class UserController : BaseController<UserController>
 {

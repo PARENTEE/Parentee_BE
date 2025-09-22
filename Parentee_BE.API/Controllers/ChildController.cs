@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Parentee_BE.BLL.Services.Interfaces;
-using Parentee_BE.Constants;
+using Parentee_BE.API.Constants;
 using Parentee_BE.DAL.Data.Entities;
 using Parentee_BE.DAL.Data.Metadatas;
 using Parentee_BE.DAL.Data.RequestDTO.Children;
 
-namespace Parentee_BE.Controllers;
+namespace Parentee_BE.API.Controllers;
 
 public class ChildController(IChildService childService, ILogger<ChildController> logger) : BaseController<ChildController>(logger)
 {

@@ -1,4 +1,4 @@
-﻿namespace Parentee_BE.Constants;
+﻿namespace Parentee_BE.API.Constants;
 
 public class APIEndpointsConstant
 {
@@ -56,6 +56,15 @@ public class APIEndpointsConstant
         public const string GET_DIAPERCHANGE_BY_ID_ENDPOINT = DIAPERCHANGE_ENDPOINT + "/{id}";
         public const string UPDATE_DIAPERCHANGE_ENDPOINT = DIAPERCHANGE_ENDPOINT + "/{id}";
         public const string DELETE_DIAPERCHANGE_ENDPOINT = DIAPERCHANGE_ENDPOINT + "/{id}";
+    }
+    
+    public static class MeasurementEndpoints
+    {
+        public const string MEASUREMENT_ENDPOINT = API_ENDPOINT + "/measurement";
+        public const string CREATE_MEASUREMENT_ENDPOINT = MEASUREMENT_ENDPOINT;
+        public const string GET_MEASUREMENT_BY_ID_ENDPOINT = MEASUREMENT_ENDPOINT + "/{id}";
+        public const string UPDATE_MEASUREMENT_ENDPOINT = MEASUREMENT_ENDPOINT + "/{id}";
+        public const string DELETE_MEASUREMENT_ENDPOINT = MEASUREMENT_ENDPOINT + "/{id}";
     }
 
 }

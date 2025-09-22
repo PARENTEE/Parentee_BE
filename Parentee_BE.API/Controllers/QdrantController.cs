@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Parentee_BE.AI.Services;
-using Parentee_BE.Controllers;
 using Parentee_BE.DAL.Data.Metadatas;
 
 namespace Parentee_BE.API.Controllers;
