@@ -33,10 +33,7 @@ builder.Configuration.AddEnvironmentVariables();
 builder.Services.AddControllers();
 builder.Services.AddHttpContextAccessor();
 
-builder.WebHost.ConfigureKestrel(options =>
-{
-    options.AllowSynchronousIO = true;
-});
+builder.WebHost.ConfigureKestrel(options => { options.AllowSynchronousIO = true; });
 
 #region Configuration
 
@@ -44,6 +41,7 @@ builder.Configuration
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
     .AddEnvironmentVariables()
     .AddUserSecrets<Program>();
+
 #endregion
 
 #region Implement Swagger
@@ -57,16 +55,17 @@ builder.Services.AddSwaggerGen(options =>
         Version = "v1",
         Description = "API for PARENTEE."
     });
-    
+
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
-        Description = "JWT Authorization header using the Bearer scheme. \n\r Enter 'Bearer' [space] and then your token in the text input below.\n\r Example: \"Bearer 12345abcdef\"",
+        Description =
+            "JWT Authorization header using the Bearer scheme. \n\r Enter 'Bearer' [space] and then your token in the text input below.\n\r Example: \"Bearer 12345abcdef\"",
         Name = "Authorization",
         In = ParameterLocation.Header,
         Type = SecuritySchemeType.Http,
         Scheme = "bearer"
     });
-    
+
     options.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
@@ -82,7 +81,6 @@ builder.Services.AddSwaggerGen(options =>
         }
     });
 });
-
 
 #endregion
 
@@ -107,8 +105,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
                 )
         )
         .UseSeeding((context, _) => SeedingData.Seed(context))
-        .UseAsyncSeeding(
-            async (context, _, cancellationToken) => await SeedingData.SeedAsync(context, cancellationToken)
+        .UseAsyncSeeding(async (context, _, cancellationToken) =>
+            await SeedingData.SeedAsync(context, cancellationToken)
         )
         .LogTo(Console.WriteLine, LogLevel.Information)
 );
@@ -134,7 +132,7 @@ builder.Services.AddAuthentication(options =>
             ValidIssuers = builder.Configuration.GetSection("JWT:ValidIssuers").Get<string[]>(),
             ValidAudiences = builder.Configuration.GetSection("JWT:ValidAudiences").Get<string[]>(),
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"])),
-            
+
             NameClaimType = ClaimTypes.NameIdentifier,
             RoleClaimType = ClaimTypes.Role
         };
@@ -155,9 +153,9 @@ builder.Services.AddAuthentication(options =>
     .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddGoogle(GoogleDefaults.AuthenticationScheme, options =>
     {
-      options.ClientId = builder.Configuration["Google:ClientId"];
-      options.ClientSecret = builder.Configuration["Google:ClientSecret"];
-      options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme; 
+        options.ClientId = builder.Configuration["Google:ClientId"];
+        options.ClientSecret = builder.Configuration["Google:ClientSecret"];
+        options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
     });
 
 // Add Roles for Authorization
@@ -182,7 +180,7 @@ builder.Services.AddCors(options =>
 });
 
 #endregion
-    
+
 # region Implement DI for Project Services
 
 builder.Services.AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>));
@@ -194,6 +192,7 @@ builder.Services.AddScoped<IAiService, AiService>();
 builder.Services.AddScoped<TokenHelper>();
 
 builder.Services.AddScoped<IChildService, ChildService>();
+
 #endregion
 
 #region Other services
@@ -216,23 +215,20 @@ var llmApiKey = "AIzaSyCmtp4ctiu7RcF_Gij0bZILzDM5ZvbkoK4";
 var embeddingModel = "gemini-embedding-001";
 var embeddingApiKey = "AIzaSyCmtp4ctiu7RcF_Gij0bZILzDM5ZvbkoK4";
 var vectoreStoreConnectionString = "";
-var vectoreStoreApiKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3MiOiJtIn0.JUla-V8J09Gi_3vThJBKnRTGKDhWOv9X5RCgRcGjN4U";
+var vectoreStoreApiKey =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3MiOiJtIn0.JUla-V8J09Gi_3vThJBKnRTGKDhWOv9X5RCgRcGjN4U";
 
 // LLM
-builder.Services.AddGoogleAIGeminiChatCompletion(llmModel, llmApiKey);
+builder.Services.AddGoogleAIGeminiChatCompletion(
+    builder.Configuration["AI:LLMModel"],
+    builder.Configuration["AI:LLMAPIKey"]
+);
 
 // Embedding
 builder.Services.AddGoogleAIEmbeddingGenerator(
-    modelId: embeddingModel,
-    apiKey: embeddingApiKey
+    modelId: builder.Configuration["AI:EmbeddingModel"],
+    apiKey: builder.Configuration["AI:EmbeddingApiKey"]
 );
-builder.Services.AddScoped<ITextEmbeddingGenerationService>(sp =>
-{
-    return new GoogleAITextEmbeddingGenerationService(
-        modelId: embeddingModel,
-        apiKey: embeddingApiKey
-    );
-});
 
 // Pinecone
 // builder.Services.AddSingleton<PineconeClient>(
@@ -240,11 +236,11 @@ builder.Services.AddScoped<ITextEmbeddingGenerationService>(sp =>
 // builder.Services.AddPineconeVectorStore();
 
 // Qdrant
-builder.Services.AddSingleton<QdrantClient>(sp => 
+builder.Services.AddSingleton<QdrantClient>(sp =>
     new QdrantClient(
-        host: "620048c6-bd62-406b-b7c5-a52007362054.us-east4-0.gcp.cloud.qdrant.io", 
-        https: true, 
-        apiKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3MiOiJtIn0.C-hVUMuh_KQ-TMi6zfqEjv8HTWZsRexXlRXgAnUs30I"                  // from Qdrant Cloud dashboard
+        host: builder.Configuration["AI:QdrantHost"] ,
+        https: true,
+        apiKey: builder.Configuration["AI:QdrantApiKey"] 
     )
 );
 
@@ -257,7 +253,7 @@ builder.Services.AddScoped<Kernel>(sp =>
 
     kernelBuilder.AddGoogleAIGeminiChatCompletion(llmModel, llmApiKey);
     kernelBuilder.AddGoogleAIEmbeddingGenerator(embeddingModel, embeddingApiKey);
-    
+
     return kernelBuilder.Build();
 });
 
@@ -270,10 +266,7 @@ builder.Services.AddScoped<IVectorStoreService, QdrantVectorStoreService>();
 #region Configure API behavior
 
 // Disable automatic model state validation
-builder.Services.Configure<ApiBehaviorOptions>(options =>
-{
-    options.SuppressModelStateInvalidFilter = true;
-});
+builder.Services.Configure<ApiBehaviorOptions>(options => { options.SuppressModelStateInvalidFilter = true; });
 
 #endregion
 

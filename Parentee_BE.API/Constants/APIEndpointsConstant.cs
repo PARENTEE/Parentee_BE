@@ -43,10 +43,10 @@ public class APIEndpointsConstant
     public static class FeedingEndpoints
     {
         public const string FEEDING_ENDPOINT = API_ENDPOINT + "/feeding";
-        public const string CREATE_FEEDING_ENDPOINT = API_ENDPOINT;
-        public const string GET_FEEDING_BY_ID_ENDPOINT = API_ENDPOINT + "/{id}";
-        public const string UPDATE_FEEDING_ENDPOINT = API_ENDPOINT + "/{id}";
-        public const string DELETE_FEEDING_ENDPOINT = API_ENDPOINT + "/{id}";
+        public const string CREATE_FEEDING_ENDPOINT = FEEDING_ENDPOINT;
+        public const string GET_FEEDING_BY_ID_ENDPOINT = FEEDING_ENDPOINT + "/{id}";
+        public const string UPDATE_FEEDING_ENDPOINT = FEEDING_ENDPOINT + "/{id}";
+        public const string DELETE_FEEDING_ENDPOINT = FEEDING_ENDPOINT + "/{id}";
     }
     
     public static class DiaperChangeEndpoints
