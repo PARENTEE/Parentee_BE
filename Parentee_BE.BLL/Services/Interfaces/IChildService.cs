@@ -9,6 +9,7 @@ public interface IChildService
     Task<CreateChildResponseDTO> CreateChild(CreateChildRequestDTO request);
     Task<IEnumerable<CreateChildResponseDTO>> GetAllChildren();
     Task<CreateChildResponseDTO> GetChildById(Guid id);
+    Task<GetChildTodayResponse> GetChildTodayById(Guid id);
     Task<CreateChildResponseDTO> UpdateChild(Guid id, CreateChildRequestDTO request);
     Task<bool> DeleteChild(Guid id);
 }
