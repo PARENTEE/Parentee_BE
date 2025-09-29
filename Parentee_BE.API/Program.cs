@@ -280,6 +280,7 @@ builder.Services.AddScoped<Kernel>(sp =>
 // RAGChatService
 builder.Services.AddScoped<RagChatService>();
 builder.Services.AddScoped<IVectorStoreService, QdrantVectorStoreService>();
+builder.Services.AddScoped<IProductService, ProductService>();
 
 #endregion
 
