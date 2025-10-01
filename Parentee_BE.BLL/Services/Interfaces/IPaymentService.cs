@@ -1,4 +1,6 @@
-using Net.payOS.Types;
+
+
+using Net.PayOSHQ.Types;
 
 namespace Parentee_BE.BLL.Services.Interfaces;
 

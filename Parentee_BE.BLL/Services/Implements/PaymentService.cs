@@ -1,7 +1,8 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Net.payOS;
-using Net.payOS.Types;
+
+using Net.PayOSHQ;
+using Net.PayOSHQ.Types;
 using Parentee_BE.BLL.Services.Interfaces;
 using Parentee_BE.DAL.Context;
 using Parentee_BE.DAL.Data.Entities;
@@ -34,7 +35,7 @@ public class PaymentService(
         };
         
         var payment = new PaymentData(
-            orderCode:   orderCode,
+            orderCode:   (int)orderCode,
             amount:      (int) product.Amount,
             description: $"Purchase {product.Name}",
             items:       items,

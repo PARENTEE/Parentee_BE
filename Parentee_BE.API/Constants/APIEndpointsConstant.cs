@@ -1,4 +1,4 @@
-﻿namespace Parentee_BE.API.Constants;
+﻿namespace Parentee_BE.Constants;
 
 public class APIEndpointsConstant
 {
@@ -30,6 +30,8 @@ public class APIEndpointsConstant
         public const string UPDATE_ACCOUNT_ENDPOINT = ACCOUNT_ENDPOINT + "/{id}";
         public const string DELETE_ACCOUNT_ENDPOINT = ACCOUNT_ENDPOINT + "/{id}";
     }
+    
+    
 
     public static class ChildEndpoints
     {
