@@ -160,11 +160,13 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEnt
     {
         ArgumentNullException.ThrowIfNull(entity);
         await _dbSet.AddAsync(entity);
+        await _dbContext.SaveChangesAsync();
     }
 
     public virtual async Task InsertRangeAsync(IEnumerable<TEntity> entities)
     {
         await _dbSet.AddRangeAsync(entities);
+        await _dbContext.SaveChangesAsync();
     }
 
     #endregion
@@ -175,11 +177,13 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEnt
     {
         ArgumentNullException.ThrowIfNull(entity);
         _dbSet.Update(entity);
+        _dbContext.SaveChanges();
     }
 
     public virtual void UpdateRangeAsync(IEnumerable<TEntity> entities)
     {
         _dbSet.UpdateRange(entities);
+        _dbContext.SaveChanges();
     }
 
     #endregion
@@ -189,11 +193,20 @@ public class GenericRepository<TEntity> : IGenericRepository<TEntity> where TEnt
     public void Delete(TEntity entity)
     {
         _dbSet.Remove(entity);
+        _dbContext.SaveChanges();
     }
 
     public void DeleteRange(IEnumerable<TEntity> entities)
     {
         _dbSet.RemoveRange(entities);
+        _dbContext.SaveChanges();
+    }
+
+    public async Task<TEntity> DeleteAsync(TEntity entity)
+    {
+        _dbContext.Set<TEntity>().Remove(entity);
+        await _dbContext.SaveChangesAsync();
+        return entity;
     }
 
     #endregion

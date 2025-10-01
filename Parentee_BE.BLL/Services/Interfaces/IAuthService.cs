@@ -1,4 +1,5 @@
 ﻿
+using Microsoft.AspNetCore.Authentication;
 using Parentee_BE.DAL.Data.RequestDto.Auth;
 
 namespace Parentee_BE.BLL.Services.Interfaces;
@@ -6,4 +7,7 @@ namespace Parentee_BE.BLL.Services.Interfaces;
 public interface IAuthService
 {
     Task<string> HandleLogin(LoginRequestDTO loginRequestDto);
+
+    Task<string> HandleGoogleLogin(AuthenticateResult authenticateResult);
+
 }

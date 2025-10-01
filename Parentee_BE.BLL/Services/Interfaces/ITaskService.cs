@@ -1,0 +1,12 @@
+﻿using Parentee_BE.DAL.Data.RequestDTO.Task;
+using Parentee_BE.DAL.Data.ResponseDTO.Task;
+
+namespace Parentee_BE.BLL.Services.Interfaces;
+
+public interface ITaskService
+{
+    Task<GetTaskResponse> GetTaskById(Guid id);
+    Task<GetTaskResponse> CreateTask(CreateTaskRequest requestDto);
+    Task<GetTaskResponse> UpdateTask(Guid id, UpdateTaskRequest requestDto);
+    Task<bool> DeleteTask(Guid id);
+}

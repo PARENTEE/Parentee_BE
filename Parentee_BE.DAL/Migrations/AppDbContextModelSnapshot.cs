@@ -1357,6 +1357,10 @@ namespace Parentee_BE.DAL.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("deleted_at");
 
+                    b.Property<DateOnly>("Dob")
+                        .HasColumnType("date")
+                        .HasColumnName("dob");
+
                     b.Property<string>("Email")
                         .HasColumnType("text")
                         .HasColumnName("email");
@@ -1385,6 +1389,11 @@ namespace Parentee_BE.DAL.Migrations
                     b.Property<string>("Phone")
                         .HasColumnType("text")
                         .HasColumnName("phone");
+
+                    b.Property<string>("SigninMethod")
+                        .IsRequired()
+                        .HasColumnType("text")
+                        .HasColumnName("signup_method");
 
                     b.Property<DateTime>("UpdatedAt")
                         .ValueGeneratedOnAdd()

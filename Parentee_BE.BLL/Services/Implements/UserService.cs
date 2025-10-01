@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using Parentee_BE.BLL.Helpers;
 using Parentee_BE.BLL.Services.Interfaces;
 using Parentee_BE.DAL.Context;
+using Parentee_BE.DAL.Data.Enums;
 
 namespace Parentee_BE.BLL.Services.Implements;
 
@@ -60,12 +61,7 @@ public class UserService(
         var User = mapper.Map<CreateUserRequestDTO, UserEntity>(requestDto);
         await unitOfWork.ExecuteInTransactionAsync(async () =>
         {
-            // Check if Role exists
-            var findRoleResult = await unitOfWork.GetRepository<UserFamilyRoleEntity>().FirstOrDefaultAsync(
-                predicate: r => r.Role.ToString() == requestDto.Role.ToLower());
-            if (findRoleResult == null) throw new NotFoundException("Role not found!");
-            User.UserFamilyRole = findRoleResult;
-            
+            User.SigninMethod = SigninMethod.App;
             // Hash Password
             var hashedPassword = PasswordHelper.HashPassword(requestDto.Password);
             User.Password = hashedPassword;
@@ -109,7 +105,6 @@ public class UserService(
         await unitOfWork.ExecuteInTransactionAsync(async () =>
         {
            unitOfWork.GetRepository<UserEntity>().Delete(User);
-            
         });
         return true;
     }

@@ -1,21 +1,24 @@
-
-using System.Collections;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Microsoft.SemanticKernel;
+using Parentee_BE.AI.Services;
+using Parentee_BE.API.OpenAPI;
 using Parentee_BE.BLL.Helpers;
 using Parentee_BE.BLL.Services.Implements;
 using Parentee_BE.BLL.Services.Interfaces;
 using Parentee_BE.DAL.Context;
-using Parentee_BE.DAL.Data.Entities;
 using Parentee_BE.DAL.Data.Exceptions;
 using Parentee_BE.DAL.Data.Repositories;
 using Parentee_BE.DAL.Data.Repositories.Interfaces;
 using Parentee_BE.Middlewares;
+using Qdrant.Client;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,10 +32,7 @@ builder.Configuration.AddEnvironmentVariables();
 builder.Services.AddControllers();
 builder.Services.AddHttpContextAccessor();
 
-builder.WebHost.ConfigureKestrel(options =>
-{
-    options.AllowSynchronousIO = true;
-});
+builder.WebHost.ConfigureKestrel(options => { options.AllowSynchronousIO = true; });
 
 #region Configuration
 
@@ -40,6 +40,7 @@ builder.Configuration
     .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
     .AddEnvironmentVariables()
     .AddUserSecrets<Program>();
+
 #endregion
 
 #region Implement Swagger
@@ -53,16 +54,17 @@ builder.Services.AddSwaggerGen(options =>
         Version = "v1",
         Description = "API for PARENTEE."
     });
-    
+
     options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
-        Description = "JWT Authorization header using the Bearer scheme. \n\r Enter 'Bearer' [space] and then your token in the text input below.\n\r Example: \"Bearer 12345abcdef\"",
+        Description =
+            "JWT Authorization header using the Bearer scheme. \n\r Enter 'Bearer' [space] and then your token in the text input below.\n\r Example: \"Bearer 12345abcdef\"",
         Name = "Authorization",
         In = ParameterLocation.Header,
         Type = SecuritySchemeType.Http,
         Scheme = "bearer"
     });
-    
+
     options.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
@@ -77,8 +79,9 @@ builder.Services.AddSwaggerGen(options =>
             []
         }
     });
+    
+    options.DocumentFilter<OrderHttpMethodsFilter>();
 });
-
 
 #endregion
 
@@ -103,8 +106,8 @@ builder.Services.AddDbContext<AppDbContext>(options =>
                 )
         )
         .UseSeeding((context, _) => SeedingData.Seed(context))
-        .UseAsyncSeeding(
-            async (context, _, cancellationToken) => await SeedingData.SeedAsync(context, cancellationToken)
+        .UseAsyncSeeding(async (context, _, cancellationToken) =>
+            await SeedingData.SeedAsync(context, cancellationToken)
         )
         .LogTo(Console.WriteLine, LogLevel.Information)
 );
@@ -114,7 +117,11 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 #region Implement Authentication and Authorization
 
 // Add Authentication and Authorization using JWT
-builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+    })
     .AddJwtBearer(options =>
     {
         options.TokenValidationParameters = new TokenValidationParameters()
@@ -126,7 +133,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidIssuers = builder.Configuration.GetSection("JWT:ValidIssuers").Get<string[]>(),
             ValidAudiences = builder.Configuration.GetSection("JWT:ValidAudiences").Get<string[]>(),
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JWT:Key"])),
-            
+
             NameClaimType = ClaimTypes.NameIdentifier,
             RoleClaimType = ClaimTypes.Role
         };
@@ -143,6 +150,13 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             },
             OnForbidden = _ => throw new ForbiddenException("You do not have permission to access this resource.")
         };
+    })
+    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddGoogle(GoogleDefaults.AuthenticationScheme, options =>
+    {
+        options.ClientId = builder.Configuration["Google:ClientId"];
+        options.ClientSecret = builder.Configuration["Google:ClientSecret"];
+        options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
     });
 
 // Add Roles for Authorization
@@ -167,15 +181,25 @@ builder.Services.AddCors(options =>
 });
 
 #endregion
-    
+
 # region Implement DI for Project Services
 
 builder.Services.AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>));
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IAiService, AiService>();
+builder.Services.AddScoped<IFamilyService, FamilyService>();
+builder.Services.AddScoped<IFeedingService, FeedingService>();
+builder.Services.AddScoped<IDiaperChangeService, DiaperChangeService>();
+builder.Services.AddScoped<IMeasurementService, MeasurementService>();
+builder.Services.AddScoped<ISleepService, SleepService>();
+builder.Services.AddScoped<ITaskService, TaskService>();
 
 builder.Services.AddScoped<TokenHelper>();
+
+builder.Services.AddScoped<IChildService, ChildService>();
+
 #endregion
 
 #region Other services
@@ -190,20 +214,66 @@ builder.Services.AddLogging(loggingBuilder =>
     loggingBuilder.AddDebug();
 });
 
-builder.Services.AddHttpClient("GeocodeClient", client =>
+// Add Semantic Kernel
+
+#pragma warning disable SKEXP0010
+var llmModel = "gemini-2.0-flash";
+var llmApiKey = "AIzaSyCmtp4ctiu7RcF_Gij0bZILzDM5ZvbkoK4";
+var embeddingModel = "gemini-embedding-001";
+var embeddingApiKey = "AIzaSyCmtp4ctiu7RcF_Gij0bZILzDM5ZvbkoK4";
+var vectoreStoreConnectionString = "";
+var vectoreStoreApiKey =
+    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3MiOiJtIn0.JUla-V8J09Gi_3vThJBKnRTGKDhWOv9X5RCgRcGjN4U";
+
+// LLM
+builder.Services.AddGoogleAIGeminiChatCompletion(
+    builder.Configuration["AI:LLMModel"],
+    builder.Configuration["AI:LLMAPIKey"]
+);
+
+// Embedding
+builder.Services.AddGoogleAIEmbeddingGenerator(
+    modelId: builder.Configuration["AI:EmbeddingModel"],
+    apiKey: builder.Configuration["AI:EmbeddingApiKey"]
+);
+
+// Pinecone
+// builder.Services.AddSingleton<PineconeClient>(
+//     sp => new PineconeClient(vectoreStoreApiKey));
+// builder.Services.AddPineconeVectorStore();
+
+// Qdrant
+builder.Services.AddSingleton<QdrantClient>(sp =>
+    new QdrantClient(
+        host: builder.Configuration["AI:QdrantHost"] ,
+        https: true,
+        apiKey: builder.Configuration["AI:QdrantApiKey"] 
+    )
+);
+
+builder.Services.AddQdrantVectorStore();
+
+// Semantic Kernel
+builder.Services.AddScoped<Kernel>(sp =>
 {
-    client.DefaultRequestHeaders.Add("User-Agent", "BloodDonationSystem/1.0 (support@blooddonation.com)");
+    var kernelBuilder = Kernel.CreateBuilder();
+
+    kernelBuilder.AddGoogleAIGeminiChatCompletion(llmModel, llmApiKey);
+    kernelBuilder.AddGoogleAIEmbeddingGenerator(embeddingModel, embeddingApiKey);
+
+    return kernelBuilder.Build();
 });
+
+// RAGChatService
+builder.Services.AddScoped<RagChatService>();
+builder.Services.AddScoped<IVectorStoreService, QdrantVectorStoreService>();
 
 #endregion
 
 #region Configure API behavior
 
 // Disable automatic model state validation
-builder.Services.Configure<ApiBehaviorOptions>(options =>
-{
-    options.SuppressModelStateInvalidFilter = true;
-});
+builder.Services.Configure<ApiBehaviorOptions>(options => { options.SuppressModelStateInvalidFilter = true; });
 
 #endregion
 

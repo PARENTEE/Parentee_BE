@@ -56,6 +56,16 @@ public class UnitOfWork<TContext> : IUnitOfWork<TContext>, IAsyncDisposable wher
         });
     }
 
+    public int SaveChanges()
+    {
+        return Context.SaveChanges();
+    }
+
+    public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+    {
+        return await Context.SaveChangesAsync(cancellationToken);
+    }
+
     public async Task ExecuteInTransactionAsync(Func<Task> operation)
     {
         var executionStrategy = Context.Database.CreateExecutionStrategy();

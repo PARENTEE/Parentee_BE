@@ -12,10 +12,6 @@ public class CreateUserRequestDTO
     [Length(10, 100, ErrorMessage = "Password length must be in between 10 and 100 characters")]
     public string Password { get; set; }
     
-    [Required(ErrorMessage = "Role is required (Admin or User)")]
-    [MaxLength(10, ErrorMessage = "Role length cannot be more than 10 characters")]
-    public string Role { get; set; }
-    
     [Required(ErrorMessage = "First name is required")]
     [MaxLength(50, ErrorMessage = "First name length cannot be more than 50 characters")]
     public string FirstName { get; set; }
@@ -24,4 +20,6 @@ public class CreateUserRequestDTO
     [MaxLength(50, ErrorMessage = "Last name length cannot be more than 50 characters")]
     public string LastName { get; set; }
     
+    [Required(ErrorMessage = "Dob is required!")]
+    public DateOnly Dob { get; set; }
 }
