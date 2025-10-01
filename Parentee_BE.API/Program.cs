@@ -197,7 +197,10 @@ builder.Services.AddScoped<IFeedingService, FeedingService>();
 builder.Services.AddScoped<IDiaperChangeService, DiaperChangeService>();
 builder.Services.AddScoped<IMeasurementService, MeasurementService>();
 builder.Services.AddScoped<ISleepService, SleepService>();
-builder.Services.AddScoped<ITaskService, TaskService>();
+builder.Services.AddScoped<IPaymentService, PaymentService>();
+builder.Services.AddScoped<IPurchaseService, PurchaseService>();
+builder.Services.AddScoped<IUserFamilyRoleService, UserFamilyRoleService>();
+
 
 builder.Services.AddScoped<TokenHelper>();
 
@@ -314,6 +317,9 @@ using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     dbContext.Database.Migrate(); // Applies any pending migrations
+    
 }
+
+
 
 app.Run();
