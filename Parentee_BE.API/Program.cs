@@ -9,7 +9,8 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Microsoft.SemanticKernel;
-using Net.payOS;
+
+using Net.PayOSHQ;
 using Parentee_BE.AI.Services;
 using Parentee_BE.API.OpenAPI;
 using Parentee_BE.BLL.Helpers;
