@@ -96,9 +96,9 @@ public class APIEndpointsConstant
     
     public static class PaymentEndpoints
     {
-        public const string PAYMENT_ENGPOINT = API_ENDPOINT + "/payment";
+        public const string PAYMENT_ENGPOINT = API_ENDPOINT + "/payments";
         public const string GET_ORDER = PAYMENT_ENGPOINT + "/{orderCode}";
         public const string CREATE_LINK = PAYMENT_ENGPOINT + "/create-link";
-        public const string CANCEL_PAYMENT = PAYMENT_ENGPOINT + "/{orderCode}/cancel";
+        public const string WEB_HOOK = PAYMENT_ENGPOINT + "/webhook";
     }
 }
