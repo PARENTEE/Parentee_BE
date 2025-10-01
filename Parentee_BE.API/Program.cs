@@ -5,9 +5,11 @@ using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Microsoft.SemanticKernel;
+using Net.payOS;
 using Parentee_BE.AI.Services;
 using Parentee_BE.API.OpenAPI;
 using Parentee_BE.BLL.Helpers;
@@ -15,6 +17,7 @@ using Parentee_BE.BLL.Services.Implements;
 using Parentee_BE.BLL.Services.Interfaces;
 using Parentee_BE.DAL.Context;
 using Parentee_BE.DAL.Data.Exceptions;
+using Parentee_BE.DAL.Data.PaymentDTO;
 using Parentee_BE.DAL.Data.Repositories;
 using Parentee_BE.DAL.Data.Repositories.Interfaces;
 using Parentee_BE.Middlewares;
@@ -194,9 +197,22 @@ builder.Services.AddScoped<IFeedingService, FeedingService>();
 builder.Services.AddScoped<IDiaperChangeService, DiaperChangeService>();
 builder.Services.AddScoped<IMeasurementService, MeasurementService>();
 builder.Services.AddScoped<ISleepService, SleepService>();
-builder.Services.AddScoped<ITaskService, TaskService>();
+builder.Services.AddScoped<IPaymentService, PaymentService>();
+builder.Services.AddScoped<IPurchaseService, PurchaseService>();
+builder.Services.AddScoped<IUserFamilyRoleService, UserFamilyRoleService>();
+
 
 builder.Services.AddScoped<TokenHelper>();
+
+builder.Services.Configure<PayOSOptions>(builder.Configuration.GetSection("PayOS"));
+
+builder.Services.AddSingleton(sp =>
+{
+    var cfg = sp.GetRequiredService<IOptions<PayOSOptions>>().Value;
+    return new PayOS(cfg.ClientId, cfg.ApiKey, cfg.ChecksumKey);
+});
+
+
 
 builder.Services.AddScoped<IChildService, ChildService>();
 
@@ -267,6 +283,7 @@ builder.Services.AddScoped<Kernel>(sp =>
 // RAGChatService
 builder.Services.AddScoped<RagChatService>();
 builder.Services.AddScoped<IVectorStoreService, QdrantVectorStoreService>();
+builder.Services.AddScoped<IProductService, ProductService>();
 
 #endregion
 
@@ -300,6 +317,9 @@ using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     dbContext.Database.Migrate(); // Applies any pending migrations
+    
 }
+
+
 
 app.Run();
