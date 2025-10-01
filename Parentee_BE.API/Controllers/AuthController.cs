@@ -2,10 +2,10 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Parentee_BE.BLL.Services.Interfaces;
-using Parentee_BE.API.Constants;
 using Parentee_BE.DAL.Data.Metadatas;
 using Parentee_BE.DAL.Data.RequestDto.Auth;
 using Microsoft.AspNetCore.Mvc;
+using Parentee_BE.Constants;
 
 namespace Parentee_BE.API.Controllers;
 
