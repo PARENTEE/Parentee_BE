@@ -104,4 +104,9 @@ public class APIEndpointsConstant
         public const string CREATE_LINK = PAYMENT_ENGPOINT + "/create-link";
         public const string WEB_HOOK = PAYMENT_ENGPOINT + "/webhook";
     }
+    
+    public static class SmsEndpoints
+    {
+        public const string SMS_ENDPOINT = API_ENDPOINT + "/sms";
+    }
 }
