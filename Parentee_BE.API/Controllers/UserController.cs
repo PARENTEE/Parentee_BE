@@ -81,7 +81,7 @@ public class UserController : BaseController<UserController>
         return Ok(ApiResponseBuilder.BuildResponse(
             statusCode: StatusCodes.Status201Created,
             isSuccess: true,
-            message: "Account created successfully",
+            message: "Account created successfully!",
             data: await _userService.CreateUser(requestDto)
             )
         );
