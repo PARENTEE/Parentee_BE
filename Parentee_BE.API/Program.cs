@@ -20,6 +20,7 @@ using Parentee_BE.DAL.Data.Exceptions;
 using Parentee_BE.DAL.Data.PaymentDTO;
 using Parentee_BE.DAL.Data.Repositories;
 using Parentee_BE.DAL.Data.Repositories.Interfaces;
+using Parentee_BE.DAL.Data.SmsDTO;
 using Parentee_BE.Middlewares;
 using Qdrant.Client;
 
@@ -205,6 +206,7 @@ builder.Services.AddScoped<IUserFamilyRoleService, UserFamilyRoleService>();
 builder.Services.AddScoped<TokenHelper>();
 
 builder.Services.Configure<PayOSOptions>(builder.Configuration.GetSection("PayOS"));
+builder.Services.Configure<SpeedSmsOptions>(builder.Configuration.GetSection("SpeedSms"));
 
 builder.Services.AddSingleton(sp =>
 {
@@ -215,6 +217,9 @@ builder.Services.AddSingleton(sp =>
 
 
 builder.Services.AddScoped<IChildService, ChildService>();
+
+
+builder.Services.AddHttpClient<ISmsSender, SpeedSmsClient>();
 
 #endregion
 
