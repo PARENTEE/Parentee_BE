@@ -16,7 +16,7 @@
 
     public enum PriceType { OneTime, RecurringMonth, RecurringYear }
 
-    public enum PurchaseStatus { Pending, Paid, Failed, Refunded, Chargeback }
+    public enum PurchaseStatus { Pending, Paid, Failed, Refunded, Chargeback, Canceled }
 
     public enum ReminderChannel { Push, Email, Sms }
 

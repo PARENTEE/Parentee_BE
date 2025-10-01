@@ -94,4 +94,12 @@ public class APIEndpointsConstant
         public const string UPDATE_FAMILY_ENDPOINT = FAMILY_ENDPOINT + "/{id}";
         public const string DELETE_FAMILY_ENDPOINT = FAMILY_ENDPOINT + "/{id}";
     }
+    
+    public static class PaymentEndpoints
+    {
+        public const string PAYMENT_ENGPOINT = API_ENDPOINT + "/payments";
+        public const string GET_ORDER = PAYMENT_ENGPOINT + "/{orderCode}";
+        public const string CREATE_LINK = PAYMENT_ENGPOINT + "/create-link";
+        public const string WEB_HOOK = PAYMENT_ENGPOINT + "/webhook";
+    }
 }

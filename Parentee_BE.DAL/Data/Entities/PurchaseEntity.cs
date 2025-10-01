@@ -14,6 +14,9 @@ public partial class PurchaseEntity
     [Column("id")]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public Guid Id { get; set; }
+    
+    [Column("order_code")]
+    public long OrderCode { get; set; }
 
     [Column("user_id")]
     public Guid UserId { get; set; }

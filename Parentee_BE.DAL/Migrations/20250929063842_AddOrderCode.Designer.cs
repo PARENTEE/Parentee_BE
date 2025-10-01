@@ -12,15 +12,15 @@ using Parentee_BE.DAL.Context;
 namespace Parentee_BE.DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250907044120_UpdateUserEntity")]
-    partial class UpdateUserEntity
+    [Migration("20250929063842_AddOrderCode")]
+    partial class AddOrderCode
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "9.0.8")
+                .HasAnnotation("ProductVersion", "9.0.9")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.HasPostgresExtension(modelBuilder, "citext");
@@ -1002,6 +1002,10 @@ namespace Parentee_BE.DAL.Migrations
                     b.Property<Guid?>("FamilyId")
                         .HasColumnType("uuid")
                         .HasColumnName("family_id");
+
+                    b.Property<long>("OrderCode")
+                        .HasColumnType("bigint")
+                        .HasColumnName("order_code");
 
                     b.Property<DateTime?>("PaidAt")
                         .HasColumnType("timestamp with time zone")
