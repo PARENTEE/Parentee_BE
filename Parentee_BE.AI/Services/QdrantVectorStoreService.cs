@@ -42,17 +42,10 @@ public class QdrantVectorStoreService : IVectorStoreService
             }
         );
 
-        // Keyword index for exact match (good for filtering)
-        await _qdrantClient.CreatePayloadIndexAsync(
-            collectionName: collectionName,
-            fieldName: "title",
-            schemaType: PayloadSchemaType.Keyword
-        );
-
         // Full-text index for semantic / hybrid search
         await _qdrantClient.CreatePayloadIndexAsync(
             collectionName: collectionName,
-            fieldName: "text",
+            fieldName: "content",
             schemaType: PayloadSchemaType.Text,
             indexParams: new PayloadIndexParams
             {

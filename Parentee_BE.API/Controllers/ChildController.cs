@@ -51,6 +51,18 @@ public class ChildController(IChildService childService, ILogger<ChildController
             message: "Get child successfully",
             data: child));
     }
+    
+    [HttpGet(APIEndpointsConstant.ChildEndpoints.GET_CHILD_TODAY_BY_ID_ENDPOINT)]
+    public async Task<IActionResult> GetChildTodayById(Guid id)
+    {
+        var child = await childService.GetChildTodayById(id);
+
+        return Ok(ApiResponseBuilder.BuildResponse(
+            statusCode: StatusCodes.Status200OK,
+            isSuccess: true,
+            message: "Get child today successfully",
+            data: child));
+    }
 
     [HttpDelete(APIEndpointsConstant.ChildEndpoints.DELETE_CHILD_ENDPOINT)]
     public async Task<IActionResult> DeleteChild(Guid id)

@@ -41,7 +41,7 @@ public class RagChatService(
     }
 
 
-    private async Task<List<VectorSearchResult<DocumentVectorModel>>> HybridSearchData(string collectionName, string question)
+    private async Task<List<VectorSearchResult<DocumentModel>>> HybridSearchData(string collectionName, string question)
     {
         // Generate embeddings
         var embeddings = await _textEmbeddingGenerator.GenerateAsync(question);
@@ -52,11 +52,11 @@ public class RagChatService(
             throw new InvalidOperationException("Generated embedding is empty or invalid.");
 
         // Perform hybrid search
-        var collection = (IKeywordHybridSearchable<DocumentVectorModel>) vectorStore.GetCollection<ulong, DocumentVectorModel>(collectionName);
-        var options = new HybridSearchOptions<DocumentVectorModel>
+        var collection = (IKeywordHybridSearchable<DocumentModel>) vectorStore.GetCollection<Guid, DocumentModel>(collectionName);
+        var options = new HybridSearchOptions<DocumentModel>
         {
-            VectorProperty = r => r.TextEmbedding,
-            AdditionalProperty = r => r.Text,
+            VectorProperty = r => r.Vectors,
+            // AdditionalProperty = r => r.Content,
         };
 
         var keywords = ExtractKeywords(question);
@@ -71,19 +71,19 @@ public class RagChatService(
 
     public async Task<string> Answer(UserArgument userArgument, string question)
     {
-        const string collectionName = "parentee";
+        const string collectionName = "parentee_docs";
         
         // Find related Information
         var searchResultList = await HybridSearchData(collectionName, question);
         
         // Add prompt template
-        var arguments = ClaimRequestPrompt.CreatePromptArguments(userArgument, question, searchResultList);
+        var arguments = ParenteePrompt.CreatePromptArguments(userArgument, question, searchResultList);
         
         var promptTemplateConfig = new PromptTemplateConfig
         {
-            Template = ClaimRequestPrompt.GetPromptTemplate(),
+            Template = ParenteePrompt.GetPromptTemplate(),
             TemplateFormat = "handlebars",
-            Name = "ClaimRequestChatPrompt",
+            Name = "ParenteeChatPrompt",
             AllowDangerouslySetContent = true
         };
         
