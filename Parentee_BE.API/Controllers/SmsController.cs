@@ -1,3 +1,4 @@
+using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Parentee_BE.BLL.Services.Interfaces;
 using Parentee_BE.Constants;
@@ -7,10 +8,20 @@ namespace Parentee_BE.API.Controllers;
 
 public class SmsController(ISmsSender _smsSender, ILogger<SmsController> _logger) : BaseController<SmsController>(_logger)
 {
-    [HttpPost(APIEndpointsConstant.SmsEndpoints.SMS_ENDPOINT)]
+    [HttpPost("test")]
     public async Task<IActionResult> Send([FromBody] SendSmsRequest req, CancellationToken ct)
     {
-        var result = await _smsSender.SendAsync(req.To, req.Content, req.SmsType, req.Sender, ct);
-        return Ok(new { result.TranId, result.TotalSms, result.TotalPrice, result.InvalidPhone });
+        var to = NormalizePhone(req.To);
+
+        var rawJsonResponse = await _smsSender.SendAsync(req, ct);
+        return Content(rawJsonResponse, "application/json", Encoding.UTF8);
     }
+
+    private static string NormalizePhone(string raw)
+    {
+        var digits = new string(raw.Where(char.IsDigit).ToArray());
+        if (digits.StartsWith("0")) return "84" + digits[1..];
+        return digits;
+    }
+
 }
