@@ -1,14 +1,17 @@
 using System.Security.Claims;
 using System.Text;
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Microsoft.SemanticKernel;
+using Parentee_BE.AI.Plugins;
 
 using Net.PayOSHQ;
 using Parentee_BE.AI.Services;
@@ -18,10 +21,8 @@ using Parentee_BE.BLL.Services.Implements;
 using Parentee_BE.BLL.Services.Interfaces;
 using Parentee_BE.DAL.Context;
 using Parentee_BE.DAL.Data.Exceptions;
-using Parentee_BE.DAL.Data.PaymentDTO;
 using Parentee_BE.DAL.Data.Repositories;
 using Parentee_BE.DAL.Data.Repositories.Interfaces;
-using Parentee_BE.DAL.Data.SmsDTO;
 using Parentee_BE.Middlewares;
 using Qdrant.Client;
 
@@ -238,19 +239,11 @@ builder.Services.AddLogging(loggingBuilder =>
 
 // Add Semantic Kernel
 
-#pragma warning disable SKEXP0010
-var llmModel = "gemini-2.0-flash";
-var llmApiKey = "AIzaSyCmtp4ctiu7RcF_Gij0bZILzDM5ZvbkoK4";
-var embeddingModel = "gemini-embedding-001";
-var embeddingApiKey = "AIzaSyCmtp4ctiu7RcF_Gij0bZILzDM5ZvbkoK4";
-var vectoreStoreConnectionString = "";
-var vectoreStoreApiKey =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3MiOiJtIn0.JUla-V8J09Gi_3vThJBKnRTGKDhWOv9X5RCgRcGjN4U";
-
+#pragma warning disable SKEXP0010, OPENAI001
 // LLM
 builder.Services.AddGoogleAIGeminiChatCompletion(
     builder.Configuration["AI:LLMModel"],
-    builder.Configuration["AI:LLMAPIKey"]
+    builder.Configuration["AI:LLMApiKey"]
 );
 
 // Embedding
@@ -289,7 +282,6 @@ builder.Services.AddScoped<Kernel>(sp =>
 // RAGChatService
 builder.Services.AddScoped<RagChatService>();
 builder.Services.AddScoped<IVectorStoreService, QdrantVectorStoreService>();
-builder.Services.AddScoped<IProductService, ProductService>();
 
 #endregion
 

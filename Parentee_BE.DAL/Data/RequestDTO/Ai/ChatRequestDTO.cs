@@ -8,6 +8,9 @@ public class ChatRequestDTO
     [MaxLength(50, ErrorMessage = "Role length cannot be more than 256 characters")]
     public string Name { get; set; }
     
+    [Required(ErrorMessage = "ChildId is required")]
+    public Guid ChildId { get; set; }
+    
     [Required(ErrorMessage = "Message is required")]
     [MaxLength(256, ErrorMessage = "Role length cannot be more than 256 characters")]
     public string Message { get; set; }

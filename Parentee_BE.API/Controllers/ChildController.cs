@@ -1,13 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Mvc;
+using Parentee_BE.AI.Plugins.PluginDto;
 using Parentee_BE.BLL.Services.Interfaces;
 using Parentee_BE.Constants;
 using Parentee_BE.DAL.Data.Entities;
 using Parentee_BE.DAL.Data.Metadatas;
 using Parentee_BE.DAL.Data.RequestDTO.Children;
+using Parentee_BE.DAL.Data.ResponseDTO.Children;
 
 namespace Parentee_BE.API.Controllers;
 
-public class ChildController(IChildService childService, ILogger<ChildController> logger) : BaseController<ChildController>(logger)
+public class ChildController(IChildService childService, IMapper mapper, ILogger<ChildController> logger) : BaseController<ChildController>(logger)
 {
     [HttpPost(APIEndpointsConstant.ChildEndpoints.CREATE_CHILD_ENDPOINT)]
     public async Task<IActionResult> CreateChild([FromBody] CreateChildRequestDTO request)
@@ -56,12 +59,13 @@ public class ChildController(IChildService childService, ILogger<ChildController
     public async Task<IActionResult> GetChildTodayById(Guid id)
     {
         var child = await childService.GetChildTodayById(id);
-
+        
         return Ok(ApiResponseBuilder.BuildResponse(
             statusCode: StatusCodes.Status200OK,
             isSuccess: true,
             message: "Get child today successfully",
-            data: child));
+            data: mapper.Map<GetChildTodayForAiResponse>(child)
+        ));
     }
 
     [HttpDelete(APIEndpointsConstant.ChildEndpoints.DELETE_CHILD_ENDPOINT)]

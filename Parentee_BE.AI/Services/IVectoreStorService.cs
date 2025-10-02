@@ -12,6 +12,5 @@ public interface IVectorStoreService
 
     Task DeleteCollection(string collectionName);
 
-    Task CreatePoint(string collectionName, string text);
     Task<RetrievedPoint?> GetPoint(string collectionName, ulong id);
 }

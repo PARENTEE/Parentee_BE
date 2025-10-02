@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.AI;
 using Microsoft.Extensions.VectorData;
-using Parentee_BE.AI.Models;
 using Qdrant.Client;
 using Qdrant.Client.Grpc;
 
@@ -69,21 +68,6 @@ public class QdrantVectorStoreService : IVectorStoreService
 
     #region Points
 
-    public async Task CreatePoint(string collectionName, string text)
-    {
-        var embedding = await _textEmbeddingGenerator.GenerateAsync(text);
-        var collection = _vectorStore.GetCollection<ulong, DocumentVectorModel>(collectionName);
-
-        var point = new DocumentVectorModel()
-        {
-            Key = BitConverter.ToUInt64(Guid.NewGuid().ToByteArray()),
-            Title = "New Document",
-            DocumentUri = "https://music.youtube.com/watch?v=BBj3SCImk_A",
-            Text = text,
-            TextEmbedding = embedding.Vector
-        };
-        await collection.UpsertAsync(point);
-    }
     
     public async Task<RetrievedPoint?> GetPoint(string collectionName, ulong id)
     {
@@ -98,36 +82,5 @@ public class QdrantVectorStoreService : IVectorStoreService
     }
 
     #endregion
-
-    #region Chat
-
-    // public async Task<RetrievedPoint?> HybridSearch (string collectionName, ulong id)
-    // {
-    //     await _qdrantClient.QueryAsync(
-    //         collectionName: collectionName,
-    //         prefetch: new List < PrefetchQuery > {
-    //             new() {
-    //                 Query = new(float, uint)[] {
-    //                     (0.22f, 1), (0.8f, 42),
-    //                 },
-    //                 Using = "sparse",
-    //                 Limit = 20
-    //             },
-    //             new() {
-    //                 Query = new float[] {
-    //                     0.01f, 0.45f, 0.67f
-    //                 },
-    //                 Using = "dense",
-    //                 Limit = 20
-    //             }
-    //         },
-    //         query: Fusion.Rrf
-    //     );
-    //
-    //     return results.FirstOrDefault();
-    // }
-
-    #endregion
-    
     
 }

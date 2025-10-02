@@ -58,7 +58,7 @@ public class ChildService(
         return mapper.Map<CreateChildResponseDTO>(child);
     }
     
-    public async Task<GetChildTodayResponse> GetChildTodayById(Guid id)
+    public async Task<ChildEntity> GetChildTodayById(Guid id)
     {
         var today = DateTime.UtcNow.Date;
         var childRepository = unitOfWork.GetRepository<ChildEntity>();
@@ -71,7 +71,7 @@ public class ChildService(
 
         return child == null ? 
             throw new NotFoundException($"Child with id {id} not found") : 
-            mapper.Map<GetChildTodayResponse>(child);
+            child;
     }
 
     public async Task<CreateChildResponseDTO> UpdateChild(Guid id, CreateChildRequestDTO request)

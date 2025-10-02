@@ -80,21 +80,4 @@ public class QdrantController(ILogger<QdrantController> logger, IVectorStoreServ
             data: point
         ));
     }
-    
-    
-    /// <summary>
-    /// Create a new point.
-    /// </summary>
-    [HttpPost("points")]
-    public async Task<IActionResult> CreatePoint([FromQuery] string collectionName, [FromBody] string text)
-    {
-        await vectorStoreService.CreatePoint(collectionName, text);
-        return Ok(ApiResponseBuilder.BuildResponse(
-            statusCode: StatusCodes.Status201Created,
-            isSuccess: true,
-            message: $"Collection '{collectionName}' created successfully",
-            data: true
-        ));
-    }
-
 }
