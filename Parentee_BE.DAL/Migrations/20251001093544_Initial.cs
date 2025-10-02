@@ -317,6 +317,8 @@ namespace Parentee_BE.DAL.Migrations
                     full_name = table.Column<string>(type: "text", nullable: true),
                     phone = table.Column<string>(type: "text", nullable: true),
                     password = table.Column<string>(type: "text", nullable: false),
+                    signup_method = table.Column<string>(type: "text", nullable: false),
+                    dob = table.Column<DateOnly>(type: "date", nullable: false),
                     avatar_image_id = table.Column<Guid>(type: "uuid", nullable: true),
                     is_premium = table.Column<bool>(type: "boolean", nullable: false, defaultValue: false),
                     is_active = table.Column<bool>(type: "boolean", nullable: false, defaultValue: true),
@@ -408,6 +410,7 @@ namespace Parentee_BE.DAL.Migrations
                 columns: table => new
                 {
                     id = table.Column<Guid>(type: "uuid", nullable: false, defaultValueSql: "gen_random_uuid()"),
+                    order_code = table.Column<long>(type: "bigint", nullable: false),
                     user_id = table.Column<Guid>(type: "uuid", nullable: false),
                     family_id = table.Column<Guid>(type: "uuid", nullable: true),
                     product_id = table.Column<Guid>(type: "uuid", nullable: false),

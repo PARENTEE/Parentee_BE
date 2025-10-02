@@ -1,3 +1,4 @@
+using Parentee_BE.DAL.Data.RequestDTO.Sms;
 using Parentee_BE.DAL.Data.ResponseDTO.Sms;
 using Parentee_BE.DAL.Data.SmsDTO;
 
@@ -5,11 +6,8 @@ namespace Parentee_BE.BLL.Services.Interfaces;
 
 public interface ISmsSender
 {
-    Task<SpeedSmsSendResult> SendAsync(
-        IEnumerable<string> to,
-        string content,
-        int? smsType = null,
-        string? sender = null,
+    Task<string> SendAsync(
+        SendSmsRequest data,
         CancellationToken ct = default);
 
     Task<IReadOnlyList<SpeedSmsStatusItem>> GetStatusAsync(

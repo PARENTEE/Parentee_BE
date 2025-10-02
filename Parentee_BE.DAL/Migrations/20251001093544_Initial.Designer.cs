@@ -12,8 +12,8 @@ using Parentee_BE.DAL.Context;
 namespace Parentee_BE.DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250929063842_AddOrderCode")]
-    partial class AddOrderCode
+    [Migration("20251001093544_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
