@@ -1,18 +1,14 @@
 using System.Security.Claims;
 using System.Text;
-using AutoMapper;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Microsoft.SemanticKernel;
-using Parentee_BE.AI.Plugins;
-
 using Net.PayOSHQ;
 using Parentee_BE.AI.Services;
 using Parentee_BE.API.OpenAPI;
@@ -21,8 +17,10 @@ using Parentee_BE.BLL.Services.Implements;
 using Parentee_BE.BLL.Services.Interfaces;
 using Parentee_BE.DAL.Context;
 using Parentee_BE.DAL.Data.Exceptions;
+using Parentee_BE.DAL.Data.PaymentDTO;
 using Parentee_BE.DAL.Data.Repositories;
 using Parentee_BE.DAL.Data.Repositories.Interfaces;
+using Parentee_BE.DAL.Data.SmsDTO;
 using Parentee_BE.Middlewares;
 using Qdrant.Client;
 
@@ -202,6 +200,7 @@ builder.Services.AddScoped<ISleepService, SleepService>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddScoped<IPurchaseService, PurchaseService>();
 builder.Services.AddScoped<IUserFamilyRoleService, UserFamilyRoleService>();
+builder.Services.AddScoped<IProductService, ProductService>();
 
 
 builder.Services.AddScoped<TokenHelper>();
@@ -272,8 +271,8 @@ builder.Services.AddScoped<Kernel>(sp =>
 {
     var kernelBuilder = Kernel.CreateBuilder();
 
-    kernelBuilder.AddGoogleAIGeminiChatCompletion(llmModel, llmApiKey);
-    kernelBuilder.AddGoogleAIEmbeddingGenerator(embeddingModel, embeddingApiKey);
+    kernelBuilder.AddGoogleAIGeminiChatCompletion(builder.Configuration["AI:LLMModel"], builder.Configuration["AI:LLMApiKey"]);
+    kernelBuilder.AddGoogleAIEmbeddingGenerator(builder.Configuration["AI:EmbeddingModel"], builder.Configuration["AI:EmbeddingApiKey"]);
 
     return kernelBuilder.Build();
 });
