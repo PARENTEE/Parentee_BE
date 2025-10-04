@@ -70,7 +70,7 @@ namespace Parentee_BE.DAL.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("audit_log");
+                    b.ToTable("audit_log", (string)null);
                 });
 
             modelBuilder.Entity("Parentee_BE.DAL.Data.Entities.AuthIdentityEntity", b =>
@@ -112,7 +112,7 @@ namespace Parentee_BE.DAL.Migrations
                     b.HasIndex(new[] { "Provider", "ProviderUid" }, "auth_identity_provider_provider_uid_key")
                         .IsUnique();
 
-                    b.ToTable("auth_identity");
+                    b.ToTable("auth_identity", (string)null);
                 });
 
             modelBuilder.Entity("Parentee_BE.DAL.Data.Entities.CalendarEventEntity", b =>
@@ -215,7 +215,7 @@ namespace Parentee_BE.DAL.Migrations
 
                     b.HasIndex(new[] { "FamilyId" }, "idx_child_family");
 
-                    b.ToTable("child");
+                    b.ToTable("child", (string)null);
                 });
 
             modelBuilder.Entity("Parentee_BE.DAL.Data.Entities.ChildPhotoEntity", b =>
@@ -256,7 +256,7 @@ namespace Parentee_BE.DAL.Migrations
                     b.HasIndex("ImageId")
                         .HasDatabaseName("IX_child_photo_image_id1");
 
-                    b.ToTable("child_photo");
+                    b.ToTable("child_photo", (string)null);
                 });
 
             modelBuilder.Entity("Parentee_BE.DAL.Data.Entities.ChildVaccinationEntity", b =>
@@ -346,7 +346,7 @@ namespace Parentee_BE.DAL.Migrations
 
                     b.HasIndex(new[] { "ChildId", "ScheduledAt" }, "idx_child_vacc_sched");
 
-                    b.ToTable("child_vaccination");
+                    b.ToTable("child_vaccination", (string)null);
                 });
 
             modelBuilder.Entity("Parentee_BE.DAL.Data.Entities.DiaperChangeEntity", b =>
@@ -412,7 +412,7 @@ namespace Parentee_BE.DAL.Migrations
                     b.HasIndex(new[] { "ChildId", "ChangedAt" }, "idx_diaper_child_time")
                         .IsDescending(false, true);
 
-                    b.ToTable("diaper_change");
+                    b.ToTable("diaper_change", (string)null);
                 });
 
             modelBuilder.Entity("Parentee_BE.DAL.Data.Entities.EntitlementEntity", b =>
@@ -472,7 +472,7 @@ namespace Parentee_BE.DAL.Migrations
                     b.HasIndex(new[] { "FamilyId", "ProductId", "StartsAt" }, "entitlement_family_id_product_id_starts_at_key")
                         .IsUnique();
 
-                    b.ToTable("entitlement");
+                    b.ToTable("entitlement", (string)null);
                 });
 
             modelBuilder.Entity("Parentee_BE.DAL.Data.Entities.FamilyEntity", b =>
@@ -513,7 +513,7 @@ namespace Parentee_BE.DAL.Migrations
 
                     b.HasIndex("CoverImageId");
 
-                    b.ToTable("family");
+                    b.ToTable("family", (string)null);
                 });
 
             modelBuilder.Entity("Parentee_BE.DAL.Data.Entities.FeedingEntity", b =>
@@ -592,7 +592,7 @@ namespace Parentee_BE.DAL.Migrations
                     b.HasIndex(new[] { "ChildId", "StartedAt" }, "idx_feeding_child_time")
                         .IsDescending(false, true);
 
-                    b.ToTable("feeding");
+                    b.ToTable("feeding", (string)null);
                 });
 
             modelBuilder.Entity("Parentee_BE.DAL.Data.Entities.ImageEntity", b =>
@@ -641,7 +641,7 @@ namespace Parentee_BE.DAL.Migrations
 
                     b.HasIndex(new[] { "FamilyId" }, "idx_image_family");
 
-                    b.ToTable("image");
+                    b.ToTable("image", (string)null);
                 });
 
             modelBuilder.Entity("Parentee_BE.DAL.Data.Entities.InvoiceEntity", b =>
@@ -708,7 +708,7 @@ namespace Parentee_BE.DAL.Migrations
                     b.HasIndex(new[] { "InvoiceNo" }, "invoice_invoice_no_key")
                         .IsUnique();
 
-                    b.ToTable("invoice");
+                    b.ToTable("invoice", (string)null);
                 });
 
             modelBuilder.Entity("Parentee_BE.DAL.Data.Entities.MeasurementEntity", b =>
@@ -784,7 +784,7 @@ namespace Parentee_BE.DAL.Migrations
                     b.HasIndex(new[] { "ChildId", "MeasuredAt" }, "idx_measurement_child_time")
                         .IsDescending(false, true);
 
-                    b.ToTable("measurement");
+                    b.ToTable("measurement", (string)null);
                 });
 
             modelBuilder.Entity("Parentee_BE.DAL.Data.Entities.NotificationOutboxEntity", b =>
@@ -847,7 +847,7 @@ namespace Parentee_BE.DAL.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("notification_outbox");
+                    b.ToTable("notification_outbox", (string)null);
                 });
 
             modelBuilder.Entity("Parentee_BE.DAL.Data.Entities.PriceEntity", b =>
@@ -910,7 +910,7 @@ namespace Parentee_BE.DAL.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("price");
+                    b.ToTable("price", (string)null);
                 });
 
             modelBuilder.Entity("Parentee_BE.DAL.Data.Entities.ProductEntity", b =>
@@ -963,7 +963,7 @@ namespace Parentee_BE.DAL.Migrations
                     b.HasIndex(new[] { "Code" }, "product_code_key")
                         .IsUnique();
 
-                    b.ToTable("product");
+                    b.ToTable("product", (string)null);
                 });
 
             modelBuilder.Entity("Parentee_BE.DAL.Data.Entities.PurchaseEntity", b =>
@@ -1059,7 +1059,7 @@ namespace Parentee_BE.DAL.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("purchase");
+                    b.ToTable("purchase", (string)null);
                 });
 
             modelBuilder.Entity("Parentee_BE.DAL.Data.Entities.RefundEntity", b =>
@@ -1111,7 +1111,7 @@ namespace Parentee_BE.DAL.Migrations
 
                     b.HasIndex("PurchaseId");
 
-                    b.ToTable("refund");
+                    b.ToTable("refund", (string)null);
                 });
 
             modelBuilder.Entity("Parentee_BE.DAL.Data.Entities.ReminderEntity", b =>
@@ -1150,7 +1150,7 @@ namespace Parentee_BE.DAL.Migrations
 
                     b.HasIndex("TaskId");
 
-                    b.ToTable("reminder");
+                    b.ToTable("reminder", (string)null);
                 });
 
             modelBuilder.Entity("Parentee_BE.DAL.Data.Entities.SleepEntity", b =>
@@ -1219,7 +1219,7 @@ namespace Parentee_BE.DAL.Migrations
                     b.HasIndex(new[] { "ChildId", "StartedAt" }, "idx_sleep_child_time")
                         .IsDescending(false, true);
 
-                    b.ToTable("sleep");
+                    b.ToTable("sleep", (string)null);
                 });
 
             modelBuilder.Entity("Parentee_BE.DAL.Data.Entities.TaskEntity", b =>
@@ -1303,7 +1303,7 @@ namespace Parentee_BE.DAL.Migrations
 
                     b.HasIndex(new[] { "FamilyId", "StartsAt" }, "idx_task_family_time");
 
-                    b.ToTable("task");
+                    b.ToTable("task", (string)null);
                 });
 
             modelBuilder.Entity("Parentee_BE.DAL.Data.Entities.TaskRecurrenceEntity", b =>
@@ -1336,7 +1336,7 @@ namespace Parentee_BE.DAL.Migrations
 
                     b.HasIndex("TaskId");
 
-                    b.ToTable("task_recurrence");
+                    b.ToTable("task_recurrence", (string)null);
                 });
 
             modelBuilder.Entity("Parentee_BE.DAL.Data.Entities.UserEntity", b =>
@@ -1413,7 +1413,7 @@ namespace Parentee_BE.DAL.Migrations
                     b.HasIndex(new[] { "Email" }, "user_email_key")
                         .IsUnique();
 
-                    b.ToTable("user");
+                    b.ToTable("user", (string)null);
                 });
 
             modelBuilder.Entity("Parentee_BE.DAL.Data.Entities.UserFamilyRoleEntity", b =>
@@ -1454,7 +1454,7 @@ namespace Parentee_BE.DAL.Migrations
                     b.HasIndex(new[] { "UserId", "FamilyId" }, "user_family_role_user_id_family_id_key")
                         .IsUnique();
 
-                    b.ToTable("user_family_role");
+                    b.ToTable("user_family_role", (string)null);
                 });
 
             modelBuilder.Entity("Parentee_BE.DAL.Data.Entities.VaccineCatalogEntity", b =>
@@ -1498,7 +1498,7 @@ namespace Parentee_BE.DAL.Migrations
                     b.HasIndex(new[] { "Code" }, "vaccine_catalog_code_key")
                         .IsUnique();
 
-                    b.ToTable("vaccine_catalog");
+                    b.ToTable("vaccine_catalog", (string)null);
                 });
 
             modelBuilder.Entity("Parentee_BE.DAL.Data.Entities.AuditLogEntity", b =>

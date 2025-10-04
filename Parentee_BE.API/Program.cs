@@ -9,7 +9,6 @@ using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Microsoft.SemanticKernel;
-
 using Net.PayOSHQ;
 using Parentee_BE.AI.Services;
 using Parentee_BE.API.OpenAPI;
@@ -193,7 +192,6 @@ builder.Services.AddScoped(typeof(IUnitOfWork<>), typeof(UnitOfWork<>));
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<IAiService, AiService>();
 builder.Services.AddScoped<IFamilyService, FamilyService>();
 builder.Services.AddScoped<IFeedingService, FeedingService>();
 builder.Services.AddScoped<IDiaperChangeService, DiaperChangeService>();
@@ -202,6 +200,7 @@ builder.Services.AddScoped<ISleepService, SleepService>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services.AddScoped<IPurchaseService, PurchaseService>();
 builder.Services.AddScoped<IUserFamilyRoleService, UserFamilyRoleService>();
+builder.Services.AddScoped<IProductService, ProductService>();
 
 
 builder.Services.AddScoped<TokenHelper>();
@@ -244,19 +243,11 @@ builder.Services.AddLogging(loggingBuilder =>
 
 // Add Semantic Kernel
 
-#pragma warning disable SKEXP0010
-var llmModel = "gemini-2.0-flash";
-var llmApiKey = "AIzaSyCmtp4ctiu7RcF_Gij0bZILzDM5ZvbkoK4";
-var embeddingModel = "gemini-embedding-001";
-var embeddingApiKey = "AIzaSyCmtp4ctiu7RcF_Gij0bZILzDM5ZvbkoK4";
-var vectoreStoreConnectionString = "";
-var vectoreStoreApiKey =
-    "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJhY2Nlc3MiOiJtIn0.JUla-V8J09Gi_3vThJBKnRTGKDhWOv9X5RCgRcGjN4U";
-
+#pragma warning disable SKEXP0010, OPENAI001
 // LLM
 builder.Services.AddGoogleAIGeminiChatCompletion(
     builder.Configuration["AI:LLMModel"],
-    builder.Configuration["AI:LLMAPIKey"]
+    builder.Configuration["AI:LLMApiKey"]
 );
 
 // Embedding
@@ -286,8 +277,8 @@ builder.Services.AddScoped<Kernel>(sp =>
 {
     var kernelBuilder = Kernel.CreateBuilder();
 
-    kernelBuilder.AddGoogleAIGeminiChatCompletion(llmModel, llmApiKey);
-    kernelBuilder.AddGoogleAIEmbeddingGenerator(embeddingModel, embeddingApiKey);
+    kernelBuilder.AddGoogleAIGeminiChatCompletion(builder.Configuration["AI:LLMModel"], builder.Configuration["AI:LLMApiKey"]);
+    kernelBuilder.AddGoogleAIEmbeddingGenerator(builder.Configuration["AI:EmbeddingModel"], builder.Configuration["AI:EmbeddingApiKey"]);
 
     return kernelBuilder.Build();
 });
@@ -295,7 +286,6 @@ builder.Services.AddScoped<Kernel>(sp =>
 // RAGChatService
 builder.Services.AddScoped<RagChatService>();
 builder.Services.AddScoped<IVectorStoreService, QdrantVectorStoreService>();
-builder.Services.AddScoped<IProductService, ProductService>();
 
 #endregion
 

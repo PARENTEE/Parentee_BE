@@ -4,7 +4,8 @@ using System.Text.RegularExpressions;
 using Microsoft.Extensions.AI;
 using Microsoft.Extensions.VectorData;
 using Microsoft.SemanticKernel;
-using Microsoft.SemanticKernel.Embeddings;
+using Microsoft.SemanticKernel.ChatCompletion;
+using Microsoft.SemanticKernel.Connectors.Google;
 using Microsoft.SemanticKernel.PromptTemplates.Handlebars;
 using Parentee_BE.AI.Arugments;
 using Parentee_BE.AI.Models;
@@ -15,6 +16,7 @@ namespace Parentee_BE.AI.Services;
 public class RagChatService(
     VectorStore vectorStore,
     Kernel kernel,
+    IChatCompletionService chatCompletionService,
     IEmbeddingGenerator<string, Embedding<float>> _textEmbeddingGenerator )
 {
     private ICollection<string> ExtractKeywords(string query)
@@ -84,7 +86,17 @@ public class RagChatService(
             Template = ParenteePrompt.GetPromptTemplate(),
             TemplateFormat = "handlebars",
             Name = "ParenteeChatPrompt",
-            AllowDangerouslySetContent = true
+            AllowDangerouslySetContent = true, 
+            ExecutionSettings = new Dictionary<string, PromptExecutionSettings>
+            {
+                {
+                    PromptExecutionSettings.DefaultServiceId,
+                    new PromptExecutionSettings
+                    {
+                        FunctionChoiceBehavior = FunctionChoiceBehavior.Auto()
+                    }
+                }
+            }
         };
         
         // Invoke the prompt function
@@ -96,4 +108,47 @@ public class RagChatService(
         return templateResponse.ToString();
     }
 
+    public async Task<string> ChatAnswer(UserArgument userArgument, string question)
+    {
+        // Vector Search
+        const string collectionName = "parentee_docs";
+        // var searchResultList = await HybridSearchData(collectionName, question);
+        
+        // // Create the prompt template using handlebars format
+        // var templateFactory = new HandlebarsPromptTemplateFactory();
+        // var arguments = ParenteePrompt.CreatePromptArguments(userArgument, question, searchResultList);
+        //
+        // var promptTemplateConfig = new PromptTemplateConfig
+        // {
+        //     Template = ParenteePrompt.GetPromptTemplate(),
+        //     TemplateFormat = "handlebars",
+        //     Name = "ParenteeChatPrompt",
+        //     AllowDangerouslySetContent = true
+        // };
+        //
+        // // Render the prompt
+        // var promptTemplate = templateFactory.Create(promptTemplateConfig);
+        // var renderedPrompt = await promptTemplate.RenderAsync(kernel, arguments);
+        
+        // Chat
+        GeminiPromptExecutionSettings geminiPromptExecutionSettings = new()
+        {
+            ToolCallBehavior = GeminiToolCallBehavior.AutoInvokeKernelFunctions,
+            FunctionChoiceBehavior = FunctionChoiceBehavior.Auto()
+        };  
+
+        var history = new ChatHistory();
+        // history.AddSystemMessage(renderedPrompt);
+        history.AddSystemMessage("You are an AI to help me with light in my app, try to use the function plugin.");
+        history.AddUserMessage(question);
+   
+        var chatResult = await chatCompletionService.GetChatMessageContentAsync(
+            history, 
+            geminiPromptExecutionSettings,
+            kernel);
+        Console.WriteLine("Assistant > " + chatResult);
+
+        // var chatResult = await kernel.InvokePromptAsync(question);
+        return chatResult.Content;
+    }
 }
