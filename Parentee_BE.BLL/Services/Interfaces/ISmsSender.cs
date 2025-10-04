@@ -6,8 +6,11 @@ namespace Parentee_BE.BLL.Services.Interfaces;
 
 public interface ISmsSender
 {
-    Task<string> SendAsync(
-        SendSmsRequest data,
+    Task<SpeedSmsSendResult> SendAsync(
+        IEnumerable<string> to,
+        string content,
+        int? smsType = null,
+        string? sender = null,
         CancellationToken ct = default);
 
     Task<IReadOnlyList<SpeedSmsStatusItem>> GetStatusAsync(
