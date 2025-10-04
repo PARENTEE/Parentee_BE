@@ -219,7 +219,13 @@ builder.Services.AddSingleton(sp =>
 builder.Services.AddScoped<IChildService, ChildService>();
 
 
-builder.Services.AddHttpClient<ISmsSender, SpeedSmsClient>();
+builder.Services.AddHttpClient<ISmsSender, SpeedSmsClient>()
+    .ConfigurePrimaryHttpMessageHandler(() => new HttpClientHandler
+    {
+        // ⚠️ Dev-only: bỏ qua validate SSL cert
+        ServerCertificateCustomValidationCallback = 
+            HttpClientHandler.DangerousAcceptAnyServerCertificateValidator
+    });
 
 #endregion
 
