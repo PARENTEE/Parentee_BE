@@ -1,16 +1,21 @@
 using System.Security.Claims;
 using System.Text;
+using AutoMapper;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.AI;
 using Microsoft.Extensions.Options;
+using Microsoft.Extensions.VectorData;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Microsoft.SemanticKernel;
 using Net.PayOSHQ;
+using Parentee_BE.AI.Plugins;
 using Parentee_BE.AI.Services;
+using Parentee_BE.API.Hubs;
 using Parentee_BE.API.OpenAPI;
 using Parentee_BE.BLL.Helpers;
 using Parentee_BE.BLL.Services.Implements;
@@ -34,6 +39,7 @@ builder.Configuration.AddEnvironmentVariables();
 #endregion
 
 builder.Services.AddControllers();
+builder.Services.AddSignalR();
 builder.Services.AddHttpContextAccessor();
 
 builder.WebHost.ConfigureKestrel(options => { options.AllowSynchronousIO = true; });
@@ -256,11 +262,6 @@ builder.Services.AddGoogleAIEmbeddingGenerator(
     apiKey: builder.Configuration["AI:EmbeddingApiKey"]
 );
 
-// Pinecone
-// builder.Services.AddSingleton<PineconeClient>(
-//     sp => new PineconeClient(vectoreStoreApiKey));
-// builder.Services.AddPineconeVectorStore();
-
 // Qdrant
 builder.Services.AddSingleton<QdrantClient>(sp =>
     new QdrantClient(
@@ -273,13 +274,23 @@ builder.Services.AddSingleton<QdrantClient>(sp =>
 builder.Services.AddQdrantVectorStore();
 
 // Semantic Kernel
-builder.Services.AddScoped<Kernel>(sp =>
+builder.Services.AddTransient<Kernel>(sp =>
 {
     var kernelBuilder = Kernel.CreateBuilder();
 
     kernelBuilder.AddGoogleAIGeminiChatCompletion(builder.Configuration["AI:LLMModel"], builder.Configuration["AI:LLMApiKey"]);
     kernelBuilder.AddGoogleAIEmbeddingGenerator(builder.Configuration["AI:EmbeddingModel"], builder.Configuration["AI:EmbeddingApiKey"]);
+    
+    // DI for plugins
+    var childService = sp.GetRequiredService<IChildService>();
+    var mapper = sp.GetRequiredService<IMapper>();
+    var childLogger =  sp.GetRequiredService<ILogger<ChildPlugin>>();
 
+    var textEmbeddingGenerator = sp.GetRequiredService <IEmbeddingGenerator<string, Embedding<float>>>();
+    var vectorStore = sp.GetRequiredService<VectorStore>();
+
+    kernelBuilder.Plugins.AddFromObject(new ChildPlugin(childService, mapper, childLogger));
+    kernelBuilder.Plugins.AddFromObject(new InternalDocumentsPlugin(textEmbeddingGenerator, vectorStore));
     return kernelBuilder.Build();
 });
 
@@ -313,15 +324,13 @@ app.UseCors("AllowAll");
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
+app.MapHub<ChatHub>("/chatHub");
 
 // Apply migrations at startup
 using (var scope = app.Services.CreateScope())
 {
     var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
     dbContext.Database.Migrate(); // Applies any pending migrations
-    
 }
-
-
 
 app.Run();

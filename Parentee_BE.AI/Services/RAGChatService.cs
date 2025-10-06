@@ -110,26 +110,6 @@ public class RagChatService(
 
     public async Task<string> ChatAnswer(UserArgument userArgument, string question)
     {
-        // Vector Search
-        const string collectionName = "parentee_docs";
-        // var searchResultList = await HybridSearchData(collectionName, question);
-        
-        // // Create the prompt template using handlebars format
-        // var templateFactory = new HandlebarsPromptTemplateFactory();
-        // var arguments = ParenteePrompt.CreatePromptArguments(userArgument, question, searchResultList);
-        //
-        // var promptTemplateConfig = new PromptTemplateConfig
-        // {
-        //     Template = ParenteePrompt.GetPromptTemplate(),
-        //     TemplateFormat = "handlebars",
-        //     Name = "ParenteeChatPrompt",
-        //     AllowDangerouslySetContent = true
-        // };
-        //
-        // // Render the prompt
-        // var promptTemplate = templateFactory.Create(promptTemplateConfig);
-        // var renderedPrompt = await promptTemplate.RenderAsync(kernel, arguments);
-        
         // Chat
         GeminiPromptExecutionSettings geminiPromptExecutionSettings = new()
         {
@@ -139,7 +119,7 @@ public class RagChatService(
 
         var history = new ChatHistory();
         // history.AddSystemMessage(renderedPrompt);
-        history.AddSystemMessage("You are an AI to help me with light in my app, try to use the function plugin.");
+        history.AddSystemMessage(ParenteePrompt.GetChatPrompt("Trần Việt Cường", userArgument.ChildId));
         history.AddUserMessage(question);
    
         var chatResult = await chatCompletionService.GetChatMessageContentAsync(

@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Parentee_BE.DAL.Data.Entities;
-using Parentee_BE.DAL.Data.ResponseDTO.Measurement;
 
 namespace Parentee_BE.AI.Plugins.PluginDto;
 

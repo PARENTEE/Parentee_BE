@@ -19,8 +19,4 @@
       <ProjectReference Include="..\Parentee_BE.BLL\Parentee_BE.BLL.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="Plugins\DocumentPlugin\" />
-    </ItemGroup>
-
 </Project>
