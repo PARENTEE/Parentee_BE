@@ -1,4 +1,5 @@
 ﻿
+using Google.Apis.Auth;
 using Microsoft.AspNetCore.Authentication;
 using Parentee_BE.DAL.Data.RequestDto.Auth;
 
@@ -8,6 +9,6 @@ public interface IAuthService
 {
     Task<string> HandleLogin(LoginRequestDTO loginRequestDto);
 
-    Task<string> HandleGoogleLogin(AuthenticateResult authenticateResult);
+    Task<string> HandleGoogleLogin(GoogleJsonWebSignature.Payload authenticateResult);
 
 }

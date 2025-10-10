@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using Google.Apis.Auth;
+using Microsoft.AspNetCore.Authentication;
 using Parentee_BE.BLL.Helpers;
 using Parentee_BE.BLL.Services.Interfaces;
 using Parentee_BE.DAL.Data.Entities;
@@ -39,14 +40,12 @@ public class AuthService
     }
     
     
-    public async Task<string> HandleGoogleLogin(AuthenticateResult authenticateResult)
+    public async Task<string> HandleGoogleLogin(GoogleJsonWebSignature.Payload payload)
     {
-        var principal = authenticateResult.Principal;
-
-        var email = principal?.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value;
-        var fullName = principal?.FindFirst(System.Security.Claims.ClaimTypes.Name)?.Value;
-        var givenName = principal?.FindFirst(System.Security.Claims.ClaimTypes.GivenName)?.Value;
-        var surname = principal?.FindFirst(System.Security.Claims.ClaimTypes.Surname)?.Value;
+        var email = payload.Email;
+        var fullName = payload.Name;
+        var givenName = payload.GivenName;
+        var surname = payload.Name;
         
         // Check if account exists
         var account = await _unitOfWork.GetRepository<UserEntity>()

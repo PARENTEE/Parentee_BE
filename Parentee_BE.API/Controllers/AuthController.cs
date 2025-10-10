@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using Google.Apis.Auth;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Parentee_BE.BLL.Services.Interfaces;
@@ -24,27 +25,21 @@ public class AuthController(
             data: await authService.HandleLogin(requestDto)
         ));
     }
-    
-    [HttpGet(APIEndpointsConstant.AuthEndpoints.SIGNIN_GOOGLE)]
-    public async Task SigninGoogle()
+
+    [HttpPost("google")]
+    public async Task<IActionResult> GoogleSignIn([FromBody] GoogleSignInRequest request)
     {
-        await HttpContext.ChallengeAsync(GoogleDefaults.AuthenticationScheme,
-            new AuthenticationProperties
-            {
-                RedirectUri = Url.Action("GoogleResponse", "Auth")
-            });
-    }
-    
-    [HttpGet(APIEndpointsConstant.AuthEndpoints.GOOGLE_RESPONSE)]
-    public async Task<IActionResult> GoogleResponse()
-    {
-        var authenticateResult = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-        
+        var payload = await GoogleJsonWebSignature.ValidateAsync(request.IdToken, new GoogleJsonWebSignature.ValidationSettings());
+
+        // payload.Email, payload.Name, payload.Picture, etc.
+
+        var token = await authService.HandleGoogleLogin(payload);
+
         return Ok(ApiResponseBuilder.BuildResponse(
-            statusCode: StatusCodes.Status200OK,
-            isSuccess: true,
-            message: "Signin google successful",
-            data: await authService.HandleGoogleLogin(authenticateResult)
+            200,
+            true,
+            "Google sign-in successful",
+            token
         ));
     }
 }

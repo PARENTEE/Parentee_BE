@@ -16,35 +16,35 @@ public class UserController : BaseController<UserController>
     #endregion
     
     #region Constructors
-    public UserController (ILogger<UserController> logger, IUserService accountService) : base(logger)
+    public UserController (ILogger<UserController> logger, IUserService userService) : base(logger)
     {
-        _userService = accountService;
+        _userService = userService;
     }
 
     #endregion
 
     #region Get Method
-    [HttpGet(APIEndpointsConstant.AccountEndpoints.GET_ACCOUNT_ENDPOINT)]
-    public string GetAccount()
+    [HttpGet(APIEndpointsConstant.UserEndpoints.GET_USER_ENDPOINT)]
+    public string GetUser()
     {
-        throw new NotFoundException("Account not found");
+        throw new NotFoundException("User not found");
     }
     
     [Authorize]
-    [HttpGet(APIEndpointsConstant.AccountEndpoints.GET_CURRENT_ACCOUNT_ENDPOINT)]
+    [HttpGet(APIEndpointsConstant.UserEndpoints.GET_CURRENT_USER_ENDPOINT)]
     public async Task<IActionResult> GetCurrent()
     {
         return Ok(ApiResponseBuilder.BuildResponse(
                 statusCode: StatusCodes.Status201Created,
                 isSuccess: true,
-                message: "Get current account successfully",
+                message: "Get current User successfully",
                 data:  await _userService.GetCurrentUser()
             )
         );
     }
     
     [Authorize]
-    [HttpGet(APIEndpointsConstant.AccountEndpoints.GET_MANY_ACCOUNTS_ENDPOINT)]
+    [HttpGet(APIEndpointsConstant.UserEndpoints.GET_MANY_USERS_ENDPOINT)]
     public async Task<IActionResult> GetMany(
         [FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10
         )
@@ -52,20 +52,20 @@ public class UserController : BaseController<UserController>
         return Ok(ApiResponseBuilder.BuildResponse(
                 statusCode: StatusCodes.Status201Created,
                 isSuccess: true,
-                message: "Get many accounts successfully",
+                message: "Get many Users successfully",
                 data:  await _userService.GetManyUsers(pageSize: pageSize, pageNumber: pageNumber)
             )
         );
     }
     
     [Authorize]
-    [HttpGet(APIEndpointsConstant.AccountEndpoints.GET_ACCOUNT_BY_ID_ENDPOINT)]
-    public async Task<IActionResult> GetAccountById([FromRoute] Guid id)
+    [HttpGet(APIEndpointsConstant.UserEndpoints.GET_USER_BY_ID_ENDPOINT)]
+    public async Task<IActionResult> GetUserById([FromRoute] Guid id)
     {
         return Ok(ApiResponseBuilder.BuildResponse(
                 statusCode: StatusCodes.Status201Created,
                 isSuccess: true,
-                message: "Account created successfully",
+                message: "User created successfully",
                 data:  await _userService.GetUserById(id)
                 )
         );
@@ -74,14 +74,14 @@ public class UserController : BaseController<UserController>
     
     #region Post Method
     
-    [HttpPost(APIEndpointsConstant.AccountEndpoints.CREATE_ACCOUNT_ENDPOINT)]
+    [HttpPost(APIEndpointsConstant.UserEndpoints.CREATE_USER_ENDPOINT)]
     [ValidAttributeActionFilter]
-    public async Task<IActionResult> CreateAccount([FromBody] CreateUserRequestDTO requestDto)
+    public async Task<IActionResult> CreateUser([FromBody] CreateUserRequestDTO requestDto)
     {
         return Ok(ApiResponseBuilder.BuildResponse(
             statusCode: StatusCodes.Status201Created,
             isSuccess: true,
-            message: "Account created successfully!",
+            message: "User created successfully!",
             data: await _userService.CreateUser(requestDto)
             )
         );
@@ -90,16 +90,16 @@ public class UserController : BaseController<UserController>
     #endregion
     
     #region Put Method
-    [HttpPut(APIEndpointsConstant.AccountEndpoints.UPDATE_ACCOUNT_ENDPOINT)]
+    [HttpPut(APIEndpointsConstant.UserEndpoints.UPDATE_USER_ENDPOINT)]
     [ValidAttributeActionFilter]
-    public async Task<IActionResult> UpdateAccount(
+    public async Task<IActionResult> UpdateUser(
         [FromRoute] Guid id,
         [FromBody] UpdateUserRequestDTO user)
     {
         return Ok(ApiResponseBuilder.BuildResponse(
             statusCode: StatusCodes.Status200OK,
             isSuccess: true,
-            message: "Account updated successfully",
+            message: "User updated successfully",
             data: await _userService.UpdateUser(id, user)
             )
         );
@@ -107,13 +107,13 @@ public class UserController : BaseController<UserController>
     #endregion
     
     #region Delete Method
-    [HttpDelete(APIEndpointsConstant.AccountEndpoints.DELETE_ACCOUNT_ENDPOINT)]
-    public async Task<IActionResult> DeleteAccount([FromRoute] Guid id)
+    [HttpDelete(APIEndpointsConstant.UserEndpoints.DELETE_USER_ENDPOINT)]
+    public async Task<IActionResult> DeleteUser([FromRoute] Guid id)
     {
         return Ok(ApiResponseBuilder.BuildResponse(
             statusCode: StatusCodes.Status200OK,
             isSuccess: true,
-            message: "Account deleted successfully",
+            message: "User deleted successfully",
             data: await _userService.DeleteUser(id)
             )
         );

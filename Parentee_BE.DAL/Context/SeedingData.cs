@@ -35,7 +35,7 @@ public static class SeedingData
     ];
 
     private static readonly List<FamilyEntity> Families =
-    [
+    [ 
         new FamilyEntity
         {
             Id = Guid.NewGuid(),

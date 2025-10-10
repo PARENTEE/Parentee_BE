@@ -9,17 +9,18 @@ public class CreateUserRequestDTO
     public string Email { get; set; }
     
     [Required(ErrorMessage = "Password is required")]
-    [Length(10, 100, ErrorMessage = "Password length must be in between 10 and 100 characters")]
-    public string Password { get; set; }
+    [Length(8, 100, ErrorMessage = "Password length must be in between 10 and 100 characters")]
+    public string Password { get; set; }    
     
     [Required(ErrorMessage = "First name is required")]
     [MaxLength(50, ErrorMessage = "First name length cannot be more than 50 characters")]
-    public string FirstName { get; set; }
+    public string FullName { get; set; }
     
-    [Required(ErrorMessage = "Last name is required")]
-    [MaxLength(50, ErrorMessage = "Last name length cannot be more than 50 characters")]
-    public string LastName { get; set; }
+    [Required(ErrorMessage = "Phone number is required")]
+    [MaxLength(15, ErrorMessage = "Phone number cannot be more than 15 digits")]
+    [RegularExpression(@"^\+?\d{7,15}$", ErrorMessage = "Invalid phone number format")]
+    public string Phone { get; set; }
     
-    [Required(ErrorMessage = "Dob is required!")]
-    public DateOnly Dob { get; set; }
+//    [Required(ErrorMessage = "Dob is required!")]
+//    public DateOnly Dob { get; set; }
 }

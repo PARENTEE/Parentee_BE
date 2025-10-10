@@ -19,16 +19,16 @@ public class APIEndpointsConstant
         public const string GOOGLE_RESPONSE = AUTH_ENDPOINT + "/google-response";
     }
     
-    public static class AccountEndpoints
+    public static class UserEndpoints
     {
-        public const string ACCOUNT_ENDPOINT = API_ENDPOINT + "/account";
-        public const string GET_ACCOUNT_ENDPOINT = ACCOUNT_ENDPOINT;
-        public const string GET_CURRENT_ACCOUNT_ENDPOINT = ACCOUNT_ENDPOINT + "/current";
-        public const string GET_MANY_ACCOUNTS_ENDPOINT = ACCOUNT_ENDPOINT + "/many";
-        public const string GET_ACCOUNT_BY_ID_ENDPOINT = ACCOUNT_ENDPOINT + "/{id}";
-        public const string CREATE_ACCOUNT_ENDPOINT = ACCOUNT_ENDPOINT;
-        public const string UPDATE_ACCOUNT_ENDPOINT = ACCOUNT_ENDPOINT + "/{id}";
-        public const string DELETE_ACCOUNT_ENDPOINT = ACCOUNT_ENDPOINT + "/{id}";
+        public const string USER_ENDPOINT = API_ENDPOINT + "/user";
+        public const string GET_USER_ENDPOINT = USER_ENDPOINT;
+        public const string GET_CURRENT_USER_ENDPOINT = USER_ENDPOINT + "/current";
+        public const string GET_MANY_USERS_ENDPOINT = USER_ENDPOINT + "/many";
+        public const string GET_USER_BY_ID_ENDPOINT = USER_ENDPOINT + "/{id}";
+        public const string CREATE_USER_ENDPOINT = USER_ENDPOINT;
+        public const string UPDATE_USER_ENDPOINT = USER_ENDPOINT + "/{id}";
+        public const string DELETE_USER_ENDPOINT = USER_ENDPOINT + "/{id}";
     }
     
     

@@ -10,6 +10,7 @@
     <ItemGroup>
         <PackageReference Include="AutoMapper" Version="15.0.1" />
         <PackageReference Include="DotNetEnv" Version="3.1.1" />
+        <PackageReference Include="Google.Apis.Auth" Version="1.72.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.Google" Version="9.0.8" />
         <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.5"/>
         <PackageReference Include="Microsoft.AspNetCore.SignalR" Version="1.2.0" />
@@ -21,7 +22,7 @@
         <PackageReference Include="Microsoft.SemanticKernel.Connectors.Google" Version="1.65.0-alpha" />
         <PackageReference Include="Microsoft.SemanticKernel.Connectors.Pinecone" Version="1.65.0-preview" />
         <PackageReference Include="Microsoft.SemanticKernel.Connectors.Qdrant" Version="1.65.0-preview" />
-        <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="9.0.4" />
         <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL.NetTopologySuite" Version="9.0.4" />
         <PackageReference Include="payOS" Version="1.0.9" />
