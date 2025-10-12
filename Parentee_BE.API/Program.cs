@@ -130,7 +130,6 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddAuthentication(options =>
     {
         options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
     })
     .AddJwtBearer(options =>
     {
@@ -161,13 +160,7 @@ builder.Services.AddAuthentication(options =>
             OnForbidden = _ => throw new ForbiddenException("You do not have permission to access this resource.")
         };
     })
-    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddGoogle(GoogleDefaults.AuthenticationScheme, options =>
-    {
-        options.ClientId = builder.Configuration["Google:ClientId"];
-        options.ClientSecret = builder.Configuration["Google:ClientSecret"];
-        options.SignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
-    });
+    .AddCookie(CookieAuthenticationDefaults.AuthenticationScheme);
 
 // Add Roles for Authorization
 // builder.Services.AddAuthorizationBuilder()
