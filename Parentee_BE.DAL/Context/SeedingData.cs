@@ -13,7 +13,7 @@ public static class SeedingData
         new UserEntity
         {
             Id = Guid.NewGuid(),
-            FullName = "Dad Tester",
+            FullName = "Dad Tester",    
             Email = "dadtester123@example.com",
             Password = "Dadtester@123", 
             IsPremium = true,

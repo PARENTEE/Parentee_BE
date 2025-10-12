@@ -9,6 +9,5 @@ public interface IAuthService
 {
     Task<string> HandleLogin(LoginRequestDTO loginRequestDto);
 
-    Task<string> HandleGoogleLogin(GoogleJsonWebSignature.Payload authenticateResult);
-
+    Task<string> HandleGoogleLogin(string email, string fullName);
 }

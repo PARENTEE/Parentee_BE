@@ -26,7 +26,7 @@ public partial class UserEntity
     public string? Phone { get; set; }
     
     [Column("password")]
-    public string Password { get; set; }
+    public string? Password { get; set; }
     
     [Column("signup_method")]
     public SigninMethod SigninMethod { get; set; }

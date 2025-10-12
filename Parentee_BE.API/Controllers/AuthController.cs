@@ -26,14 +26,10 @@ public class AuthController(
         ));
     }
 
-    [HttpPost("google")]
+    [HttpPost(APIEndpointsConstant.AuthEndpoints.SIGNIN_GOOGLE)]
     public async Task<IActionResult> GoogleSignIn([FromBody] GoogleSignInRequest request)
     {
-        var payload = await GoogleJsonWebSignature.ValidateAsync(request.IdToken, new GoogleJsonWebSignature.ValidationSettings());
-
-        // payload.Email, payload.Name, payload.Picture, etc.
-
-        var token = await authService.HandleGoogleLogin(payload);
+        var token = await authService.HandleGoogleLogin(request.Email, request.FullName);
 
         return Ok(ApiResponseBuilder.BuildResponse(
             200,

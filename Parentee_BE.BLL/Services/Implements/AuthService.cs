@@ -40,13 +40,8 @@ public class AuthService
     }
     
     
-    public async Task<string> HandleGoogleLogin(GoogleJsonWebSignature.Payload payload)
+    public async Task<string> HandleGoogleLogin(string email, string fullName)
     {
-        var email = payload.Email;
-        var fullName = payload.Name;
-        var givenName = payload.GivenName;
-        var surname = payload.Name;
-        
         // Check if account exists
         var account = await _unitOfWork.GetRepository<UserEntity>()
             .FirstOrDefaultAsync(
