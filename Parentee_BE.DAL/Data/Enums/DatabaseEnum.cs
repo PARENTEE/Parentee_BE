@@ -1,5 +1,7 @@
 ﻿namespace Parentee_BE.DAL.Data.Enums
 {
+    public enum Gender { Male, Female }
+
     public enum SigninMethod { App, Google }
 
     public enum DiaperType { Wet, Dirty, Mixed, Dry }

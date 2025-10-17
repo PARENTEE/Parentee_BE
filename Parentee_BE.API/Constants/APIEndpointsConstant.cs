@@ -24,6 +24,7 @@ public class APIEndpointsConstant
         public const string GET_USER_ENDPOINT = USER_ENDPOINT;
         public const string GET_CURRENT_USER_ENDPOINT = USER_ENDPOINT + "/current";
         public const string GET_MANY_USERS_ENDPOINT = USER_ENDPOINT + "/many";
+        public const string GET_USERS_WITH_NO_FAMILY_ENDPOINT = USER_ENDPOINT + "/no-family";
         public const string GET_USER_BY_ID_ENDPOINT = USER_ENDPOINT + "/{id}";
         public const string CREATE_USER_ENDPOINT = USER_ENDPOINT;
         public const string UPDATE_USER_ENDPOINT = USER_ENDPOINT + "/{id}";

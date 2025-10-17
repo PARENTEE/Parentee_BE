@@ -1,4 +1,6 @@
-﻿namespace Parentee_BE.DAL.Data.ResponseDTO.Users;
+﻿using Parentee_BE.DAL.Data.Enums;
+
+namespace Parentee_BE.DAL.Data.ResponseDTO.Users;
 
 public class GetUserResponseDTO
 {
@@ -9,6 +11,8 @@ public class GetUserResponseDTO
     public string Role { get; set; }
     
     public string FullName { get; set; }
+    
+    public Gender Gender { get; set; }
     
     public DateTime CreatedAt { get; set; }
     

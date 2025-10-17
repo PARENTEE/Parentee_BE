@@ -21,11 +21,6 @@ public class UserService(
     IMapper mapper)
     : BaseService<UserEntity>(unitOfWork, logger, httpContextAccessor), IUserService
 {
-    public Task<UserEntity> GetUser()
-    {
-        throw new NotImplementedException();
-    }
-
     public async Task<GetUserResponseDTO> GetCurrentUser()
     {
         return await GetUserById(GetCurrentAccountIdThroughToken());
@@ -38,6 +33,17 @@ public class UserService(
             pageSize: pageSize);
 
         return Users.Items.Select(mapper.Map<UserEntity, GetUserResponseDTO>).ToList();
+    }
+    
+    public async Task<ICollection<GetUserResponseDTO>> GetUsersWithNoFamily(Gender userGender)
+    {
+        var findGender = Gender.Male;
+        if (userGender == Gender.Male) findGender = Gender.Female;
+        
+        var users = await unitOfWork.GetRepository<UserEntity>().GetListAsync(
+            predicate: u => u.UserFamilyRole == null & u.Gender == findGender);
+
+        return users.Select(mapper.Map<UserEntity, GetUserResponseDTO>).ToList();
     }
 
     public async Task<GetUserResponseDTO> GetUserById(Guid id)

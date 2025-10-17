@@ -31,6 +31,9 @@ public partial class UserEntity
     [Column("signup_method")]
     public SigninMethod SigninMethod { get; set; }
     
+    [Column("gender")]
+    public  Gender Gender { get; set; }
+    
     [Column("dob")]
     public DateOnly Dob { get; set; }
 
