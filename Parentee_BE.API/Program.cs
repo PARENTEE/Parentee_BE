@@ -103,6 +103,8 @@ foreach (var account in SeedingData.Users)
 }
 
 // Configure DbContext
+Console.WriteLine($"CONNECTION STRING = {builder.Configuration.GetConnectionString("PostgresConnectionString")}.");
+
 builder.Services.AddDbContext<AppDbContext>(options =>
     options
         .UseNpgsql(
