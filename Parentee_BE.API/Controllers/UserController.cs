@@ -67,7 +67,7 @@ public class UserController : BaseController<UserController>
         return Ok(ApiResponseBuilder.BuildResponse(
                 statusCode: StatusCodes.Status201Created,
                 isSuccess: true,
-                message: "Get many Users successfully",
+                message: "Get users with no family successfully",
                 data:  await _userService.GetUsersWithNoFamily(gender)
             )
         );

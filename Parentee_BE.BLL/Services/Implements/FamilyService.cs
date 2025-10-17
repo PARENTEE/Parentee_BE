@@ -30,6 +30,18 @@ namespace Parentee_BE.BLL.Services.Implements
 
             return mapper.Map<GetFamilyResponse>(entity);
         }
+        
+        public async Task<GetFamilyDetailResponse> GetFamilyDetailById(Guid id)
+        {
+            var entity = await unitOfWork.GetRepository<FamilyEntity>()
+                .FirstOrDefaultAsync(predicate: f => f.Id == id,
+                    include: q => q.Include(f => f.UserFamilyRoles)
+                        .ThenInclude(ufre => ufre.User));
+
+            if (entity == null) throw new NotFoundException("Family not found!");
+
+            return mapper.Map<GetFamilyDetailResponse>(entity);
+        }
 
         public async Task<GetFamilyResponse> CreateFamily(CreateFamilyRequest requestDto)
         {

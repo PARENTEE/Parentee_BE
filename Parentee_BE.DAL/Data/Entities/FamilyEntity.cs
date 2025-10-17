@@ -19,6 +19,9 @@ public partial class FamilyEntity
 
     [Column("cover_image_id")]
     public Guid? CoverImageId { get; set; }
+    
+    [Column("is_disable")]
+    public bool IsDisable { get; set; }
 
     [Column("created_at")]
     public DateTime CreatedAt { get; set; }

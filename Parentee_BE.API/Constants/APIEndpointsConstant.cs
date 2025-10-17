@@ -92,6 +92,7 @@ public class APIEndpointsConstant
     {
         public const string FAMILY_ENDPOINT = API_ENDPOINT + "/families";
         public const string GET_FAMILY_BY_ID_ENDPOINT = FAMILY_ENDPOINT + "/{id}";
+        public const string GET_FAMILY_DETAILS_BY_ID_ENDPOINT = FAMILY_ENDPOINT + "/details/{id}";
         public const string CREATE_FAMILY_ENDPOINT = FAMILY_ENDPOINT;
         public const string UPDATE_FAMILY_ENDPOINT = FAMILY_ENDPOINT + "/{id}";
         public const string DELETE_FAMILY_ENDPOINT = FAMILY_ENDPOINT + "/{id}";

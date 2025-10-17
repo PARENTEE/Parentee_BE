@@ -6,7 +6,7 @@ using Parentee_BE.DAL.Data.RequestDTO.Family;
 
 namespace Parentee_BE.API.Controllers;
 
-public class FamilyController(ILogger<FamilyController> logger, IFamilyService familyService) 
+public class FamilyController(ILogger<FamilyController> logger, IFamilyService familyService)
     : BaseController<FamilyController>(logger)
 {
     [HttpGet(APIEndpointsConstant.FamilyEndpoints.GET_FAMILY_BY_ID_ENDPOINT)]
@@ -19,6 +19,18 @@ public class FamilyController(ILogger<FamilyController> logger, IFamilyService f
             message: "Get family by id successfully",
             data: familyById));
     }
+
+    [HttpGet(APIEndpointsConstant.FamilyEndpoints.GET_FAMILY_DETAILS_BY_ID_ENDPOINT)]
+    public async Task<IActionResult> GetFamilyDetailById([FromRoute] Guid id)
+    {
+        return Ok(ApiResponseBuilder.BuildResponse(
+            statusCode: StatusCodes.Status200OK,
+            isSuccess: true,
+            message: "Get family detail by id successfully",
+            data: await familyService.GetFamilyDetailById(id)
+        ));
+    }
+
 
     [HttpPost(APIEndpointsConstant.FamilyEndpoints.CREATE_FAMILY_ENDPOINT)]
     public async Task<IActionResult> CreateFamily([FromBody] CreateFamilyRequest request)

@@ -15,7 +15,7 @@ using Parentee_BE.DAL.Data.Enums;
 namespace Parentee_BE.BLL.Services.Implements;
 
 public class UserService(
-    IUnitOfWork<AppDbContext> unitOfWork, 
+    IUnitOfWork<AppDbContext> unitOfWork,
     ILogger<UserEntity> logger,
     IHttpContextAccessor? httpContextAccessor,
     IMapper mapper)
@@ -34,14 +34,16 @@ public class UserService(
 
         return Users.Items.Select(mapper.Map<UserEntity, GetUserResponseDTO>).ToList();
     }
-    
+
     public async Task<ICollection<GetUserResponseDTO>> GetUsersWithNoFamily(Gender userGender)
     {
         var findGender = Gender.Male;
         if (userGender == Gender.Male) findGender = Gender.Female;
-        
+
         var users = await unitOfWork.GetRepository<UserEntity>().GetListAsync(
-            predicate: u => u.UserFamilyRole == null & u.Gender == findGender);
+            predicate: u => (u.UserFamilyRole == null
+                             || u.UserFamilyRole.Family.IsDisable) 
+                             && u.Gender == findGender);
 
         return users.Select(mapper.Map<UserEntity, GetUserResponseDTO>).ToList();
     }
