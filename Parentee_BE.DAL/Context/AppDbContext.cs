@@ -69,6 +69,7 @@ public partial class AppDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         #region Enums
+
         // User
         modelBuilder.Entity<UserEntity>(entity =>
         {
@@ -77,7 +78,7 @@ public partial class AppDbContext : DbContext
                 .HasConversion<string>()
                 .IsRequired();
         });
-        
+
         // Feeding
         modelBuilder.Entity<FeedingEntity>(entity =>
         {
@@ -181,6 +182,14 @@ public partial class AppDbContext : DbContext
                 .HasConversion<string>()
                 .IsRequired();
         });
+        
+        modelBuilder.Entity<UserFamilyRoleEntity>(entity =>
+        {
+            entity.Property(e => e.InvitationStatus)
+                .HasColumnType("text")
+                .HasConversion<string>()
+                .IsRequired();
+        });
 
         #endregion
 
@@ -208,10 +217,7 @@ public partial class AppDbContext : DbContext
                 .HasConstraintName("auth_identity_user_id_fkey");
         });
 
-        modelBuilder.Entity<CalendarEventEntity>(entity =>
-        {
-            entity.ToView("calendar_event");
-        });
+        modelBuilder.Entity<CalendarEventEntity>(entity => { entity.ToView("calendar_event"); });
 
         modelBuilder.Entity<ChildEntity>(entity =>
         {
@@ -247,7 +253,7 @@ public partial class AppDbContext : DbContext
         modelBuilder.Entity<ChildVaccinationEntity>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("child_vaccination_pkey");
-            
+
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("now()");
             entity.Property(e => e.UpdatedAt).HasDefaultValueSql("now()");
 
@@ -255,15 +261,18 @@ public partial class AppDbContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("child_vaccination_child_id_fkey");
 
-            entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.ChildVaccinationCreatedByNavigations).HasConstraintName("child_vaccination_created_by_fkey");
+            entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.ChildVaccinationCreatedByNavigations)
+                .HasConstraintName("child_vaccination_created_by_fkey");
 
             entity.HasOne(d => d.Family).WithMany(p => p.ChildVaccinations)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("child_vaccination_family_id_fkey");
 
-            entity.HasOne(d => d.UpdatedByNavigation).WithMany(p => p.ChildVaccinationUpdatedByNavigations).HasConstraintName("child_vaccination_updated_by_fkey");
+            entity.HasOne(d => d.UpdatedByNavigation).WithMany(p => p.ChildVaccinationUpdatedByNavigations)
+                .HasConstraintName("child_vaccination_updated_by_fkey");
 
-            entity.HasOne(d => d.Vaccine).WithMany(p => p.ChildVaccinations).HasConstraintName("child_vaccination_vaccine_id_fkey");
+            entity.HasOne(d => d.Vaccine).WithMany(p => p.ChildVaccinations)
+                .HasConstraintName("child_vaccination_vaccine_id_fkey");
         });
 
         modelBuilder.Entity<DiaperChangeEntity>(entity =>
@@ -278,7 +287,8 @@ public partial class AppDbContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("diaper_change_child_id_fkey");
 
-            entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.DiaperChanges).HasConstraintName("diaper_change_created_by_fkey");
+            entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.DiaperChanges)
+                .HasConstraintName("diaper_change_created_by_fkey");
 
             entity.HasOne(d => d.Family).WithMany(p => p.DiaperChanges)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -288,7 +298,7 @@ public partial class AppDbContext : DbContext
         modelBuilder.Entity<EntitlementEntity>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("entitlement_pkey");
-            
+
             entity.Property(e => e.Id).HasDefaultValueSql("gen_random_uuid()");
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("now()");
             entity.Property(e => e.UpdatedAt).HasDefaultValueSql("now()");
@@ -301,7 +311,8 @@ public partial class AppDbContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("entitlement_product_id_fkey");
 
-            entity.HasOne(d => d.Purchase).WithMany(p => p.Entitlements).HasConstraintName("entitlement_purchase_id_fkey");
+            entity.HasOne(d => d.Purchase).WithMany(p => p.Entitlements)
+                .HasConstraintName("entitlement_purchase_id_fkey");
         });
 
         modelBuilder.Entity<FamilyEntity>(entity =>
@@ -327,7 +338,8 @@ public partial class AppDbContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("feeding_child_id_fkey");
 
-            entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.Feedings).HasConstraintName("feeding_created_by_fkey");
+            entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.Feedings)
+                .HasConstraintName("feeding_created_by_fkey");
 
             entity.HasOne(d => d.Family).WithMany(p => p.Feedings)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -373,7 +385,8 @@ public partial class AppDbContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("measurement_child_id_fkey");
 
-            entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.Measurements).HasConstraintName("measurement_created_by_fkey");
+            entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.Measurements)
+                .HasConstraintName("measurement_created_by_fkey");
 
             entity.HasOne(d => d.Family).WithMany(p => p.Measurements)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -392,7 +405,8 @@ public partial class AppDbContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("notification_outbox_family_id_fkey");
 
-            entity.HasOne(d => d.User).WithMany(p => p.NotificationOutboxes).HasConstraintName("notification_outbox_user_id_fkey");
+            entity.HasOne(d => d.User).WithMany(p => p.NotificationOutboxes)
+                .HasConstraintName("notification_outbox_user_id_fkey");
         });
 
         modelBuilder.Entity<PriceEntity>(entity =>
@@ -477,7 +491,8 @@ public partial class AppDbContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("sleep_child_id_fkey");
 
-            entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.Sleeps).HasConstraintName("sleep_created_by_fkey");
+            entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.Sleeps)
+                .HasConstraintName("sleep_created_by_fkey");
 
             entity.HasOne(d => d.Family).WithMany(p => p.Sleeps)
                 .OnDelete(DeleteBehavior.ClientSetNull)
@@ -487,7 +502,7 @@ public partial class AppDbContext : DbContext
         modelBuilder.Entity<TaskEntity>(entity =>
         {
             entity.HasKey(e => e.Id).HasName("task_pkey");
-            
+
             entity.Property(e => e.Id).HasDefaultValueSql("gen_random_uuid()");
             entity.Property(e => e.AllDay).HasDefaultValue(false);
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("now()");
@@ -495,13 +510,15 @@ public partial class AppDbContext : DbContext
 
             entity.HasOne(d => d.Child).WithMany(p => p.Tasks).HasConstraintName("task_child_id_fkey");
 
-            entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.TaskCreatedByNavigations).HasConstraintName("task_created_by_fkey");
+            entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.TaskCreatedByNavigations)
+                .HasConstraintName("task_created_by_fkey");
 
             entity.HasOne(d => d.Family).WithMany(p => p.Tasks)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("task_family_id_fkey");
 
-            entity.HasOne(d => d.UpdatedByNavigation).WithMany(p => p.TaskUpdatedByNavigations).HasConstraintName("task_updated_by_fkey");
+            entity.HasOne(d => d.UpdatedByNavigation).WithMany(p => p.TaskUpdatedByNavigations)
+                .HasConstraintName("task_updated_by_fkey");
         });
 
         modelBuilder.Entity<TaskRecurrenceEntity>(entity =>
@@ -510,7 +527,8 @@ public partial class AppDbContext : DbContext
 
             entity.Property(e => e.Id).HasDefaultValueSql("gen_random_uuid()");
 
-            entity.HasOne(d => d.Task).WithMany(p => p.TaskRecurrences).HasConstraintName("task_recurrence_task_id_fkey");
+            entity.HasOne(d => d.Task).WithMany(p => p.TaskRecurrences)
+                .HasConstraintName("task_recurrence_task_id_fkey");
         });
 
         modelBuilder.Entity<UserEntity>(entity =>
@@ -532,7 +550,7 @@ public partial class AppDbContext : DbContext
 
             entity.Property(e => e.Id).HasDefaultValueSql("gen_random_uuid()");
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("now()");
-            
+
             entity.HasOne(d => d.Family).WithMany(p => p.UserFamilyRoles)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("user_family_role_family_id_fkey");

@@ -64,6 +64,9 @@ public partial class UserEntity
     [ForeignKey("AvatarImageId")]
     [InverseProperty("Users")]
     public virtual ImageEntity? AvatarImage { get; set; }
+    
+    [InverseProperty("CreatedByNavigation")]
+    public virtual ICollection<FamilyEntity> Families { get; set; } = new List<FamilyEntity>();
 
     [InverseProperty("CreatedByNavigation")]
     public virtual ICollection<ChildVaccinationEntity> ChildVaccinationCreatedByNavigations { get; set; } = new List<ChildVaccinationEntity>();

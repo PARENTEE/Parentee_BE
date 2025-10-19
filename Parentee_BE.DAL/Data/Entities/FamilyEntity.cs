@@ -22,6 +22,9 @@ public partial class FamilyEntity
     
     [Column("is_disable")]
     public bool IsDisable { get; set; }
+    
+    [Column("created_by")]
+    public Guid? CreatedBy { get; set; }
 
     [Column("created_at")]
     public DateTime CreatedAt { get; set; }
@@ -44,6 +47,10 @@ public partial class FamilyEntity
     [ForeignKey("CoverImageId")]
     [InverseProperty("Families")]
     public virtual ImageEntity? CoverImage { get; set; }
+    
+    [ForeignKey("CreatedBy")]
+    [InverseProperty("Families")]
+    public virtual UserEntity? CreatedByNavigation { get; set; }
 
     [InverseProperty("Family")]
     public virtual ICollection<DiaperChangeEntity> DiaperChanges { get; set; } = new List<DiaperChangeEntity>();

@@ -9,6 +9,8 @@
     public enum EntitlementStatus { Active, Expired, Revoked }
 
     public enum FamilyRole { Father, Mother, Others }
+    
+    public enum InvitationStatus { Accepted, InProcessing }
 
     public enum FeedingMethod { Breast, Bottle, Formula, Solid }
 
