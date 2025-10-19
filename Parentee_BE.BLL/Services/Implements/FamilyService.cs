@@ -102,6 +102,26 @@ namespace Parentee_BE.BLL.Services.Implements
             return familyEntity;
         }
 
+        public async Task<bool> UpdateInvitation(Guid userFamilyRoleId, bool isAccepted)
+        {
+            var userFamilyRoleEntity = await unitOfWork.GetRepository<UserFamilyRoleEntity>()
+                .FirstOrDefaultAsync(predicate: ufr => ufr.Id == userFamilyRoleId);
+            if (userFamilyRoleEntity == null) throw new NotImplementedException("Lời mời không tìm thấy");
+            
+            // If user accept invitation
+            if (isAccepted)
+            {
+                userFamilyRoleEntity.InvitationStatus = InvitationStatus.Accepted;
+                unitOfWork.GetRepository<UserFamilyRoleEntity>().UpdateAsync(userFamilyRoleEntity);
+                return true;
+            }
+            // If user not accept
+            await unitOfWork.GetRepository<UserFamilyRoleEntity>().DeleteAsync(userFamilyRoleEntity);
+            return false;
+            
+
+        }
+
         public async Task<GetFamilyResponse> UpdateFamily(Guid id, UpdateFamilyRequest requestDto)
         {
             var entity = await unitOfWork.GetRepository<FamilyEntity>()

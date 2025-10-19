@@ -10,6 +10,7 @@ public interface IFamilyService
     Task<GetFamilyDetailResponse> GetFamilyDetailById(Guid id);
     Task<GetFamilyResponse> CreateFamily(string name);
     Task<FamilyEntity> AddMemberForFamily(Guid familyId, UserFamilyRoleEntity userFamilyRoleEntity);
+    Task<bool> UpdateInvitation(Guid id, bool isAccepted);
     Task<GetFamilyResponse> UpdateFamily(Guid id, UpdateFamilyRequest requestDto);
     Task<bool> DisableFamily(Guid id);
     Task<bool> DeleteFamily(Guid id);

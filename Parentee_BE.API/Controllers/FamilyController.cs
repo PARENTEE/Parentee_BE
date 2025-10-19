@@ -6,6 +6,7 @@ using Parentee_BE.Constants;
 using Parentee_BE.DAL.Data.Entities;
 using Parentee_BE.DAL.Data.Metadatas;
 using Parentee_BE.DAL.Data.RequestDTO.Family;
+using Parentee_BE.DAL.Data.ResponseDTO.Family;
 
 namespace Parentee_BE.API.Controllers;
 
@@ -48,14 +49,27 @@ public class FamilyController(IMapper mapper, ILogger<FamilyController> logger, 
     
     [Authorize]
     [HttpPost(APIEndpointsConstant.FamilyEndpoints.ASSIGN_MEMBER_TO_FAMILY_ENDPOINT)]
-    public async Task<IActionResult> CreateFamily([FromRoute] Guid id, [FromBody] UserFamilyRoleRequest request)
+    public async Task<IActionResult> AssignMemberToFamily([FromRoute] Guid id, [FromBody] UserFamilyRoleRequest request)
     {
         var userFamilyRole = mapper.Map<UserFamilyRoleEntity>(request);
         var result = await familyService.AddMemberForFamily(id, userFamilyRole);
+        var response = mapper.Map<GetFamilyResponse>(result);
         return Ok(ApiResponseBuilder.BuildResponse(
             statusCode: StatusCodes.Status201Created,
             isSuccess: true,
-            message: "Add member to family successfully",
+            message: "Mời thành công!",
+            data: response));
+    }
+    
+    [Authorize]
+    [HttpPost(APIEndpointsConstant.FamilyEndpoints.ACCEPT_INVITATION_ENDPOINT)]
+    public async Task<IActionResult> UpdateInvitation([FromRoute] Guid id, [FromRoute] bool isAccepted)
+    {
+        var result = await familyService.UpdateInvitation(id, isAccepted);
+        return Ok(ApiResponseBuilder.BuildResponse(
+            statusCode: StatusCodes.Status201Created,
+            isSuccess: true,
+            message: result ? "Chấp nhận lời mời thành công!" : "Từ chối lời mời thành công!",
             data: result));
     }
 
