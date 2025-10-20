@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Parentee_BE.DAL.Context;
@@ -11,9 +12,11 @@ using Parentee_BE.DAL.Context;
 namespace Parentee_BE.DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251019023828_UpdateFamily")]
+    partial class UpdateFamily
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -1446,11 +1449,6 @@ namespace Parentee_BE.DAL.Migrations
                     b.Property<Guid>("FamilyId")
                         .HasColumnType("uuid")
                         .HasColumnName("family_id");
-
-                    b.Property<string>("InvitationStatus")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("invitation_status");
 
                     b.Property<string>("Role")
                         .IsRequired()

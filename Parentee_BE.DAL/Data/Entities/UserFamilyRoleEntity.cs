@@ -23,6 +23,9 @@ public partial class UserFamilyRoleEntity
     [Column("role")]
     public FamilyRole Role { get; set; }
     
+    [Column("invitation_status")]
+    public InvitationStatus InvitationStatus { get; set; }
+    
     [Column("created_at")]
     public DateTime CreatedAt { get; set; }
 

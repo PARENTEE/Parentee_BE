@@ -94,7 +94,10 @@ public class APIEndpointsConstant
         public const string GET_FAMILY_BY_ID_ENDPOINT = FAMILY_ENDPOINT + "/{id}";
         public const string GET_FAMILY_DETAILS_BY_ID_ENDPOINT = FAMILY_ENDPOINT + "/details/{id}";
         public const string CREATE_FAMILY_ENDPOINT = FAMILY_ENDPOINT;
+        public const string ASSIGN_MEMBER_TO_FAMILY_ENDPOINT = FAMILY_ENDPOINT + "/{id}";
+        public const string ACCEPT_INVITATION_ENDPOINT = FAMILY_ENDPOINT + "/user-family-role/{id}/{isAccepted}";
         public const string UPDATE_FAMILY_ENDPOINT = FAMILY_ENDPOINT + "/{id}";
+        public const string DISABLE_FAMILY_ENDPOINT = FAMILY_ENDPOINT + "/{id}/disable";
         public const string DELETE_FAMILY_ENDPOINT = FAMILY_ENDPOINT + "/{id}";
     }
     

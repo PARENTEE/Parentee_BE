@@ -22,7 +22,7 @@ public class FamilyMapper : Profile
         CreateMap<CreateFamilyRequest, FamilyEntity>()
             .ForMember(dest => dest.UserFamilyRoles, opt => opt.MapFrom(s => s.MemberRoles));
         CreateMap<UpdateFamilyRequest, FamilyEntity>();
-
+        
         // Entity -> Response
         CreateMap<FamilyEntity, GetFamilyResponse>()
             .ForMember(dest => dest.UserFamilyRoleResponses, opt => opt.MapFrom(s => s.UserFamilyRoles));
