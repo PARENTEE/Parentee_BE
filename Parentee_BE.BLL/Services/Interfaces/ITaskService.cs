@@ -6,6 +6,7 @@ namespace Parentee_BE.BLL.Services.Interfaces;
 public interface ITaskService
 {
     Task<GetTaskResponse> GetTaskById(Guid id);
+    Task<ICollection<GetTaskResponse>> GetTasksByFamilyIdAndDate(Guid familyId, DateTime date);
     Task<GetTaskResponse> CreateTask(CreateTaskRequest requestDto);
     Task<GetTaskResponse> UpdateTask(Guid id, UpdateTaskRequest requestDto);
     Task<bool> DeleteTask(Guid id);

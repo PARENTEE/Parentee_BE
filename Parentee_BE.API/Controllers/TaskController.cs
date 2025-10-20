@@ -19,6 +19,17 @@ public class TaskController(ILogger<TaskController> logger, ITaskService taskSer
             message: "Get task by id successfully",
             data: result));
     }
+    
+    [HttpGet(APIEndpointsConstant.TaskEndpoints.TASK_ENDPOINT)]
+    public async Task<IActionResult> GetTaskByFamilyIdAndDate(Guid familyId, DateTime startsAt)
+    {
+        var result = await taskService.GetTasksByFamilyIdAndDate(familyId, startsAt);
+        return Ok(ApiResponseBuilder.BuildResponse(
+            statusCode: StatusCodes.Status200OK,
+            isSuccess: true,
+            message: "Get task by FamilyId and Date successfully",
+            data: result));
+    }
 
     [HttpPost(APIEndpointsConstant.TaskEndpoints.CREATE_TASK_ENDPOINT)]
     public async Task<IActionResult> CreateTask([FromBody] CreateTaskRequest request)

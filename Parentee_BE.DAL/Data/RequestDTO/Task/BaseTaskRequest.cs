@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using TaskStatus = Parentee_BE.DAL.Data.Enums.TaskStatus;
 
 namespace Parentee_BE.DAL.Data.RequestDTO.Task;
 
