@@ -1,4 +1,6 @@
-﻿namespace Parentee_BE.DAL.Data.ResponseDTO.Task;
+﻿using TaskStatus = Parentee_BE.DAL.Data.Enums.TaskStatus;
+
+namespace Parentee_BE.DAL.Data.ResponseDTO.Task;
 
 public class GetTaskResponse
 {
