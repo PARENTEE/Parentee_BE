@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Parentee_BE.DAL.Data.Entities;
 using Parentee_BE.DAL.Data.Enums;
+using TaskStatus = Parentee_BE.DAL.Data.Enums.TaskStatus;
 
 namespace Parentee_BE.DAL.Context;
 
@@ -116,6 +117,112 @@ public static class SeedingData
             Description = "Tiêm sau sinh", RecommendedAgeDays = 0, Doses = 3
         }
     ];
+        
+    private static readonly List<TaskEntity> TaskEntities =
+    [
+        // Yesterday's tasks
+        new TaskEntity
+        {
+            Id = Guid.NewGuid(),
+            FamilyId = Families.First().Id,
+            ChildId = ChildEntities.First().Id,
+            Title = "Cho bé bú sáng",
+            Description = "Bé bú sữa mẹ lúc 8 giờ sáng.",
+            StartsAt = DateTime.UtcNow.Date.AddDays(-1).AddHours(8),
+            EndsAt = DateTime.UtcNow.Date.AddDays(-1).AddHours(8).AddMinutes(30),
+            AllDay = false,
+            Status = TaskStatus.Completed,
+            CreatedBy = Users[1].Id, // Mom
+            UpdatedBy = Users[1].Id,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow
+        },
+        new TaskEntity
+        {
+            Id = Guid.NewGuid(),
+            FamilyId = Families.First().Id,
+            ChildId = ChildEntities.First().Id,
+            Title = "Thay tã buổi chiều",
+            Description = "Thay tã cho bé sau khi ngủ trưa.",
+            StartsAt = DateTime.UtcNow.Date.AddDays(-1).AddHours(15),
+            EndsAt = DateTime.UtcNow.Date.AddDays(-1).AddHours(15).AddMinutes(15),
+            AllDay = false,
+            Status = TaskStatus.Completed,
+            CreatedBy = Users[0].Id, // Dad
+            UpdatedBy = Users[0].Id,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow
+        },
+
+        // Today's tasks
+        new TaskEntity
+        {
+            Id = Guid.NewGuid(),
+            FamilyId = Families.First().Id,
+            ChildId = ChildEntities.First().Id,
+            Title = "Cho bé bú sáng",
+            Description = "Bé bú sữa mẹ lúc 8 giờ sáng.",
+            StartsAt = DateTime.UtcNow.Date.AddHours(8),
+            EndsAt = DateTime.UtcNow.Date.AddHours(8).AddMinutes(20),
+            AllDay = false,
+            Status = TaskStatus.Completed,
+            CreatedBy = Users[1].Id, // Mom
+            UpdatedBy = Users[1].Id,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow
+        },
+        new TaskEntity
+        {
+            Id = Guid.NewGuid(),
+            FamilyId = Families.First().Id,
+            ChildId = ChildEntities.First().Id,
+            Title = "Chơi với bé",
+            Description = "Ba chơi cùng bé bằng đồ chơi mềm.",
+            StartsAt = DateTime.UtcNow.Date.AddHours(14),
+            EndsAt = DateTime.UtcNow.Date.AddHours(15),
+            AllDay = false,
+            Status = TaskStatus.Pending,
+            CreatedBy = Users[0].Id, // Dad
+            UpdatedBy = Users[0].Id,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow
+        },
+        new TaskEntity
+        {
+            Id = Guid.NewGuid(),
+            FamilyId = Families.First().Id,
+            ChildId = ChildEntities.First().Id,
+            Title = "Tắm cho bé",
+            Description = "Mẹ tắm cho bé bằng nước ấm lúc 17:00.",
+            StartsAt = DateTime.UtcNow.Date.AddHours(17),
+            EndsAt = DateTime.UtcNow.Date.AddHours(17).AddMinutes(30),
+            AllDay = false,
+            Status = TaskStatus.Pending,
+            CreatedBy = Users[1].Id,
+            UpdatedBy = Users[1].Id,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow
+        },
+
+        // Tomorrow’s tasks
+        new TaskEntity
+        {
+            Id = Guid.NewGuid(),
+            FamilyId = Families.First().Id,
+            ChildId = ChildEntities.First().Id,
+            Title = "Massage cho bé",
+            Description = "Ba massage cho bé sau khi tắm.",
+            StartsAt = DateTime.UtcNow.Date.AddDays(1).AddHours(18),
+            EndsAt = DateTime.UtcNow.Date.AddDays(1).AddHours(18).AddMinutes(20),
+            AllDay = false,
+            Status = TaskStatus.Pending,
+            CreatedBy = Users[0].Id,
+            UpdatedBy = Users[0].Id,
+            CreatedAt = DateTime.UtcNow,
+            UpdatedAt = DateTime.UtcNow
+        }
+    ];
+
 
     #endregion
     
@@ -139,6 +246,8 @@ public static class SeedingData
         AddIfNotExists(context, Families);
         AddIfNotExists(context, UserFamilyRoles);
         AddIfNotExists(context, ChildEntities);
+        context.SaveChanges();
+        
 
         AddIfNotExists(context, MeasurementEntities);
         AddIfNotExists(context, DiaperChangeEntities);
@@ -147,6 +256,8 @@ public static class SeedingData
         
         AddIfNotExists(context, Products);
         AddIfNotExists(context, Vaccines);
+        AddIfNotExists(context, TaskEntities);
+        
 
         context.SaveChanges();
     }
@@ -158,6 +269,8 @@ public static class SeedingData
         await AddIfNotExistsAsync(context, UserFamilyRoles);
         await AddIfNotExistsAsync(context, ChildEntities);
 
+        await context.SaveChangesAsync(cancellationToken);
+        
         await AddIfNotExistsAsync(context, MeasurementEntities);
         await AddIfNotExistsAsync(context, DiaperChangeEntities);
         await AddIfNotExistsAsync(context, FeedingEntities);
@@ -165,6 +278,7 @@ public static class SeedingData
         
         await AddIfNotExistsAsync(context, Products);
         await AddIfNotExistsAsync(context, Vaccines);
+        await AddIfNotExistsAsync(context, TaskEntities);
 
         await context.SaveChangesAsync(cancellationToken);
     }
