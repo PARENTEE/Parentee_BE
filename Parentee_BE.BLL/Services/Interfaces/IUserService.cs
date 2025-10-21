@@ -9,7 +9,7 @@ public interface IUserService
 {
     Task<GetUserResponseDTO> GetCurrentUser();
     Task<ICollection<GetUserResponseDTO>> GetManyUsers(int pageNumber, int pageSize);
-    Task<ICollection<GetUserResponseDTO>> GetUsersWithNoFamily(Gender userGender);
+    Task<ICollection<GetUserResponseDTO>> GetUsersWithNoFamily();
     Task<GetUserResponseDTO> GetUserById(Guid id);
     Task<GetUserResponseDTO> CreateUser(CreateUserRequestDTO requestDto);
     Task<GetUserResponseDTO> UpdateUser(Guid id, UpdateUserRequestDTO requestDto);

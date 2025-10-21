@@ -49,8 +49,8 @@ public static class SeedingData
     
     private static readonly List<UserFamilyRoleEntity> UserFamilyRoles =
     [
-        new () { UserId = Users[0].Id, FamilyId = Families.First().Id, Role = FamilyRole.Father, CreatedAt = DateTime.UtcNow},
-        new () { UserId = Users[1].Id, FamilyId = Families.First().Id, Role = FamilyRole.Mother, CreatedAt = DateTime.UtcNow},
+        new () { UserId = Users[0].Id, FamilyId = Families.First().Id, Role = FamilyRole.Father, InvitationStatus = InvitationStatus.Accepted, CreatedAt = DateTime.UtcNow},
+        new () { UserId = Users[1].Id, FamilyId = Families.First().Id, Role = FamilyRole.Mother, InvitationStatus = InvitationStatus.Accepted, CreatedAt = DateTime.UtcNow},
     ];
 
     #region Child and Other Data

@@ -16,6 +16,8 @@ public class GetUserFamily
     
     public string FamilyRole { get; set; }
     
+    public int InvitationStatus { get; set; }
+    
     public DateTime CreatedAt { get; set; }
     
     public DateTime UpdatedAt { get; set; }

@@ -35,15 +35,12 @@ public class UserService(
         return Users.Items.Select(mapper.Map<UserEntity, GetUserResponseDTO>).ToList();
     }
 
-    public async Task<ICollection<GetUserResponseDTO>> GetUsersWithNoFamily(Gender userGender)
+    public async Task<ICollection<GetUserResponseDTO>> GetUsersWithNoFamily()
     {
-        var findGender = Gender.Male;
-        if (userGender == Gender.Male) findGender = Gender.Female;
-
         var users = await unitOfWork.GetRepository<UserEntity>().GetListAsync(
-            predicate: u => (u.UserFamilyRole == null
-                             || u.UserFamilyRole.Family.IsDisable) 
-                             && u.Gender == findGender);
+            predicate: u => u.UserFamilyRole == null
+                            || (u.UserFamilyRole != null && u.UserFamilyRole.Family.IsDisable
+                            && u.UserFamilyRole.InvitationStatus != InvitationStatus.Accepted));
 
         return users.Select(mapper.Map<UserEntity, GetUserResponseDTO>).ToList();
     }
@@ -66,19 +63,19 @@ public class UserService(
 
     public async Task<GetUserResponseDTO> CreateUser(CreateUserRequestDTO requestDto)
     {
-        var User = mapper.Map<CreateUserRequestDTO, UserEntity>(requestDto);
+        var user = mapper.Map<CreateUserRequestDTO, UserEntity>(requestDto);
         await unitOfWork.ExecuteInTransactionAsync(async () =>
         {
-            User.SigninMethod = SigninMethod.App;
+            user.SigninMethod = SigninMethod.App;
             // Hash Password
             var hashedPassword = PasswordHelper.HashPassword(requestDto.Password);
-            User.Password = hashedPassword;
+            user.Password = hashedPassword;
             
             // Add User
-            await unitOfWork.GetRepository<UserEntity>().InsertAsync(User);
+            await unitOfWork.GetRepository<UserEntity>().InsertAsync(user);
             
         });
-        return mapper.Map<UserEntity, GetUserResponseDTO>(User);;
+        return mapper.Map<UserEntity, GetUserResponseDTO>(user);;
     }
 
     public async Task<GetUserResponseDTO> UpdateUser(Guid id, UpdateUserRequestDTO requestDto)

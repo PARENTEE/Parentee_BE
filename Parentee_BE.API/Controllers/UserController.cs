@@ -4,7 +4,6 @@ using Parentee_BE.DAL.Data.Exceptions;
 using Parentee_BE.DAL.Data.Metadatas;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using Parentee_BE.Constants;
 using Parentee_BE.DAL.Data.Enums;
 using Parentee_BE.DAL.Data.RequestDTO.Users;
@@ -62,13 +61,13 @@ public class UserController : BaseController<UserController>
     
     [Authorize]
     [HttpGet(APIEndpointsConstant.UserEndpoints.GET_USERS_WITH_NO_FAMILY_ENDPOINT)]
-    public async Task<IActionResult> GetUsersWithNoFamily([FromQuery] Gender gender)
+    public async Task<IActionResult> GetUsersWithNoFamily()
     {
         return Ok(ApiResponseBuilder.BuildResponse(
                 statusCode: StatusCodes.Status201Created,
                 isSuccess: true,
                 message: "Get users with no family successfully",
-                data:  await _userService.GetUsersWithNoFamily(gender)
+                data:  await _userService.GetUsersWithNoFamily()
             )
         );
     }

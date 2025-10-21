@@ -42,6 +42,33 @@ namespace Parentee_BE.BLL.Services.Implements
 
             return mapper.Map<GetFamilyDetailResponse>(entity);
         }
+        
+        public async Task<GetFamilyDetailResponse> GetFamilyDetailByUserId(Guid userId)
+        {
+            var entity = await unitOfWork.GetRepository<FamilyEntity>()
+                .FirstOrDefaultAsync(predicate: f => f.UserFamilyRoles.Any(ufr => ufr.UserId == userId),
+                    include: q => q.Include(f => f.UserFamilyRoles)
+                        .ThenInclude(ufr => ufr.User));
+
+            if (entity == null) throw new NotFoundException("Không tìm thấy gia đình nào!");
+
+            return mapper.Map<GetFamilyDetailResponse>(entity);
+        }
+        
+        public async Task<GetFamilyDetailResponse> GetFamilyDetailByCurrentUserId()
+        {
+            var currentUserId = GetCurrentAccountIdThroughToken();
+            return await GetFamilyDetailByUserId(currentUserId);
+        }
+        
+        public async Task<ICollection<UserFamilyRoleEntity>> GetInvitation()
+        {
+            var currentUserId = GetCurrentAccountIdThroughToken();
+            return await unitOfWork.GetRepository<UserFamilyRoleEntity>()
+                .GetListAsync(predicate: ufr => ufr.UserId == currentUserId && ufr.InvitationStatus == InvitationStatus.InProcessing,
+                    include: q => q.Include(ufr => ufr.Family)
+                        .ThenInclude(f => f.CreatedByNavigation)!);
+        }
 
         public async Task<GetFamilyResponse> CreateFamily(string name)
         {
@@ -104,9 +131,14 @@ namespace Parentee_BE.BLL.Services.Implements
 
         public async Task<bool> UpdateInvitation(Guid userFamilyRoleId, bool isAccepted)
         {
+            // Find invitation
             var userFamilyRoleEntity = await unitOfWork.GetRepository<UserFamilyRoleEntity>()
                 .FirstOrDefaultAsync(predicate: ufr => ufr.Id == userFamilyRoleId);
-            if (userFamilyRoleEntity == null) throw new NotImplementedException("Lời mời không tìm thấy");
+            if (userFamilyRoleEntity == null) throw new NotFoundException("Lời mời không tìm thấy.");
+            
+            // Lời mời đã được chấp nhận
+            if (userFamilyRoleEntity.InvitationStatus == InvitationStatus.Accepted)
+                throw new NotImplementedException("Lời mời đã được chấp nhận!");
             
             // If user accept invitation
             if (isAccepted)
@@ -118,8 +150,6 @@ namespace Parentee_BE.BLL.Services.Implements
             // If user not accept
             await unitOfWork.GetRepository<UserFamilyRoleEntity>().DeleteAsync(userFamilyRoleEntity);
             return false;
-            
-
         }
 
         public async Task<GetFamilyResponse> UpdateFamily(Guid id, UpdateFamilyRequest requestDto)

@@ -8,6 +8,9 @@ public interface IFamilyService
 {
     Task<GetFamilyResponse> GetFamilyById(Guid id);
     Task<GetFamilyDetailResponse> GetFamilyDetailById(Guid id);
+    Task<GetFamilyDetailResponse> GetFamilyDetailByUserId(Guid userId);
+    Task<GetFamilyDetailResponse> GetFamilyDetailByCurrentUserId();
+    Task<ICollection<UserFamilyRoleEntity>> GetInvitation();
     Task<GetFamilyResponse> CreateFamily(string name);
     Task<FamilyEntity> AddMemberForFamily(Guid familyId, UserFamilyRoleEntity userFamilyRoleEntity);
     Task<bool> UpdateInvitation(Guid id, bool isAccepted);

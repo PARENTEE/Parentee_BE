@@ -14,19 +14,31 @@ public class FamilyMapper : Profile
     {
         CreateMap<UserFamilyRoleRequest, UserFamilyRoleEntity>();
         CreateMap<UserFamilyRoleEntity, UserFamilyRoleResponse>();
+        CreateMap<UserFamilyRoleEntity, GetUserFamily>()
+            .ForMember(dest => dest.FamilyRole, opt => opt.MapFrom(src => src.Role))
+            .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => src.User.FullName))
+            .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.User.Email))
+            .ForMember(dest => dest.InvitationStatus,
+                opt => opt.MapFrom(src => src.InvitationStatus))
+            .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.User.CreatedAt))
+            .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(src => src.User.UpdatedAt));
 
         CreateMap<UserEntity, GetUserFamily>()
             .ForMember(dest => dest.FamilyRole, opt => opt.MapFrom(u => u.UserFamilyRole.Role));
         
         // Request -> Entity
-        CreateMap<CreateFamilyRequest, FamilyEntity>()
-            .ForMember(dest => dest.UserFamilyRoles, opt => opt.MapFrom(s => s.MemberRoles));
+        CreateMap<CreateFamilyRequest, FamilyEntity>();
         CreateMap<UpdateFamilyRequest, FamilyEntity>();
         
         // Entity -> Response
         CreateMap<FamilyEntity, GetFamilyResponse>()
             .ForMember(dest => dest.UserFamilyRoleResponses, opt => opt.MapFrom(s => s.UserFamilyRoles));
         CreateMap<FamilyEntity, GetFamilyDetailResponse>()
-            .ForMember(dest => dest.FamilyUsers, opt => opt.MapFrom(s => s.UserFamilyRoles.Select(ufr => ufr.User)));
+            .ForMember(dest => dest.FamilyUsers, opt => opt.MapFrom(src => src.UserFamilyRoles));
+        CreateMap<UserFamilyRoleEntity, GetInvitationResponse>()
+            .ForMember(dest => dest.UserFamilyRoleId, opt => opt.MapFrom(src => src.Id))
+            .ForMember(dest => dest.InviterName, opt => opt.MapFrom(src => src.Family.CreatedByNavigation!.FullName))
+            .ForMember(dest => dest.Role, opt => opt.MapFrom(src => src.Role))
+            .ForMember(dest => dest.CreatedAt, opt => opt.MapFrom(src => src.CreatedAt));
     }
 }

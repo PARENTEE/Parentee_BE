@@ -34,12 +34,37 @@ public class FamilyController(IMapper mapper, ILogger<FamilyController> logger, 
             data: await familyService.GetFamilyDetailById(id)
         ));
     }
-
+    
+    [Authorize]
+    [HttpGet(APIEndpointsConstant.FamilyEndpoints.GET_FAMILY_DETAILS_BY_USER_ID_ENDPOINT)]
+    public async Task<IActionResult> GetFamilyDetailByUserId()
+    {
+        return Ok(ApiResponseBuilder.BuildResponse(
+            statusCode: StatusCodes.Status200OK,
+            isSuccess: true,
+            message: "Lấy gia đình thành công!",
+            data: await familyService.GetFamilyDetailByCurrentUserId()
+        ));
+    }
+    
+    [Authorize]
+    [HttpGet(APIEndpointsConstant.FamilyEndpoints.GET_INVITATION_ENDPOINT)]
+    public async Task<IActionResult> GetInvitations()
+    {
+        var result = await familyService.GetInvitation();
+        return Ok(ApiResponseBuilder.BuildResponse(
+            statusCode: StatusCodes.Status200OK,
+            isSuccess: true,
+            message: "Lấy lời mời thành công!",
+            data: mapper.Map<List<GetInvitationResponse>>(result)
+        ));
+    }
+    
     [Authorize]
     [HttpPost(APIEndpointsConstant.FamilyEndpoints.CREATE_FAMILY_ENDPOINT)]
-    public async Task<IActionResult> CreateFamily([FromBody] string name)
+    public async Task<IActionResult> CreateFamily([FromBody] CreateFamilyRequest request)
     {
-        var createResult = await familyService.CreateFamily(name);
+        var createResult = await familyService.CreateFamily(request.Name);
         return Ok(ApiResponseBuilder.BuildResponse(
             statusCode: StatusCodes.Status201Created,
             isSuccess: true,
