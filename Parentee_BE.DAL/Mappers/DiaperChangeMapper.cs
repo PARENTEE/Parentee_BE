@@ -10,7 +10,9 @@ public class DiaperChangeMapper : Profile
     public DiaperChangeMapper()
     {
         // Request -> Entity
-        CreateMap<CreateDiaperChangeRequest, DiaperChangeEntity>();
+        CreateMap<CreateDiaperChangeRequest, DiaperChangeEntity>()
+            .ForMember(dest => dest.ChangedAt,
+                opt => opt.MapFrom(src => DateTime.SpecifyKind(src.ChangedAt, DateTimeKind.Utc)));
         CreateMap<UpdateDiaperChangeRequest, DiaperChangeEntity>();
 
         // Entity -> Response

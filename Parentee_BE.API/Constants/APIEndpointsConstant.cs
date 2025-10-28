@@ -37,6 +37,7 @@ public class APIEndpointsConstant
     {
         public const string CREATE_CHILD_ENDPOINT = API_ENDPOINT + "/create";
         public const string VIEW_CHILD_ENDPOINT = API_ENDPOINT + "/view";
+        public const string GET_CHILDREN_IN_CURRENT_FAMILY_ENDPOINT = API_ENDPOINT + "/current-family";
         public const string GET_CHILD_BY_ID_ENDPOINT = API_ENDPOINT + "/{id}";
         public const string GET_CHILD_TODAY_BY_ID_ENDPOINT = API_ENDPOINT + "/today/{id}";
         public const string UPDATE_CHILD_ENDPOINT = API_ENDPOINT + "/{id}";
@@ -77,6 +78,12 @@ public class APIEndpointsConstant
         public const string GET_SLEEP_BY_ID_ENDPOINT = SLEEP_ENDPOINT + "/{id}";
         public const string UPDATE_SLEEP_ENDPOINT = SLEEP_ENDPOINT + "/{id}";
         public const string DELETE_SLEEP_ENDPOINT = SLEEP_ENDPOINT + "/{id}";
+    }
+    
+    public static class SolidFoodEndpoints
+    {
+        public const string SOLID_FOOD_ENDPOINT = API_ENDPOINT + "/solid-food";
+        public const string CREATE_ENDPOINT = SOLID_FOOD_ENDPOINT;
     }
     
     public static class TaskEndpoints

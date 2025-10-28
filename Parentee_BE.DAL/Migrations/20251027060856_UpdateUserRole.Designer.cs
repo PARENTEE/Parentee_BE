@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Parentee_BE.DAL.Context;
@@ -11,9 +12,11 @@ using Parentee_BE.DAL.Context;
 namespace Parentee_BE.DAL.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251027060856_UpdateUserRole")]
+    partial class UpdateUserRole
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -375,10 +378,6 @@ namespace Parentee_BE.DAL.Migrations
                         .HasColumnType("uuid")
                         .HasColumnName("child_id");
 
-                    b.Property<string>("Color")
-                        .HasColumnType("text")
-                        .HasColumnName("color");
-
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
@@ -393,19 +392,17 @@ namespace Parentee_BE.DAL.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("deleted_at");
 
-                    b.Property<string>("DiaperQuantity")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("diaper_quantity");
-
-                    b.Property<string>("DiaperWaste")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("waste");
+                    b.Property<Guid>("FamilyId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("family_id");
 
                     b.Property<string>("Notes")
                         .HasColumnType("text")
                         .HasColumnName("notes");
+
+                    b.Property<bool?>("RashObserved")
+                        .HasColumnType("boolean")
+                        .HasColumnName("rash_observed");
 
                     b.Property<string>("Type")
                         .IsRequired()
@@ -422,6 +419,8 @@ namespace Parentee_BE.DAL.Migrations
                         .HasName("diaper_change_pkey");
 
                     b.HasIndex("CreatedBy");
+
+                    b.HasIndex("FamilyId");
 
                     b.HasIndex(new[] { "ChildId", "ChangedAt" }, "idx_diaper_child_time")
                         .IsDescending(false, true);
@@ -549,6 +548,11 @@ namespace Parentee_BE.DAL.Migrations
                         .HasColumnName("id")
                         .HasDefaultValueSql("gen_random_uuid()");
 
+                    b.Property<decimal?>("AmountMl")
+                        .HasPrecision(6, 1)
+                        .HasColumnType("numeric(6,1)")
+                        .HasColumnName("amount_ml");
+
                     b.Property<Guid>("ChildId")
                         .HasColumnType("uuid")
                         .HasColumnName("child_id");
@@ -567,13 +571,17 @@ namespace Parentee_BE.DAL.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("deleted_at");
 
+                    b.Property<int?>("DurationMin")
+                        .HasColumnType("integer")
+                        .HasColumnName("duration_min");
+
                     b.Property<DateTime?>("EndedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("ended_at");
 
-                    b.Property<TimeSpan?>("LeftDuration")
-                        .HasColumnType("interval")
-                        .HasColumnName("left_duration");
+                    b.Property<Guid>("FamilyId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("family_id");
 
                     b.Property<string>("Method")
                         .IsRequired()
@@ -584,9 +592,9 @@ namespace Parentee_BE.DAL.Migrations
                         .HasColumnType("text")
                         .HasColumnName("notes");
 
-                    b.Property<TimeSpan?>("RightDuration")
-                        .HasColumnType("interval")
-                        .HasColumnName("right_duration");
+                    b.Property<string>("Side")
+                        .HasColumnType("text")
+                        .HasColumnName("side");
 
                     b.Property<DateTime>("StartedAt")
                         .HasColumnType("timestamp with time zone")
@@ -602,6 +610,8 @@ namespace Parentee_BE.DAL.Migrations
                         .HasName("feeding_pkey");
 
                     b.HasIndex("CreatedBy");
+
+                    b.HasIndex("FamilyId");
 
                     b.HasIndex(new[] { "ChildId", "StartedAt" }, "idx_feeding_child_time")
                         .IsDescending(false, true);
@@ -1193,9 +1203,17 @@ namespace Parentee_BE.DAL.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("deleted_at");
 
+                    b.Property<int?>("DurationMin")
+                        .HasColumnType("integer")
+                        .HasColumnName("duration_min");
+
                     b.Property<DateTime?>("EndedAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("ended_at");
+
+                    b.Property<Guid>("FamilyId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("family_id");
 
                     b.Property<string>("Location")
                         .HasColumnType("text")
@@ -1220,72 +1238,12 @@ namespace Parentee_BE.DAL.Migrations
 
                     b.HasIndex("CreatedBy");
 
+                    b.HasIndex("FamilyId");
+
                     b.HasIndex(new[] { "ChildId", "StartedAt" }, "idx_sleep_child_time")
                         .IsDescending(false, true);
 
                     b.ToTable("sleep");
-                });
-
-            modelBuilder.Entity("Parentee_BE.DAL.Data.Entities.SolidFoodEntity", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uuid")
-                        .HasColumnName("id")
-                        .HasDefaultValueSql("gen_random_uuid()");
-
-                    b.Property<DateTime>("AteAt")
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("ate_at");
-
-                    b.Property<Guid>("ChildId")
-                        .HasColumnType("uuid")
-                        .HasColumnName("child_id");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("created_at")
-                        .HasDefaultValueSql("now()");
-
-                    b.Property<Guid?>("CreatedBy")
-                        .HasColumnType("uuid")
-                        .HasColumnName("created_by");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("name");
-
-                    b.Property<string>("Notes")
-                        .HasColumnType("text")
-                        .HasColumnName("notes");
-
-                    b.Property<double>("Quantity")
-                        .HasColumnType("double precision")
-                        .HasColumnName("quantity");
-
-                    b.Property<string>("Unit")
-                        .IsRequired()
-                        .HasColumnType("text")
-                        .HasColumnName("unit");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("timestamp with time zone")
-                        .HasColumnName("updated_at")
-                        .HasDefaultValueSql("now()");
-
-                    b.HasKey("Id")
-                        .HasName("solid_food_pkey");
-
-                    b.HasIndex("CreatedBy");
-
-                    b.HasIndex(new[] { "ChildId", "AteAt" }, "idx_diaper_child_time")
-                        .IsDescending(false, true)
-                        .HasDatabaseName("idx_diaper_child_time1");
-
-                    b.ToTable("solid_food");
                 });
 
             modelBuilder.Entity("Parentee_BE.DAL.Data.Entities.TaskEntity", b =>
@@ -1328,6 +1286,10 @@ namespace Parentee_BE.DAL.Migrations
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("ends_at");
 
+                    b.Property<Guid>("FamilyId")
+                        .HasColumnType("uuid")
+                        .HasColumnName("family_id");
+
                     b.Property<DateTime?>("StartsAt")
                         .HasColumnType("timestamp with time zone")
                         .HasColumnName("starts_at");
@@ -1362,6 +1324,8 @@ namespace Parentee_BE.DAL.Migrations
                     b.HasIndex("CreatedBy");
 
                     b.HasIndex("UpdatedBy");
+
+                    b.HasIndex(new[] { "FamilyId", "StartsAt" }, "idx_task_family_time");
 
                     b.ToTable("task");
                 });
@@ -1687,9 +1651,17 @@ namespace Parentee_BE.DAL.Migrations
                         .HasForeignKey("CreatedBy")
                         .HasConstraintName("diaper_change_created_by_fkey");
 
+                    b.HasOne("Parentee_BE.DAL.Data.Entities.FamilyEntity", "Family")
+                        .WithMany("DiaperChanges")
+                        .HasForeignKey("FamilyId")
+                        .IsRequired()
+                        .HasConstraintName("diaper_change_family_id_fkey");
+
                     b.Navigation("Child");
 
                     b.Navigation("CreatedByNavigation");
+
+                    b.Navigation("Family");
                 });
 
             modelBuilder.Entity("Parentee_BE.DAL.Data.Entities.EntitlementEntity", b =>
@@ -1747,9 +1719,17 @@ namespace Parentee_BE.DAL.Migrations
                         .HasForeignKey("CreatedBy")
                         .HasConstraintName("feeding_created_by_fkey");
 
+                    b.HasOne("Parentee_BE.DAL.Data.Entities.FamilyEntity", "Family")
+                        .WithMany("Feedings")
+                        .HasForeignKey("FamilyId")
+                        .IsRequired()
+                        .HasConstraintName("feeding_family_id_fkey");
+
                     b.Navigation("Child");
 
                     b.Navigation("CreatedByNavigation");
+
+                    b.Navigation("Family");
                 });
 
             modelBuilder.Entity("Parentee_BE.DAL.Data.Entities.ImageEntity", b =>
@@ -1911,27 +1891,17 @@ namespace Parentee_BE.DAL.Migrations
                         .HasForeignKey("CreatedBy")
                         .HasConstraintName("sleep_created_by_fkey");
 
-                    b.Navigation("Child");
-
-                    b.Navigation("CreatedByNavigation");
-                });
-
-            modelBuilder.Entity("Parentee_BE.DAL.Data.Entities.SolidFoodEntity", b =>
-                {
-                    b.HasOne("Parentee_BE.DAL.Data.Entities.ChildEntity", "Child")
-                        .WithMany("SolidFood")
-                        .HasForeignKey("ChildId")
+                    b.HasOne("Parentee_BE.DAL.Data.Entities.FamilyEntity", "Family")
+                        .WithMany("Sleeps")
+                        .HasForeignKey("FamilyId")
                         .IsRequired()
-                        .HasConstraintName("solid_food_child_id_fkey");
-
-                    b.HasOne("Parentee_BE.DAL.Data.Entities.UserEntity", "CreatedByNavigation")
-                        .WithMany("SolidFood")
-                        .HasForeignKey("CreatedBy")
-                        .HasConstraintName("solid_food_created_by_fkey");
+                        .HasConstraintName("sleep_family_id_fkey");
 
                     b.Navigation("Child");
 
                     b.Navigation("CreatedByNavigation");
+
+                    b.Navigation("Family");
                 });
 
             modelBuilder.Entity("Parentee_BE.DAL.Data.Entities.TaskEntity", b =>
@@ -1946,6 +1916,12 @@ namespace Parentee_BE.DAL.Migrations
                         .HasForeignKey("CreatedBy")
                         .HasConstraintName("task_created_by_fkey");
 
+                    b.HasOne("Parentee_BE.DAL.Data.Entities.FamilyEntity", "Family")
+                        .WithMany("Tasks")
+                        .HasForeignKey("FamilyId")
+                        .IsRequired()
+                        .HasConstraintName("task_family_id_fkey");
+
                     b.HasOne("Parentee_BE.DAL.Data.Entities.UserEntity", "UpdatedByNavigation")
                         .WithMany("TaskUpdatedByNavigations")
                         .HasForeignKey("UpdatedBy")
@@ -1954,6 +1930,8 @@ namespace Parentee_BE.DAL.Migrations
                     b.Navigation("Child");
 
                     b.Navigation("CreatedByNavigation");
+
+                    b.Navigation("Family");
 
                     b.Navigation("UpdatedByNavigation");
                 });
@@ -2013,8 +1991,6 @@ namespace Parentee_BE.DAL.Migrations
 
                     b.Navigation("Sleeps");
 
-                    b.Navigation("SolidFood");
-
                     b.Navigation("Tasks");
                 });
 
@@ -2026,7 +2002,11 @@ namespace Parentee_BE.DAL.Migrations
 
                     b.Navigation("Children");
 
+                    b.Navigation("DiaperChanges");
+
                     b.Navigation("Entitlements");
+
+                    b.Navigation("Feedings");
 
                     b.Navigation("Images");
 
@@ -2035,6 +2015,10 @@ namespace Parentee_BE.DAL.Migrations
                     b.Navigation("NotificationOutboxes");
 
                     b.Navigation("Purchases");
+
+                    b.Navigation("Sleeps");
+
+                    b.Navigation("Tasks");
 
                     b.Navigation("UserFamilyRoles");
                 });
@@ -2108,8 +2092,6 @@ namespace Parentee_BE.DAL.Migrations
                     b.Navigation("Purchases");
 
                     b.Navigation("Sleeps");
-
-                    b.Navigation("SolidFood");
 
                     b.Navigation("TaskCreatedByNavigations");
 

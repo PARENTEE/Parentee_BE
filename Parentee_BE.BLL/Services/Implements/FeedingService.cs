@@ -28,7 +28,8 @@ public class FeedingService(
 
     public async Task<GetFeedingResponse> CreateFeeding(CreateFeedingRequest requestDto)
     {
-        var feedingEntity = mapper.Map<CreateFeedingRequest, FeedingEntity>(requestDto);
+        var feedingEntity = mapper.Map<FeedingEntity>(requestDto);
+        Console.Write(feedingEntity);
         await unitOfWork.GetRepository<FeedingEntity>().InsertAsync(feedingEntity);
         return mapper.Map<FeedingEntity, GetFeedingResponse>(feedingEntity);;
     }

@@ -16,9 +16,6 @@ public partial class DiaperChangeEntity
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public Guid Id { get; set; }
 
-    [Column("family_id")]
-    public Guid FamilyId { get; set; }
-
     [Column("child_id")]
     public Guid ChildId { get; set; }
 
@@ -27,9 +24,15 @@ public partial class DiaperChangeEntity
     
     [Column("type")]
     public DiaperType Type { get; set; }
-
-    [Column("rash_observed")]
-    public bool? RashObserved { get; set; }
+    
+    [Column("diaper_quantity")]
+    public DiaperQuantity? DiaperQuantity { get; set; }
+    
+    [Column("color")]
+    public string? Color { get; set; }
+    
+    [Column("waste")]
+    public DiaperWaste? DiaperWaste { get; set; }
 
     [Column("notes")]
     public string? Notes { get; set; }
@@ -53,8 +56,4 @@ public partial class DiaperChangeEntity
     [ForeignKey("CreatedBy")]
     [InverseProperty("DiaperChanges")]
     public virtual UserEntity? CreatedByNavigation { get; set; }
-
-    [ForeignKey("FamilyId")]
-    [InverseProperty("DiaperChanges")]
-    public virtual FamilyEntity Family { get; set; } = null!;
 }

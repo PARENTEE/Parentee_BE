@@ -4,7 +4,13 @@
 
     public enum SigninMethod { App, Google }
 
-    public enum DiaperType { Wet, Dirty, Mixed, Dry }
+    public enum DiaperType { Dry, Pee, Poo, Both }
+    
+    public enum DiaperWaste { Solid, Loose, Runny, Mucusy }
+    
+    public enum DiaperQuantity { Small, Medium, Large }
+    
+    public enum FoodUnit { Gam, Mililit, TableSpoon, Teaspoon, Pieces }
 
     public enum EntitlementStatus { Active, Expired, Revoked }
 

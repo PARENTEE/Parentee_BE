@@ -7,6 +7,7 @@ namespace Parentee_BE.BLL.Services.Interfaces;
 public interface IChildService
 {
     Task<CreateChildResponseDTO> CreateChild(CreateChildRequestDTO request);
+    Task<IEnumerable<CreateChildResponseDTO>> GetChildrenInCurrentFamily();
     Task<IEnumerable<CreateChildResponseDTO>> GetAllChildren();
     Task<CreateChildResponseDTO> GetChildById(Guid id);
     Task<ChildEntity> GetChildTodayById(Guid id);

@@ -95,6 +95,26 @@ public partial class AppDbContext : DbContext
                 .HasColumnType("text")
                 .HasConversion<string>()
                 .IsRequired();
+            
+            entity.Property(e => e.DiaperWaste)
+                .HasColumnType("text")
+                .HasConversion<string>()
+                .IsRequired();
+            
+            entity.Property(e => e.DiaperQuantity)
+                .HasColumnType("text")
+                .HasConversion<string>()
+                .IsRequired();
+            
+        });
+        
+        // Diaper Change
+        modelBuilder.Entity<SolidFoodEntity>(entity =>
+        {
+            entity.Property(e => e.Unit)
+                .HasColumnType("text")
+                .HasConversion<string>()
+                .IsRequired();
         });
 
         // Measurement
@@ -289,10 +309,22 @@ public partial class AppDbContext : DbContext
 
             entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.DiaperChanges)
                 .HasConstraintName("diaper_change_created_by_fkey");
+        });
+        
+        modelBuilder.Entity<SolidFoodEntity>(entity =>
+        {
+            entity.HasKey(e => e.Id).HasName("solid_food_pkey");
 
-            entity.HasOne(d => d.Family).WithMany(p => p.DiaperChanges)
+            entity.Property(e => e.Id).HasDefaultValueSql("gen_random_uuid()");
+            entity.Property(e => e.CreatedAt).HasDefaultValueSql("now()");
+            entity.Property(e => e.UpdatedAt).HasDefaultValueSql("now()");
+
+            entity.HasOne(d => d.Child).WithMany(p => p.SolidFood)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("diaper_change_family_id_fkey");
+                .HasConstraintName("solid_food_child_id_fkey");
+
+            entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.SolidFood)
+                .HasConstraintName("solid_food_created_by_fkey");
         });
 
         modelBuilder.Entity<EntitlementEntity>(entity =>
@@ -340,10 +372,6 @@ public partial class AppDbContext : DbContext
 
             entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.Feedings)
                 .HasConstraintName("feeding_created_by_fkey");
-
-            entity.HasOne(d => d.Family).WithMany(p => p.Feedings)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("feeding_family_id_fkey");
         });
 
         modelBuilder.Entity<ImageEntity>(entity =>
@@ -493,10 +521,6 @@ public partial class AppDbContext : DbContext
 
             entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.Sleeps)
                 .HasConstraintName("sleep_created_by_fkey");
-
-            entity.HasOne(d => d.Family).WithMany(p => p.Sleeps)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("sleep_family_id_fkey");
         });
 
         modelBuilder.Entity<TaskEntity>(entity =>
@@ -512,11 +536,7 @@ public partial class AppDbContext : DbContext
 
             entity.HasOne(d => d.CreatedByNavigation).WithMany(p => p.TaskCreatedByNavigations)
                 .HasConstraintName("task_created_by_fkey");
-
-            entity.HasOne(d => d.Family).WithMany(p => p.Tasks)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("task_family_id_fkey");
-
+            
             entity.HasOne(d => d.UpdatedByNavigation).WithMany(p => p.TaskUpdatedByNavigations)
                 .HasConstraintName("task_updated_by_fkey");
         });

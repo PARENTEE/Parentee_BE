@@ -6,16 +6,12 @@ using TaskStatus = Parentee_BE.DAL.Data.Enums.TaskStatus;
 namespace Parentee_BE.DAL.Data.Entities;
 
 [Table("task")]
-[Index("FamilyId", "StartsAt", Name = "idx_task_family_time")]
 public partial class TaskEntity
 {
     [Key]
     [Column("id")]
     [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public Guid Id { get; set; }
-
-    [Column("family_id")]
-    public Guid FamilyId { get; set; }
 
     [Column("child_id")]
     public Guid? ChildId { get; set; }
@@ -60,10 +56,6 @@ public partial class TaskEntity
     [ForeignKey("CreatedBy")]
     [InverseProperty("TaskCreatedByNavigations")]
     public virtual UserEntity? CreatedByNavigation { get; set; }
-
-    [ForeignKey("FamilyId")]
-    [InverseProperty("Tasks")]
-    public virtual FamilyEntity Family { get; set; } = null!;
 
     [InverseProperty("Task")]
     public virtual ICollection<ReminderEntity> Reminders { get; set; } = new List<ReminderEntity>();

@@ -20,6 +20,14 @@ public partial class ChildEntity
 
     [Column("full_name")]
     public string FullName { get; set; } = null!;
+    
+    [Column("height")]
+    [Precision(6, 2)]
+    public decimal Height { get; set; }
+    
+    [Column("weight")]
+    [Precision(6, 2)]
+    public decimal Weight { get; set; }
 
     [Column("birth_date")]
     public DateOnly BirthDate { get; set; }
@@ -50,6 +58,9 @@ public partial class ChildEntity
 
     [InverseProperty("Child")]
     public virtual ICollection<DiaperChangeEntity> DiaperChanges { get; set; } = new List<DiaperChangeEntity>();
+
+    [InverseProperty("Child")]
+    public virtual ICollection<SolidFoodEntity> SolidFood { get; set; } = new List<SolidFoodEntity>();
 
     [ForeignKey("FamilyId")]
     [InverseProperty("Children")]

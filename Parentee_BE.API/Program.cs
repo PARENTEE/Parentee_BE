@@ -195,6 +195,7 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IFamilyService, FamilyService>();
 builder.Services.AddScoped<IFeedingService, FeedingService>();
 builder.Services.AddScoped<IDiaperChangeService, DiaperChangeService>();
+builder.Services.AddScoped<ISolidFoodService, SolidFoodService>();
 builder.Services.AddScoped<IMeasurementService, MeasurementService>();
 builder.Services.AddScoped<ISleepService, SleepService>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();

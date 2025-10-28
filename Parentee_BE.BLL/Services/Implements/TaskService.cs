@@ -40,7 +40,6 @@ public class TaskService(
                 selector: t => new GetTaskResponse()
                 {
                     Id = t.Id,
-                    FamilyId = t.FamilyId,
                     ChildId = t.ChildId,
                     Title = t.Title,
                     Description = t.Description,
@@ -53,7 +52,7 @@ public class TaskService(
                 },
 
                 // 3. Use the date range in the predicate
-                predicate: t => t.FamilyId == familyId && 
+                predicate: t => // t.FamilyId == familyId && 
                                 t.StartsAt >= startDate && 
                                 t.StartsAt < endDate,
             

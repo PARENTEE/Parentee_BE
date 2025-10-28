@@ -10,7 +10,11 @@ public class SleepMapper : Profile
     public SleepMapper()
     {
         // Request -> Entity
-        CreateMap<CreateSleepRequest, SleepEntity>();
+        CreateMap<CreateSleepRequest, SleepEntity>()
+            .ForMember(dest => dest.StartedAt,
+                opt => opt.MapFrom(src => DateTime.SpecifyKind(src.StartTime, DateTimeKind.Utc)))
+            .ForMember(dest => dest.EndedAt,
+                opt => opt.MapFrom(src => DateTime.SpecifyKind(src.EndTime, DateTimeKind.Utc)));
         CreateMap<UpdateSleepRequest, SleepEntity>();
 
         // Entity -> Response

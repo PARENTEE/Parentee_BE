@@ -66,7 +66,7 @@ public partial class UserEntity
     public virtual ImageEntity? AvatarImage { get; set; }
     
     [InverseProperty("CreatedByNavigation")]
-    public virtual ICollection<FamilyEntity> Families { get; set; } = new List<FamilyEntity>();
+    public virtual FamilyEntity Family { get; set; }
 
     [InverseProperty("CreatedByNavigation")]
     public virtual ICollection<ChildVaccinationEntity> ChildVaccinationCreatedByNavigations { get; set; } = new List<ChildVaccinationEntity>();
@@ -76,6 +76,9 @@ public partial class UserEntity
 
     [InverseProperty("CreatedByNavigation")]
     public virtual ICollection<DiaperChangeEntity> DiaperChanges { get; set; } = new List<DiaperChangeEntity>();
+
+    [InverseProperty("CreatedByNavigation")]
+    public virtual ICollection<SolidFoodEntity> SolidFood { get; set; } = new List<SolidFoodEntity>();
 
     [InverseProperty("CreatedByNavigation")]
     public virtual ICollection<FeedingEntity> Feedings { get; set; } = new List<FeedingEntity>();

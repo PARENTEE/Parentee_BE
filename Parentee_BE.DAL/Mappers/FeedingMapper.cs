@@ -11,7 +11,10 @@ public class FeedingMapper : Profile
     public FeedingMapper()
     {
         // Request -> Entity
-        CreateMap<CreateFeedingRequest, FeedingEntity>();
+        CreateMap<CreateFeedingRequest, FeedingEntity>()
+            .ForMember(dest => dest.StartedAt, opt => opt.MapFrom(src => DateTime.SpecifyKind(src.StartedAt, DateTimeKind.Utc)))
+            .ForMember(dest => dest.RightDuration, opt => opt.MapFrom(src => src.RightDuration))
+            .ForMember(dest => dest.LeftDuration, opt => opt.MapFrom(src => src.LeftDuration));
         CreateMap<UpdateFeedingRequest, FeedingEntity>();
 
         // Entity -> Response

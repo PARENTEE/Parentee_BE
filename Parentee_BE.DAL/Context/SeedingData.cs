@@ -70,20 +70,20 @@ public static class SeedingData
     
     private static readonly List<FeedingEntity> FeedingEntities = 
     [
-        new() { Id = Guid.NewGuid(), FamilyId = Families.First().Id, ChildId = ChildEntities.First().Id, Method = FeedingMethod.Bottle, StartedAt = DateTime.UtcNow.AddHours(-4), EndedAt = DateTime.UtcNow.AddHours(-3).AddMinutes(-45), DurationMin = 15, AmountMl = 120.0m, Side = null, Notes = "Morning bottle feeding", CreatedBy = Users[0].Id, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow },
-        new() { Id = Guid.NewGuid(), FamilyId = Families.First().Id, ChildId = ChildEntities.First().Id, Method = FeedingMethod.Breast, StartedAt = DateTime.UtcNow.AddHours(-2), EndedAt = DateTime.UtcNow.AddHours(-1).AddMinutes(-30), DurationMin = 30, AmountMl = null, Side = "Left", Notes = "Afternoon breastfeeding", CreatedBy = Users[0].Id, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow }
+        new() { Id = Guid.NewGuid(), ChildId = ChildEntities.First().Id, Method = FeedingMethod.Bottle, StartedAt = DateTime.UtcNow.AddHours(-4), EndedAt = DateTime.UtcNow.AddHours(-3).AddMinutes(-45), LeftDuration = new TimeSpan(0, 1, 11), RightDuration = new TimeSpan(0, 1, 11), Notes = "Morning bottle feeding", CreatedBy = Users[0].Id, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow },
+        new() { Id = Guid.NewGuid(), ChildId = ChildEntities.First().Id, Method = FeedingMethod.Breast, StartedAt = DateTime.UtcNow.AddHours(-2), EndedAt = DateTime.UtcNow.AddHours(-1).AddMinutes(-30), LeftDuration = new TimeSpan(0,1, 11), RightDuration = new TimeSpan(0, 1, 11), Notes = "Afternoon breastfeeding", CreatedBy = Users[0].Id, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow }
     ];
     
     private static readonly List<DiaperChangeEntity> DiaperChangeEntities = 
     [
-        new() { Id = Guid.NewGuid(), FamilyId = Families.First().Id, ChildId = ChildEntities.First().Id, ChangedAt = DateTime.UtcNow.AddHours(-6), Type = DiaperType.Wet, RashObserved = false, Notes = "Morning diaper change", CreatedBy = Users[0].Id, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow },
-        new() { Id = Guid.NewGuid(), FamilyId = Families.First().Id, ChildId = ChildEntities.First().Id, ChangedAt = DateTime.UtcNow.AddHours(-2), Type = DiaperType.Dry, RashObserved = true, Notes = "Afternoon change with slight rash", CreatedBy = Users[0].Id, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow }
+        new() { Id = Guid.NewGuid(), ChildId = ChildEntities.First().Id, ChangedAt = DateTime.UtcNow.AddHours(-6), Type = DiaperType.Pee, Notes = "Morning diaper change", CreatedBy = Users[0].Id, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow },
+        new() { Id = Guid.NewGuid(), ChildId = ChildEntities.First().Id, ChangedAt = DateTime.UtcNow.AddHours(-2), Type = DiaperType.Poo, Notes = "Afternoon change with slight rash", CreatedBy = Users[0].Id, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow }
     ];
     
     private static readonly List<SleepEntity> SleepEntities = 
     [
-        new() { Id = Guid.NewGuid(), FamilyId = Families.First().Id, ChildId = ChildEntities.First().Id, StartedAt = DateTime.UtcNow.AddHours(-10), EndedAt = DateTime.UtcNow.AddHours(-8), DurationMin = 120, Location = "Crib", Notes = "Morning nap", CreatedBy = Users[0].Id, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow },
-        new() { Id = Guid.NewGuid(), FamilyId = Families.First().Id, ChildId = ChildEntities.First().Id, StartedAt = DateTime.UtcNow.AddHours(-5), EndedAt = DateTime.UtcNow.AddHours(-3), DurationMin = 120, Location = "Stroller", Notes = "Afternoon nap", CreatedBy = Users[0].Id, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow }
+        new() { Id = Guid.NewGuid(), ChildId = ChildEntities.First().Id, StartedAt = DateTime.UtcNow.AddHours(-10), EndedAt = DateTime.UtcNow.AddHours(-8), Location = "Crib", Notes = "Morning nap", CreatedBy = Users[0].Id, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow },
+        new() { Id = Guid.NewGuid(), ChildId = ChildEntities.First().Id, StartedAt = DateTime.UtcNow.AddHours(-5), EndedAt = DateTime.UtcNow.AddHours(-3), Location = "Stroller", Notes = "Afternoon nap", CreatedBy = Users[0].Id, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow }
     ];
     
     #endregion
@@ -124,7 +124,6 @@ public static class SeedingData
         new TaskEntity
         {
             Id = Guid.NewGuid(),
-            FamilyId = Families.First().Id,
             ChildId = ChildEntities.First().Id,
             Title = "Cho bé bú sáng",
             Description = "Bé bú sữa mẹ lúc 8 giờ sáng.",
@@ -140,7 +139,6 @@ public static class SeedingData
         new TaskEntity
         {
             Id = Guid.NewGuid(),
-            FamilyId = Families.First().Id,
             ChildId = ChildEntities.First().Id,
             Title = "Thay tã buổi chiều",
             Description = "Thay tã cho bé sau khi ngủ trưa.",
@@ -158,7 +156,6 @@ public static class SeedingData
         new TaskEntity
         {
             Id = Guid.NewGuid(),
-            FamilyId = Families.First().Id,
             ChildId = ChildEntities.First().Id,
             Title = "Cho bé bú sáng",
             Description = "Bé bú sữa mẹ lúc 8 giờ sáng.",
@@ -174,7 +171,6 @@ public static class SeedingData
         new TaskEntity
         {
             Id = Guid.NewGuid(),
-            FamilyId = Families.First().Id,
             ChildId = ChildEntities.First().Id,
             Title = "Chơi với bé",
             Description = "Ba chơi cùng bé bằng đồ chơi mềm.",
@@ -190,7 +186,6 @@ public static class SeedingData
         new TaskEntity
         {
             Id = Guid.NewGuid(),
-            FamilyId = Families.First().Id,
             ChildId = ChildEntities.First().Id,
             Title = "Tắm cho bé",
             Description = "Mẹ tắm cho bé bằng nước ấm lúc 17:00.",
@@ -208,7 +203,6 @@ public static class SeedingData
         new TaskEntity
         {
             Id = Guid.NewGuid(),
-            FamilyId = Families.First().Id,
             ChildId = ChildEntities.First().Id,
             Title = "Massage cho bé",
             Description = "Ba massage cho bé sau khi tắm.",

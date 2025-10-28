@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Parentee_BE.BLL.Services.Interfaces;
 using Parentee_BE.DAL.Context;
 using Parentee_BE.DAL.Data.Entities;
+using Parentee_BE.DAL.Data.Enums;
 using Parentee_BE.DAL.Data.Exceptions;
 using Parentee_BE.DAL.Data.Repositories.Interfaces;
 using Parentee_BE.DAL.Data.RequestDTO.Children;
@@ -18,12 +20,23 @@ public class ChildService(
     IHttpContextAccessor httpContextAccessor,
     IMapper mapper) : BaseService<ChildService>(unitOfWork, logger, httpContextAccessor), IChildService
 {
+    [Authorize]
     public async Task<CreateChildResponseDTO> CreateChild(CreateChildRequestDTO request)
     {
+        var userId = GetCurrentAccountIdThroughToken();
+        
+        // Find family in family roles
+        var userFamilyRoleEntity = await unitOfWork.GetRepository<UserFamilyRoleEntity>()
+            .FirstOrDefaultAsync(predicate: u => u.UserId == userId);
+        if (userFamilyRoleEntity == null)
+            throw new BusinessException("Người dùng không nằm trong gia đình nào cả!");
+
         var childRepository = unitOfWork.GetRepository<ChildEntity>();
         try
         {
             var childEntity = mapper.Map<ChildEntity>(request);
+            childEntity.FamilyId = userFamilyRoleEntity.FamilyId;
+            
             await childRepository.InsertAsync(childEntity);
             await unitOfWork.SaveChangesAsync();
             var response = mapper.Map<CreateChildResponseDTO>(childEntity);
@@ -36,6 +49,23 @@ public class ChildService(
         }
     }
 
+    [Authorize]
+    public async Task<IEnumerable<CreateChildResponseDTO>> GetChildrenInCurrentFamily()
+    {
+        var userId = GetCurrentAccountIdThroughToken();
+        
+        // Find family in family roles
+        var userFamilyRoleEntity = await unitOfWork.GetRepository<UserFamilyRoleEntity>()
+            .FirstOrDefaultAsync(predicate: u => u.UserId == userId);
+        if (userFamilyRoleEntity == null)
+            throw new BusinessException("Người dùng không nằm trong gia đình nào cả!");
+        
+        var childRepository = unitOfWork.GetRepository<ChildEntity>();
+        var children = await childRepository.GetListAsync(predicate: c => c.FamilyId == userFamilyRoleEntity.FamilyId);
+        // return children;
+        
+        return mapper.Map<IEnumerable<CreateChildResponseDTO>>(children);
+    }
     public async Task<IEnumerable<CreateChildResponseDTO>> GetAllChildren()
     {
         var childRepository = unitOfWork.GetRepository<ChildEntity>();
@@ -88,7 +118,6 @@ public class ChildService(
         child.BirthDate = request.BirthDate;
         child.Sex = request.Sex;
         child.Notes = request.Notes;
-        child.FamilyId = request.FamilyId;
         child.UpdatedAt = DateTime.UtcNow;
         childRepository.UpdateAsync(child);
         await unitOfWork.SaveChangesAsync();

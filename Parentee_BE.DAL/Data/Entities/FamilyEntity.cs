@@ -49,17 +49,11 @@ public partial class FamilyEntity
     public virtual ImageEntity? CoverImage { get; set; }
     
     [ForeignKey("CreatedBy")]
-    [InverseProperty("Families")]
+    [InverseProperty("Family")]
     public virtual UserEntity? CreatedByNavigation { get; set; }
 
     [InverseProperty("Family")]
-    public virtual ICollection<DiaperChangeEntity> DiaperChanges { get; set; } = new List<DiaperChangeEntity>();
-
-    [InverseProperty("Family")]
     public virtual ICollection<EntitlementEntity> Entitlements { get; set; } = new List<EntitlementEntity>();
-
-    [InverseProperty("Family")]
-    public virtual ICollection<FeedingEntity> Feedings { get; set; } = new List<FeedingEntity>();
 
     [InverseProperty("Family")]
     public virtual ICollection<ImageEntity> Images { get; set; } = new List<ImageEntity>();
@@ -72,13 +66,7 @@ public partial class FamilyEntity
 
     [InverseProperty("Family")]
     public virtual ICollection<PurchaseEntity> Purchases { get; set; } = new List<PurchaseEntity>();
-
-    [InverseProperty("Family")]
-    public virtual ICollection<SleepEntity> Sleeps { get; set; } = new List<SleepEntity>();
-
-    [InverseProperty("Family")]
-    public virtual ICollection<TaskEntity> Tasks { get; set; } = new List<TaskEntity>();
-
+    
     [InverseProperty("Family")]
     public virtual ICollection<UserFamilyRoleEntity> UserFamilyRoles { get; set; } = new List<UserFamilyRoleEntity>();
 }

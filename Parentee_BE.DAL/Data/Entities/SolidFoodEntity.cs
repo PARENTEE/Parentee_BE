@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
+using Parentee_BE.DAL.Data.Enums;
 
 namespace Parentee_BE.DAL.Data.Entities;
 
-[Table("sleep")]
-[Index("ChildId", "StartedAt", Name = "idx_sleep_child_time", IsDescending = new[] { false, true })]
-public partial class SleepEntity
+[Table("solid_food")]
+[Index("ChildId", "AteAt", Name = "idx_diaper_child_time", IsDescending = new[] { false, true })]
+public partial class SolidFoodEntity
 {
     [Key]
     [Column("id")]
@@ -18,15 +19,18 @@ public partial class SleepEntity
     [Column("child_id")]
     public Guid ChildId { get; set; }
 
-    [Column("started_at")]
-    public DateTime StartedAt { get; set; }
-
-    [Column("ended_at")]
-    public DateTime? EndedAt { get; set; }
+    [Column("ate_at")]
+    public DateTime AteAt { get; set; }
     
-    [Column("location")]
-    public string? Location { get; set; }
-
+    [Column("name")]
+    public string Name { get; set; }
+    
+    [Column("quantity")]
+    public double Quantity { get; set; }
+    
+    [Column("unit")]
+    public FoodUnit Unit { get; set; }
+    
     [Column("notes")]
     public string? Notes { get; set; }
 
@@ -39,14 +43,11 @@ public partial class SleepEntity
     [Column("updated_at")]
     public DateTime UpdatedAt { get; set; }
 
-    [Column("deleted_at")]
-    public DateTime? DeletedAt { get; set; }
-
     [ForeignKey("ChildId")]
-    [InverseProperty("Sleeps")]
+    [InverseProperty("SolidFood")]
     public virtual ChildEntity Child { get; set; } = null!;
 
     [ForeignKey("CreatedBy")]
-    [InverseProperty("Sleeps")]
+    [InverseProperty("SolidFood")]
     public virtual UserEntity? CreatedByNavigation { get; set; }
 }
