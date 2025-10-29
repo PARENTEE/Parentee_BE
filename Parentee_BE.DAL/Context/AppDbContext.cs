@@ -78,7 +78,16 @@ public partial class AppDbContext : DbContext
                 .HasConversion<string>()
                 .IsRequired();
         });
-
+        
+        // Child
+        modelBuilder.Entity<ChildEntity>(entity =>
+        {
+            entity.Property(e => e.Gender)
+                .HasColumnType("text")
+                .HasConversion<string>()
+                .IsRequired();
+        });
+        
         // Feeding
         modelBuilder.Entity<FeedingEntity>(entity =>
         {

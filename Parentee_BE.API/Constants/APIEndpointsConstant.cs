@@ -35,13 +35,14 @@ public class APIEndpointsConstant
 
     public static class ChildEndpoints
     {
-        public const string CREATE_CHILD_ENDPOINT = API_ENDPOINT + "/create";
-        public const string VIEW_CHILD_ENDPOINT = API_ENDPOINT + "/view";
-        public const string GET_CHILDREN_IN_CURRENT_FAMILY_ENDPOINT = API_ENDPOINT + "/current-family";
-        public const string GET_CHILD_BY_ID_ENDPOINT = API_ENDPOINT + "/{id}";
-        public const string GET_CHILD_TODAY_BY_ID_ENDPOINT = API_ENDPOINT + "/today/{id}";
-        public const string UPDATE_CHILD_ENDPOINT = API_ENDPOINT + "/{id}";
-        public const string DELETE_CHILD_ENDPOINT = API_ENDPOINT + "/{id}";
+        public const string CHILD_ENDPOINT = API_ENDPOINT + "/child";
+        public const string CREATE_CHILD_ENDPOINT = CHILD_ENDPOINT;
+        public const string VIEW_CHILD_ENDPOINT = CHILD_ENDPOINT + "/view";
+        public const string GET_CHILDREN_IN_CURRENT_FAMILY_ENDPOINT = CHILD_ENDPOINT + "/current-family";
+        public const string GET_CHILD_BY_ID_ENDPOINT = CHILD_ENDPOINT + "/{id}";
+        public const string GET_CHILD_TODAY_BY_ID_ENDPOINT = CHILD_ENDPOINT + "/today/{id}";
+        public const string UPDATE_CHILD_ENDPOINT = CHILD_ENDPOINT + "/{id}";
+        public const string DELETE_CHILD_ENDPOINT = CHILD_ENDPOINT + "/{id}";
     }
     
     public static class FeedingEndpoints

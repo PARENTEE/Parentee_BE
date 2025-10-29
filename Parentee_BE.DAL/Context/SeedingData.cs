@@ -58,8 +58,8 @@ public static class SeedingData
 
     private static readonly List<ChildEntity> ChildEntities = 
     [ 
-        new() { Id = Guid.NewGuid(), FamilyId = Families.First().Id, FullName = "Emma Johnson", BirthDate = new DateOnly(2023, 5, 15), Sex = "Female", Notes = "First child of the Johnson family", CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow }, 
-        new() { Id = Guid.NewGuid(), FamilyId = Families.First().Id, FullName = "Noah Johnson", BirthDate = new DateOnly(2025, 1, 20), Sex = "Male", Notes = "Younger brother, born recently", CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow } 
+        new() { Id = Guid.NewGuid(), FamilyId = Families.First().Id, FullName = "Emma Johnson", BirthDate = new DateOnly(2023, 5, 15), Gender = Gender.Female, Notes = "First child of the Johnson family", CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow }, 
+        new() { Id = Guid.NewGuid(), FamilyId = Families.First().Id, FullName = "Noah Johnson", BirthDate = new DateOnly(2025, 1, 20), Gender = Gender.Male, Notes = "Younger brother, born recently", CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow } 
     ];
     
     private static readonly List<MeasurementEntity> MeasurementEntities = 

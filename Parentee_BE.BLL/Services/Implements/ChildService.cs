@@ -24,54 +24,44 @@ public class ChildService(
     public async Task<CreateChildResponseDTO> CreateChild(CreateChildRequestDTO request)
     {
         var userId = GetCurrentAccountIdThroughToken();
-        
+
         // Find family in family roles
         var userFamilyRoleEntity = await unitOfWork.GetRepository<UserFamilyRoleEntity>()
             .FirstOrDefaultAsync(predicate: u => u.UserId == userId);
         if (userFamilyRoleEntity == null)
             throw new BusinessException("Người dùng không nằm trong gia đình nào cả!");
+        
+        var childEntity = mapper.Map<ChildEntity>(request);
+        childEntity.FamilyId = userFamilyRoleEntity.FamilyId;
 
-        var childRepository = unitOfWork.GetRepository<ChildEntity>();
-        try
-        {
-            var childEntity = mapper.Map<ChildEntity>(request);
-            childEntity.FamilyId = userFamilyRoleEntity.FamilyId;
-            
-            await childRepository.InsertAsync(childEntity);
-            await unitOfWork.SaveChangesAsync();
-            var response = mapper.Map<CreateChildResponseDTO>(childEntity);
-            return response;
-        }
-        catch (Exception e)
-        {
-            logger.LogError(e.Message);
-            return null;
-        }
+        await unitOfWork.GetRepository<ChildEntity>().InsertAsync(childEntity);
+        return mapper.Map<CreateChildResponseDTO>(childEntity);
     }
 
     [Authorize]
     public async Task<IEnumerable<CreateChildResponseDTO>> GetChildrenInCurrentFamily()
     {
         var userId = GetCurrentAccountIdThroughToken();
-        
+
         // Find family in family roles
         var userFamilyRoleEntity = await unitOfWork.GetRepository<UserFamilyRoleEntity>()
             .FirstOrDefaultAsync(predicate: u => u.UserId == userId);
         if (userFamilyRoleEntity == null)
             throw new BusinessException("Người dùng không nằm trong gia đình nào cả!");
-        
+
         var childRepository = unitOfWork.GetRepository<ChildEntity>();
         var children = await childRepository.GetListAsync(predicate: c => c.FamilyId == userFamilyRoleEntity.FamilyId);
         // return children;
-        
+
         return mapper.Map<IEnumerable<CreateChildResponseDTO>>(children);
     }
+
     public async Task<IEnumerable<CreateChildResponseDTO>> GetAllChildren()
     {
         var childRepository = unitOfWork.GetRepository<ChildEntity>();
         var children = await childRepository.GetListAsync();
         // return children;
-        
+
         return mapper.Map<IEnumerable<CreateChildResponseDTO>>(children);
     }
 
@@ -85,9 +75,10 @@ public class ChildService(
             logger.LogError($"Child with id {id} not found");
             return null;
         }
+
         return mapper.Map<CreateChildResponseDTO>(child);
     }
-    
+
     public async Task<ChildEntity> GetChildTodayById(Guid id)
     {
         var today = DateTime.UtcNow.Date;
@@ -99,24 +90,23 @@ public class ChildService(
                 .Include(c => c.Feedings.Where(f => f.CreatedAt.Date == today))
                 .Include(c => c.Sleeps.Where(s => s.CreatedAt.Date == today)));
 
-        return child == null ? 
-            throw new NotFoundException($"Child with id {id} not found") : 
-            child;
+        return child == null ? throw new NotFoundException($"Child with id {id} not found") : child;
     }
 
     public async Task<CreateChildResponseDTO> UpdateChild(Guid id, CreateChildRequestDTO request)
     {
         var childRepository = unitOfWork.GetRepository<ChildEntity>();
-        var child = await childRepository.FirstOrDefaultAsync(predicate:c => c.Id == id);
+        var child = await childRepository.FirstOrDefaultAsync(predicate: c => c.Id == id);
         if (child == null)
         {
             logger.LogError($"Child with id {id} not found");
             throw new NotFoundException($"Child with id {id} not found");
         }
+
         // mapper.Map(request, child);
         child.FullName = request.FullName;
         child.BirthDate = request.BirthDate;
-        child.Sex = request.Sex;
+        // child.Gender = request.Sex;
         child.Notes = request.Notes;
         child.UpdatedAt = DateTime.UtcNow;
         childRepository.UpdateAsync(child);
@@ -127,12 +117,13 @@ public class ChildService(
     public async Task<bool> DeleteChild(Guid id)
     {
         var childRepository = unitOfWork.GetRepository<ChildEntity>();
-        var child = await childRepository.FirstOrDefaultAsync(predicate:c => c.Id == id);
+        var child = await childRepository.FirstOrDefaultAsync(predicate: c => c.Id == id);
 
         if (child == null)
         {
             return false;
         }
+
         childRepository.Delete(child);
         await unitOfWork.SaveChangesAsync();
         return true;

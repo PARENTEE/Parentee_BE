@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.EntityFrameworkCore;
+using Parentee_BE.DAL.Data.Enums;
 
 namespace Parentee_BE.DAL.Data.Entities;
 
@@ -32,8 +33,8 @@ public partial class ChildEntity
     [Column("birth_date")]
     public DateOnly BirthDate { get; set; }
 
-    [Column("sex")]
-    public string? Sex { get; set; }
+    [Column("gender")]
+    public Gender? Gender { get; set; }
 
     [Column("photo_image_id")]
     public Guid? PhotoImageId { get; set; }
