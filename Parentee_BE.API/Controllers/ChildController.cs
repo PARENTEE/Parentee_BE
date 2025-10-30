@@ -18,7 +18,7 @@ public class ChildController(IChildService childService, IMapper mapper, ILogger
         return Ok(ApiResponseBuilder.BuildResponse(
             statusCode: StatusCodes.Status201Created,
             isSuccess: true,
-            message: "Create child successfully",
+            message: "Tạo em bé thành công",
             data: createResult));
     }
 
@@ -102,19 +102,10 @@ public class ChildController(IChildService childService, IMapper mapper, ILogger
     public async Task<IActionResult> UpdateChild(Guid id, [FromBody] CreateChildRequestDTO request)
     {
         var updatedChild = await childService.UpdateChild(id, request);
-        if (updatedChild == null)
-        {
-            return NotFound(ApiResponseBuilder.BuildResponse<bool>(
-                statusCode: StatusCodes.Status404NotFound,
-                isSuccess: false,
-                message: "Child not found",
-                data: false
-            ));
-        }
         return Ok(ApiResponseBuilder.BuildResponse(
             statusCode: StatusCodes.Status200OK,
             isSuccess: true,
-            message: "Update child successfully",
-            data: true));
+            message: "Cập nhật thông tin em bé thành công",
+            data: updatedChild));
     }
 }

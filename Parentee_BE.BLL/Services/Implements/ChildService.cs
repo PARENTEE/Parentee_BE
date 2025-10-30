@@ -100,17 +100,13 @@ public class ChildService(
         if (child == null)
         {
             logger.LogError($"Child with id {id} not found");
-            throw new NotFoundException($"Child with id {id} not found");
+            throw new NotFoundException("Em bé này không tìm thấy");
         }
 
-        // mapper.Map(request, child);
-        child.FullName = request.FullName;
-        child.BirthDate = request.BirthDate;
-        // child.Gender = request.Sex;
-        child.Notes = request.Notes;
+        mapper.Map(request, child);
+        child.Id = id;
         child.UpdatedAt = DateTime.UtcNow;
         childRepository.UpdateAsync(child);
-        await unitOfWork.SaveChangesAsync();
         return mapper.Map<CreateChildResponseDTO>(child);
     }
 
