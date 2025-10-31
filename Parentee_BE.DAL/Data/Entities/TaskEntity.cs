@@ -19,17 +19,11 @@ public partial class TaskEntity
     [Column("title")]
     public string Title { get; set; } = null!;
 
-    [Column("description")]
-    public string? Description { get; set; }
-
     [Column("starts_at")]
     public DateTime? StartsAt { get; set; }
 
     [Column("ends_at")]
     public DateTime? EndsAt { get; set; }
-
-    [Column("all_day")]
-    public bool AllDay { get; set; }
     
     [Column("status")]
     public TaskStatus Status { get; set; }

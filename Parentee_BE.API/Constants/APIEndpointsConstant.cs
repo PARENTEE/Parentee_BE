@@ -92,7 +92,9 @@ public class APIEndpointsConstant
         public const string TASK_ENDPOINT = API_ENDPOINT + "/task";
         public const string CREATE_TASK_ENDPOINT = TASK_ENDPOINT;
         public const string GET_TASK_BY_ID_ENDPOINT = TASK_ENDPOINT + "/{id}";
+        public const string GET_TASK_BY_ID_AND_DATE_ENDPOINT = TASK_ENDPOINT + "/{childId}/{date}";
         public const string UPDATE_TASK_ENDPOINT = TASK_ENDPOINT + "/{id}";
+        public const string UPDATE_TASK_STATUS_ENDPOINT = TASK_ENDPOINT + "/{id}/{status}";
         public const string DELETE_TASK_ENDPOINT = TASK_ENDPOINT + "/{id}";
     }
     

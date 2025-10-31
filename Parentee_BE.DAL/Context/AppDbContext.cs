@@ -537,7 +537,6 @@ public partial class AppDbContext : DbContext
             entity.HasKey(e => e.Id).HasName("task_pkey");
 
             entity.Property(e => e.Id).HasDefaultValueSql("gen_random_uuid()");
-            entity.Property(e => e.AllDay).HasDefaultValue(false);
             entity.Property(e => e.CreatedAt).HasDefaultValueSql("now()");
             entity.Property(e => e.UpdatedAt).HasDefaultValueSql("now()");
 

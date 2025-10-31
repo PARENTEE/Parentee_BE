@@ -10,7 +10,9 @@ public class TaskMapper : Profile
     public TaskMapper()
     {
         // Request -> Entity
-        CreateMap<CreateTaskRequest, TaskEntity>();
+        CreateMap<CreateTaskRequest, TaskEntity>()
+            .ForMember(dest => dest.StartsAt, opt => opt.MapFrom(src => DateTime.SpecifyKind(src.StartsAt, DateTimeKind.Utc)))
+            .ForMember(dest => dest.EndsAt, opt => opt.MapFrom(src => DateTime.SpecifyKind(src.EndsAt, DateTimeKind.Utc)));
         CreateMap<UpdateTaskRequest, TaskEntity>();
 
         // Entity -> Response

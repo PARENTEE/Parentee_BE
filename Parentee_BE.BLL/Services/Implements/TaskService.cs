@@ -8,6 +8,7 @@ using Parentee_BE.DAL.Data.Exceptions;
 using Parentee_BE.DAL.Data.RequestDTO.Task;
 using Parentee_BE.DAL.Data.ResponseDTO.Task;
 using Parentee_BE.DAL.Data.Repositories.Interfaces;
+using TaskStatus = Parentee_BE.DAL.Data.Enums.TaskStatus;
 
 namespace Parentee_BE.BLL.Services.Implements;
 
@@ -27,10 +28,10 @@ public class TaskService(
         return mapper.Map<GetTaskResponse>(entity);
     }
 
-    public async Task<ICollection<GetTaskResponse>> GetTasksByFamilyIdAndDate(Guid familyId, DateTime date)
+    public async Task<ICollection<GetTaskResponse>> GetTasksByFamilyIdAndDate(Guid childId, DateTime date)
     {
         // 1. Define the date range for the entire day
-        var startDate = date.Date; // Sets the time to 00:00:00
+        var startDate = DateTime.SpecifyKind(date.Date, DateTimeKind.Utc);
         var endDate = startDate.AddDays(1); // The start of the next day
 
         var tasks = await unitOfWork.GetRepository<TaskEntity>()
@@ -42,13 +43,10 @@ public class TaskService(
                     Id = t.Id,
                     ChildId = t.ChildId,
                     Title = t.Title,
-                    Description = t.Description,
                     StartsAt = t.StartsAt, // <-- Use the actual start time from the task
                     EndsAt = t.EndsAt,     // <-- Use the actual end time from the task
                     Status = t.Status,
-                    AllDay = t.AllDay,
                     CreatedBy = t.CreatedBy,
-                    // Map other properties as needed...
                 },
 
                 // 3. Use the date range in the predicate
@@ -93,7 +91,7 @@ public class TaskService(
 
     public async Task<GetTaskResponse> CreateTask(CreateTaskRequest requestDto)
     {
-        var entity = mapper.Map<CreateTaskRequest, TaskEntity>(requestDto);
+        var entity = mapper.Map<TaskEntity>(requestDto);
         await unitOfWork.GetRepository<TaskEntity>().InsertAsync(entity);
         return mapper.Map<TaskEntity, GetTaskResponse>(entity);
     }
@@ -122,6 +120,16 @@ public class TaskService(
 
         // Map the updated entity back to a response object
         return mapper.Map<TaskEntity, GetTaskResponse>(task);
+    }
+
+    public async Task<int> UpdateTaskStatus(Guid id, TaskStatus taskStatus)
+    {
+        var entity = new TaskEntity() { Id = id, Status = taskStatus };
+
+        unitOfWork.Context.Tasks.Attach(entity);
+        unitOfWork.Context.Entry(entity).Property(e => e.Status).IsModified = true;
+
+        return await unitOfWork.Context.SaveChangesAsync();
     }
 
     public async Task<bool> DeleteTask(Guid id)
