@@ -203,6 +203,7 @@ builder.Services.AddScoped<IPurchaseService, PurchaseService>();
 builder.Services.AddScoped<IUserFamilyRoleService, UserFamilyRoleService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ITaskService, TaskService>();
+builder.Services.AddScoped<IInvoiceService, InvoiceService>();
 
 
 builder.Services.AddScoped<TokenHelper>();
