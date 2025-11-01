@@ -76,8 +76,8 @@ public static class SeedingData
     
     private static readonly List<DiaperChangeEntity> DiaperChangeEntities = 
     [
-        new() { Id = Guid.NewGuid(), ChildId = ChildEntities.First().Id, ChangedAt = DateTime.UtcNow.AddHours(-6), Type = DiaperType.Pee, Notes = "Morning diaper change", CreatedBy = Users[0].Id, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow },
-        new() { Id = Guid.NewGuid(), ChildId = ChildEntities.First().Id, ChangedAt = DateTime.UtcNow.AddHours(-2), Type = DiaperType.Poo, Notes = "Afternoon change with slight rash", CreatedBy = Users[0].Id, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow }
+        new() { Id = Guid.NewGuid(), ChildId = ChildEntities.First().Id, ChangedAt = DateTime.UtcNow.AddHours(-6), Type = DiaperType.Pee, DiaperQuantity = DiaperQuantity.Small, Notes = "Morning diaper change", CreatedBy = Users[0].Id, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, DiaperWaste = DiaperWaste.Loose},
+        new() { Id = Guid.NewGuid(), ChildId = ChildEntities.First().Id, ChangedAt = DateTime.UtcNow.AddHours(-2), Type = DiaperType.Poo, DiaperQuantity = DiaperQuantity.Small, Notes = "Afternoon change with slight rash", CreatedBy = Users[0].Id, CreatedAt = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, DiaperWaste = DiaperWaste.Loose }
     ];
     
     private static readonly List<SleepEntity> SleepEntities = 
