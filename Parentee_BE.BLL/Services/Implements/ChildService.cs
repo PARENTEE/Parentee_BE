@@ -92,6 +92,33 @@ public class ChildService(
 
         return child == null ? throw new NotFoundException($"Child with id {id} not found") : child;
     }
+    public async Task<ChildEntity> GetChildReport(Guid id, DateTime date)
+    {
+        // Giả sử bạn truyền vào date = "2025-11-02"
+        // Xác định múi giờ Việt Nam
+        var vnZone = TimeZoneInfo.FindSystemTimeZoneById("SE Asia Standard Time");
+
+        // Định nghĩa ngày bắt đầu và kết thúc theo giờ Việt Nam
+        var startOfDayLocal = new DateTime(date.Year, date.Month, date.Day, 0, 0, 0, DateTimeKind.Unspecified);
+        var endOfDayLocal = startOfDayLocal.AddDays(1);
+
+        // Chuyển sang UTC để so sánh với dữ liệu trong DB
+        var startOfDayUtc = TimeZoneInfo.ConvertTimeToUtc(startOfDayLocal, vnZone);
+        var endOfDayUtc = TimeZoneInfo.ConvertTimeToUtc(endOfDayLocal, vnZone);
+
+        var childRepository = unitOfWork.GetRepository<ChildEntity>();
+        var child = await childRepository.FirstOrDefaultAsync(
+            predicate: c => c.Id == id,
+            include: q => q
+                .Include(c => c.Feedings.Where(f => f.StartedAt >= startOfDayUtc && f.StartedAt < endOfDayUtc))
+                .Include(c => c.SolidFood.Where(t => t.AteAt >= startOfDayUtc && t.AteAt < endOfDayUtc))
+                .Include(c => c.DiaperChanges.Where(dp => dp.ChangedAt >= startOfDayUtc && dp.ChangedAt < endOfDayUtc))
+                .Include(c => c.Sleeps.Where(s => s.StartedAt >= startOfDayUtc && s.StartedAt < endOfDayUtc))
+        );
+
+        return child ?? throw new NotFoundException($"Child with id {id} not found");
+    }
+
 
     public async Task<CreateChildResponseDTO> UpdateChild(Guid id, CreateChildRequestDTO request)
     {

@@ -29,9 +29,19 @@ public class FeedingService(
     public async Task<GetFeedingResponse> CreateFeeding(CreateFeedingRequest requestDto)
     {
         var feedingEntity = mapper.Map<FeedingEntity>(requestDto);
-        Console.Write(feedingEntity);
+
+        // Convert về UTC ngay từ đầu
+        var startedAtUtc = DateTime.SpecifyKind(requestDto.StartedAt, DateTimeKind.Local).ToUniversalTime();
+
+        var longerDuration = requestDto.LeftDuration > requestDto.RightDuration
+            ? requestDto.LeftDuration
+            : requestDto.RightDuration;
+
+        feedingEntity.StartedAt = startedAtUtc;
+        feedingEntity.EndedAt = startedAtUtc.AddMinutes(longerDuration.TotalMinutes);
+
         await unitOfWork.GetRepository<FeedingEntity>().InsertAsync(feedingEntity);
-        return mapper.Map<FeedingEntity, GetFeedingResponse>(feedingEntity);;
+        return mapper.Map<GetFeedingResponse>(feedingEntity);
     }
 
     public async Task<GetFeedingResponse> UpdateFeeding(Guid id, UpdateFeedingRequest requestDto)

@@ -6,6 +6,7 @@ using Parentee_BE.Constants;
 using Parentee_BE.DAL.Data.Entities;
 using Parentee_BE.DAL.Data.Metadatas;
 using Parentee_BE.DAL.Data.RequestDTO.Children;
+using Parentee_BE.DAL.Data.ResponseDTO.Children;
 
 namespace Parentee_BE.API.Controllers;
 
@@ -42,6 +43,17 @@ public class ChildController(IChildService childService, IMapper mapper, ILogger
             isSuccess: true,
             message: "Get children in current family successfully",
             data: children));
+    }
+    
+    [HttpGet(APIEndpointsConstant.ChildEndpoints.GET_CHILD_REPORT_ENDPOINT)]
+    public async Task<IActionResult> GetChildReport([FromRoute] Guid id,[FromRoute] DateTime date)
+    {
+        var child = await childService.GetChildReport(id, date);
+        return Ok(ApiResponseBuilder.BuildResponse(
+            statusCode: StatusCodes.Status201Created,
+            isSuccess: true,
+            message: "Get children in current family successfully",
+            data: mapper.Map<GetChildReportResponse>(child)));
     }
     
     [HttpGet(APIEndpointsConstant.ChildEndpoints.GET_CHILD_BY_ID_ENDPOINT)]
