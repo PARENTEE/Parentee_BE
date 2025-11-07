@@ -61,5 +61,6 @@ jobs:
         with:
           app-name: 'parentee-be'
           slot-name: 'Production'
-          package: .
+          package: './**'
+
           
