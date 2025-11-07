@@ -51,9 +51,9 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_A2264AC528924903A6192B6DAF29A647 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_88965CF776464C2D8DBA4F24F0F7275B }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_BC252FF97AA64EAEBA40ABA61DF947BB }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_5FDEF534CFC543F5AE0CA3F6069A2A07 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_9D15529E4E04486C993B48CC89074CB3 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_EDD3693E37814E2C80A44CD7E8F1118F }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
@@ -61,5 +61,6 @@ jobs:
         with:
           app-name: 'parentee-be'
           slot-name: 'Production'
-          package: .
+          package: './**'
+
           
