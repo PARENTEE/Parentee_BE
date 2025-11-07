@@ -24,8 +24,17 @@ public class FamilyMapper : Profile
             .ForMember(dest => dest.UpdatedAt, opt => opt.MapFrom(src => src.User.UpdatedAt));
 
         CreateMap<UserEntity, GetUserFamily>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.Id))
             .ForMember(dest => dest.FamilyRole, opt => opt.MapFrom(u => u.UserFamilyRole.Role));
         
+        CreateMap<UserFamilyRoleEntity, GetUserFamily>()
+            .ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.UserId))
+            .ForMember(dest => dest.FullName, opt => opt.MapFrom(src => src.User.FullName))
+            .ForMember(dest => dest.Email, opt => opt.MapFrom(src => src.User.Email))
+            .ForMember(dest => dest.Gender, opt => opt.MapFrom(src => src.User.Gender))
+            .ForMember(dest => dest.InvitationStatus, opt => opt.MapFrom(src => src.InvitationStatus))
+            .ForMember(dest => dest.FamilyRole, opt => opt.MapFrom(u => u.Role));
+
         // Request -> Entity
         CreateMap<CreateFamilyRequest, FamilyEntity>();
         CreateMap<UpdateFamilyRequest, FamilyEntity>();

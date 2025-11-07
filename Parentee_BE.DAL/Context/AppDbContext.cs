@@ -547,6 +547,9 @@ public partial class AppDbContext : DbContext
             
             entity.HasOne(d => d.UpdatedByNavigation).WithMany(p => p.TaskUpdatedByNavigations)
                 .HasConstraintName("task_updated_by_fkey");
+            
+            entity.HasOne(d => d.AssignedToNavigation).WithMany(p => p.TaskAssignedToNavigations)
+                .HasConstraintName("task_assigned_to_fkey");
         });
 
         modelBuilder.Entity<TaskRecurrenceEntity>(entity =>

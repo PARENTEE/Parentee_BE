@@ -103,6 +103,9 @@ public partial class UserEntity
 
     [InverseProperty("UpdatedByNavigation")]
     public virtual ICollection<TaskEntity> TaskUpdatedByNavigations { get; set; } = new List<TaskEntity>();
+    
+    [InverseProperty("AssignedToNavigation")]
+    public virtual ICollection<TaskEntity> TaskAssignedToNavigations { get; set; } = new List<TaskEntity>();
 
     [InverseProperty("User")]
     public virtual UserFamilyRoleEntity? UserFamilyRole { get; set; }

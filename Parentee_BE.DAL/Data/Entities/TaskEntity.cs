@@ -33,6 +33,9 @@ public partial class TaskEntity
 
     [Column("updated_by")]
     public Guid? UpdatedBy { get; set; }
+    
+    [Column("assigned_to")]
+    public Guid? AssignedTo { get; set; }
 
     [Column("created_at")]
     public DateTime CreatedAt { get; set; }
@@ -50,14 +53,19 @@ public partial class TaskEntity
     [ForeignKey("CreatedBy")]
     [InverseProperty("TaskCreatedByNavigations")]
     public virtual UserEntity? CreatedByNavigation { get; set; }
+    
+    [ForeignKey("UpdatedBy")]
+    [InverseProperty("TaskUpdatedByNavigations")]
+    public virtual UserEntity? UpdatedByNavigation { get; set; }
+    
+    [ForeignKey("AssignedTo")]
+    [InverseProperty("TaskAssignedToNavigations")]
+    public virtual UserEntity? AssignedToNavigation { get; set; }
 
     [InverseProperty("Task")]
     public virtual ICollection<ReminderEntity> Reminders { get; set; } = new List<ReminderEntity>();
 
     [InverseProperty("Task")]
     public virtual ICollection<TaskRecurrenceEntity> TaskRecurrences { get; set; } = new List<TaskRecurrenceEntity>();
-
-    [ForeignKey("UpdatedBy")]
-    [InverseProperty("TaskUpdatedByNavigations")]
-    public virtual UserEntity? UpdatedByNavigation { get; set; }
+    
 }

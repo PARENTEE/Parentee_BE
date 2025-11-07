@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Parentee_BE.BLL.Services.Interfaces;
 using Parentee_BE.DAL.Context;
@@ -8,6 +9,7 @@ using Parentee_BE.DAL.Data.Exceptions;
 using Parentee_BE.DAL.Data.RequestDTO.Task;
 using Parentee_BE.DAL.Data.ResponseDTO.Task;
 using Parentee_BE.DAL.Data.Repositories.Interfaces;
+using Parentee_BE.DAL.Data.ResponseDTO.Users;
 using TaskStatus = Parentee_BE.DAL.Data.Enums.TaskStatus;
 
 namespace Parentee_BE.BLL.Services.Implements;
@@ -46,6 +48,14 @@ public class TaskService(
                     StartsAt = t.StartsAt, // <-- Use the actual start time from the task
                     EndsAt = t.EndsAt,     // <-- Use the actual end time from the task
                     Status = t.Status,
+                    // ✅ Map 2 field bạn muốn
+                    AssignedToFullName = t.AssignedToNavigation != null
+                        ? t.AssignedToNavigation.FullName
+                        : null,
+
+                    AssignedToRole = t.AssignedToNavigation != null
+                        ? t.AssignedToNavigation.UserFamilyRole!.Role.ToString()
+                        : "None",
                     CreatedBy = t.CreatedBy,
                 },
 
@@ -53,6 +63,9 @@ public class TaskService(
                 predicate: t => // t.FamilyId == familyId && 
                                 t.StartsAt >= startDate && 
                                 t.StartsAt < endDate,
+                
+                include: q => q.Include(t => t.AssignedToNavigation)!
+                    .ThenInclude(u => u.UserFamilyRole),
             
                 // (Optional but recommended) Order the tasks by time
                 orderBy: q => q.OrderBy(t => t.StartsAt)
