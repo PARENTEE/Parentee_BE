@@ -1,6 +1,45 @@
 ﻿services:
-  parentee_be:
-    image: parentee_be
+  parentee.api:
     build:
       context: .
-      dockerfile: Parentee_BE/Dockerfile
+      dockerfile: Parentee_BE.API/Dockerfile
+    depends_on:
+      - postgres
+    environment:
+      ASPNETCORE_URLS: "http://+:8080"
+      ConnectionStrings__PostgresConnectionString: "Host=postgres;Port=5432;Database=ParenteeDb;Username=postgres;Password=postgres"
+    ports:
+      - "8080:8080"
+
+  postgres:
+    image: postgres:16
+    container_name: parentee-postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: ParenteeDb
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: parentee-pgadmin
+    restart: always
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "8081:80"
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:
+    driver: local
+    driver_opts:
+      type: none
+      device: /var/lib/docker/volumes
+      o: bind

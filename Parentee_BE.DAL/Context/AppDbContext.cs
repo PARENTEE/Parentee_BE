@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Parentee_BE.DAL.Data.Entities;
 using Parentee_BE.DAL.Data.Enums;
 using TaskStatus = Parentee_BE.DAL.Data.Enums.TaskStatus;
