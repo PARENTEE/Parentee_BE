@@ -11,11 +11,7 @@ namespace Parentee_BE.AI.Plugins.PluginDto
         [Description("The unique identifier of the child.")]
         [JsonPropertyName("id")]
         public Guid Id { get; set; }
-
-        [Description("The unique identifier of the family this child belongs to.")]
-        [JsonPropertyName("familyId")]
-        public Guid FamilyId { get; set; }
-
+        
         [Description("The full name of the child.")]
         [JsonPropertyName("fullName")]
         public string FullName { get; set; }
@@ -36,9 +32,9 @@ namespace Parentee_BE.AI.Plugins.PluginDto
         [JsonPropertyName("notes")]
         public string? Notes { get; set; }
 
-        [Description("The most recent measurement record for the child.")]
-        [JsonPropertyName("measurement")]
-        public virtual MeasurementResponse Measurement { get; set; }
+        [Description("A list of all solid food intake events recorded for the child today.")]
+        [JsonPropertyName("solidFoods")]
+        public ICollection<SolidFoodResponse> SolidFoods { get; set; }
 
         [Description("A list of all diaper change events recorded for the child today.")]
         [JsonPropertyName("diaperChanges")]
@@ -53,29 +49,25 @@ namespace Parentee_BE.AI.Plugins.PluginDto
         public virtual ICollection<SleepResponse> Sleeps { get; set; }
     }
 
-    public class MeasurementResponse
+    public class SolidFoodResponse
     {
-        [Description("The type of measurement (e.g., Weight, Height).")]
-        [JsonPropertyName("type")]
-        public MeasureType Type { get; set; }
+        [Description("The date and time the child ate the solid food.")]
+        [JsonPropertyName("ateAt")]
+        public DateTime AteAt { get; set; }
 
-        [Description("The date and time when the measurement was taken.")]
-        [JsonPropertyName("measuredAt")]
-        public DateTime MeasuredAt { get; set; }
+        [Description("The name of the solid food eaten by the child.")]
+        [JsonPropertyName("name")]
+        public string Name { get; set; }
 
-        [Description("The measured value.")]
-        [JsonPropertyName("value")]
-        public decimal Value { get; set; }
+        [Description("The quantity of the food eaten.")]
+        [JsonPropertyName("quantity")]
+        public double Quantity { get; set; }
 
-        [Description("The unit of measurement (e.g., kg, cm).")]
+        [Description("The unit of measurement for the quantity (e.g., grams, ml).")]
         [JsonPropertyName("unit")]
-        public string Unit { get; set; } = null!;
+        public string Unit { get; set; }
 
-        [Description("The source of the measurement data, if available.")]
-        [JsonPropertyName("source")]
-        public string? Source { get; set; }
-
-        [Description("Additional notes about the measurement.")]
+        [Description("Additional notes or comments about this food intake.")]
         [JsonPropertyName("notes")]
         public string? Notes { get; set; }
 

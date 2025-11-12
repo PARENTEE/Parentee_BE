@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Parentee_BE.AI.Arugments;
 using Parentee_BE.AI.Services;
 using Parentee_BE.BLL.Services.Interfaces;
@@ -8,24 +10,17 @@ using Parentee_BE.DAL.Data.RequestDTO.Ai;
 
 namespace Parentee_BE.API.Controllers;
 
-public class AiController(ILogger<AiController> logger, RagChatService ragChatService) : BaseController<AiController>(logger)
+public class AiController(ILogger<AiController> logger, RagChatService ragChatService,IHttpContextAccessor httpContextAccessor) : BaseController<AiController>(logger)
 {
+    [Authorize]
     [HttpPost(APIEndpointsConstant.AiEndpoints.CHAT_ENDPOINT)]
     public async Task<IActionResult> Chat([FromBody] ChatRequestDTO requestDto)
     {
-        var userArgument = new UserArgument()
-        {
-            Email = "newcustomer@gmail.com",
-            Name = "Tran Viet Cuong",
-            Role = "User",
-            ChildId = requestDto.ChildId
-        };
-
         return Ok(ApiResponseBuilder.BuildResponse(
             statusCode: StatusCodes.Status200OK,
             isSuccess: true,
             message: "Handle chat successful",
-            data: await ragChatService.ChatAnswer(userArgument, requestDto.Message)
+            data: await ragChatService.ChatAnswer(requestDto.Message)
         ));
     }
 }

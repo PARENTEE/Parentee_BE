@@ -77,15 +77,17 @@ public class ChildController(IChildService childService, IMapper mapper, ILogger
             data: child));
     }
     
-    [HttpGet(APIEndpointsConstant.ChildEndpoints.GET_CHILD_TODAY_BY_ID_ENDPOINT)]
-    public async Task<IActionResult> GetChildTodayById(Guid id)
+    [HttpGet(APIEndpointsConstant.ChildEndpoints.GET_CHILD_STATUS_BY_ID_ENDPOINT)]
+    public async Task<IActionResult> GetChildStatus(
+        [FromQuery] DateTime date,
+        [FromQuery] string childName)
     {
-        var child = await childService.GetChildTodayById(id);
+        var child = await childService.GetChildStatus(null, date, childName);
         
         return Ok(ApiResponseBuilder.BuildResponse(
             statusCode: StatusCodes.Status200OK,
             isSuccess: true,
-            message: "Get child today successfully",
+            message: "Lấy dữ liệu bé thành công",
             data: mapper.Map<GetChildTodayForAiResponse>(child)
         ));
     }

@@ -11,6 +11,7 @@ public interface IChildService
     Task<IEnumerable<CreateChildResponseDTO>> GetAllChildren();
     Task<CreateChildResponseDTO> GetChildById(Guid id);
     Task<ChildEntity> GetChildTodayById(Guid id);
+    Task<ChildEntity> GetChildStatus(Guid? userId, DateTime date, string childName);
     Task<ChildEntity> GetChildReport(Guid id, DateTime date);
     Task<CreateChildResponseDTO> UpdateChild(Guid id, CreateChildRequestDTO request);
     Task<bool> DeleteChild(Guid id);

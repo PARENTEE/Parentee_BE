@@ -19,12 +19,7 @@ public class ChildMapper : Profile
 
         // Entity -> Response
         CreateMap<ChildEntity, CreateChildResponseDTO>();
-        CreateMap<ChildEntity, GetChildTodayResponse>()
-            .ForMember(dest => dest.Measurement, opt => opt.MapFrom(c => c.Measurements.FirstOrDefault()))
-            .ForMember(dest => dest.Feedings, opt => opt.MapFrom(c => c.Feedings))
-            .ForMember(dest => dest.DiaperChanges, opt => opt.MapFrom(c => c.DiaperChanges))
-            .ForMember(dest => dest.Sleeps, opt => opt.MapFrom(c => c.Sleeps));
-
+        
         // Report Response
         CreateMap<FeedingEntity, ReportTimeBlock>()
             .ForMember(dest => dest.Message, opt => opt.MapFrom(c => "Bé được cho bú."))

@@ -1,7 +1,10 @@
 ﻿#pragma warning disable SKEXP0001
 
 using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.AI;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.VectorData;
 using Microsoft.SemanticKernel;
 using Microsoft.SemanticKernel.ChatCompletion;
@@ -10,14 +13,22 @@ using Microsoft.SemanticKernel.PromptTemplates.Handlebars;
 using Parentee_BE.AI.Arugments;
 using Parentee_BE.AI.Models;
 using Parentee_BE.AI.Prompts;
+using Parentee_BE.BLL.Services;
+using Parentee_BE.DAL.Context;
+using Parentee_BE.DAL.Data.Entities;
+using Parentee_BE.DAL.Data.Repositories.Interfaces;
 
 namespace Parentee_BE.AI.Services;
 
 public class RagChatService(
+    IUnitOfWork<AppDbContext> unitOfWork,
+    ILogger<RagChatService> logger,
+    IHttpContextAccessor httpContextAccessor,
     VectorStore vectorStore,
     Kernel kernel,
     IChatCompletionService chatCompletionService,
-    IEmbeddingGenerator<string, Embedding<float>> _textEmbeddingGenerator )
+    IEmbeddingGenerator<string, Embedding<float>> _textEmbeddingGenerator) : 
+    BaseService<RagChatService>(unitOfWork, logger, httpContextAccessor)
 {
     private ICollection<string> ExtractKeywords(string query)
     {
@@ -108,8 +119,23 @@ public class RagChatService(
         return templateResponse.ToString();
     }
 
-    public async Task<string> ChatAnswer(UserArgument userArgument, string question)
+    public async Task<string> ChatAnswer(string question)
     {
+        var userId = GetCurrentAccountIdThroughToken();
+        
+        var userEntity = await unitOfWork.GetRepository<UserEntity>()
+            .FirstOrDefaultAsync(predicate: u => u.Id == userId,
+                include: q => q.Include(u => u.UserFamilyRole));
+        
+        // Set User Arguments
+        var userArguments = new UserArgument()
+        {
+            UserId = userId,
+            Name = userEntity.FullName,
+            Email = userEntity.Email,
+            Role = userEntity.UserFamilyRole.Role.ToString()
+        };
+        
         // Chat
         GeminiPromptExecutionSettings geminiPromptExecutionSettings = new()
         {
@@ -119,7 +145,7 @@ public class RagChatService(
 
         var history = new ChatHistory();
         // history.AddSystemMessage(renderedPrompt);
-        history.AddSystemMessage(ParenteePrompt.GetChatPrompt("Trần Việt Cường", userArgument.ChildId));
+        history.AddSystemMessage(ParenteePrompt.GetChatPrompt(userArguments));
         history.AddUserMessage(question);
    
         var chatResult = await chatCompletionService.GetChatMessageContentAsync(

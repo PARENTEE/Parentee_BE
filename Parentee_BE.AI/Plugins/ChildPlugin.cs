@@ -18,22 +18,28 @@ public class ChildPlugin
         _mapper = mapper;
         _logger = logger;
     }
-
-    [KernelFunction("get_children_today")]
-    [Description("Get today's data for a child including measurement, feeding, diaper changes, and sleeps.")]
+    
+    [KernelFunction("get_children_status")]
+    [Description("Get a specific data for a child including feeding, diaper changes, and sleeps.")]
     [return: Description("The child's daily data including measurement, feedings, sleeps, and diaper changes.")]
-    public async Task<GetChildTodayForAiResponse> GetChildrenToday(
-        [Description("The unique identifier (GUID) of the child.")] Guid childId)
+    public async Task<GetChildTodayForAiResponse> GetChildrenStatus(
+        [Description("The unique identifier (GUID) of the parent user.")] Guid userId,
+        [Description("The name of the child.")]
+        string childName,
+        [Description("The date that user want to search (optional).")]
+        DateTime? date = null)
     {
         try
         {
-            _logger.LogInformation("Get children today for {ChildId}", childId);
-            var childEntity = await _childService.GetChildTodayById(childId);
+            // ✅ Nếu user không truyền date, mặc định là hôm nay UTC
+            var searchDate = date?.Date ?? DateTime.UtcNow.Date;
+
+            var childEntity = await _childService.GetChildStatus(userId, searchDate, childName);
 
             if (childEntity == null)
             {
-                _logger.LogWarning("Child with ID {ChildId} not found.", childId);
-                return null; // or throw a custom exception
+                _logger.LogWarning("Child not found.");
+                return null; // hoặc throw custom exception
             }
 
             return _mapper.Map<GetChildTodayForAiResponse>(childEntity);
@@ -44,6 +50,4 @@ public class ChildPlugin
             throw;
         }
     }
-
-
 }

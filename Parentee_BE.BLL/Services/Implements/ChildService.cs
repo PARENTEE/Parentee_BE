@@ -92,6 +92,64 @@ public class ChildService(
 
         return child == null ? throw new NotFoundException($"Child with id {id} not found") : child;
     }
+    
+    public async Task<ChildEntity> GetChildStatus(
+        Guid? userId, DateTime date, string childName)
+    {
+        // Nếu userId null thì lấy từ token
+        userId ??= GetCurrentAccountIdThroughToken();
+        
+        // ✅ Ép DateTime về UTC nếu cần
+        if (date.Kind == DateTimeKind.Unspecified)
+            date = DateTime.SpecifyKind(date, DateTimeKind.Utc);
+
+        var startOfDay = date.Date;
+        var endOfDay = startOfDay.AddDays(1);
+
+        var child = await unitOfWork.GetRepository<UserFamilyRoleEntity>()
+            .CreateBaseQuery(
+                predicate: u => u.UserId == userId && u.Family != null,
+                include: q => q.Include(u => u.Family).ThenInclude(f => f.Children)
+                    .ThenInclude(c => c.SolidFood) // ✅ include luôn nếu cần
+                    .Include(u => u.Family).ThenInclude(f => f.Children)
+                    .ThenInclude(c => c.DiaperChanges)
+                    .Include(u => u.Family).ThenInclude(f => f.Children)
+                    .ThenInclude(c => c.Feedings)
+                    .Include(u => u.Family).ThenInclude(f => f.Children)
+                    .ThenInclude(c => c.Sleeps)
+            )
+            .SelectMany(u => u.Family.Children)
+            .Where(c => EF.Functions.ILike(c.FullName, $"%{childName}%"))
+            .Select(c => new ChildEntity
+            {
+                Id = c.Id,
+                FullName = c.FullName,
+                FamilyId = c.FamilyId,
+
+                SolidFood = c.SolidFood
+                    .Where(sf => sf.CreatedAt >= startOfDay && sf.CreatedAt < endOfDay)
+                    .ToList(),
+
+                DiaperChanges = c.DiaperChanges
+                    .Where(dp => dp.CreatedAt >= startOfDay && dp.CreatedAt < endOfDay)
+                    .ToList(),
+
+                Feedings = c.Feedings
+                    .Where(f => f.CreatedAt >= startOfDay && f.CreatedAt < endOfDay)
+                    .ToList(),
+
+                Sleeps = c.Sleeps
+                    .Where(s => s.CreatedAt >= startOfDay && s.CreatedAt < endOfDay)
+                    .ToList()
+            })
+            .FirstOrDefaultAsync();
+
+        return child ?? throw new NotFoundException("Không tìm thấy bé");
+    }
+
+
+
+    
     public async Task<ChildEntity> GetChildReport(Guid id, DateTime date)
     {
         // Giả sử bạn truyền vào date = "2025-11-02"

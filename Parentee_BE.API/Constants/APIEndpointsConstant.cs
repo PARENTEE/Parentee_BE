@@ -41,7 +41,7 @@ public class APIEndpointsConstant
         public const string GET_CHILDREN_IN_CURRENT_FAMILY_ENDPOINT = CHILD_ENDPOINT + "/current-family";
         public const string GET_CHILD_REPORT_ENDPOINT = CHILD_ENDPOINT + "/report/{id}/{date}";
         public const string GET_CHILD_BY_ID_ENDPOINT = CHILD_ENDPOINT + "/{id}";
-        public const string GET_CHILD_TODAY_BY_ID_ENDPOINT = CHILD_ENDPOINT + "/today/{id}";
+        public const string GET_CHILD_STATUS_BY_ID_ENDPOINT = CHILD_ENDPOINT + "/status";
         public const string UPDATE_CHILD_ENDPOINT = CHILD_ENDPOINT + "/{id}";
         public const string DELETE_CHILD_ENDPOINT = CHILD_ENDPOINT + "/{id}";
     }

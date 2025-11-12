@@ -38,7 +38,7 @@ public class ChatHub : Hub
     {
         // ✅ Khi user connect lần đầu → tạo ChatHistory mới
         _sessions[Context.ConnectionId] = new ChatHistory();
-        _sessions[Context.ConnectionId].AddSystemMessage(ParenteePrompt.GetChatPrompt("",Guid.Parse("f6f63db7-96e6-450b-bdbf-51e45bbdb171")));
+        // _sessions[Context.ConnectionId].AddSystemMessage(ParenteePrompt.GetChatPrompt("",Guid.Parse("f6f63db7-96e6-450b-bdbf-51e45bbdb171")));
         return base.OnConnectedAsync();
     }
 
