@@ -155,6 +155,6 @@ public class RagChatService(
         Console.WriteLine("Assistant > " + chatResult);
 
         // var chatResult = await kernel.InvokePromptAsync(question);
-        return chatResult.Content;
+        return chatResult.Content.Trim();
     }
 }

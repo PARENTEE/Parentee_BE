@@ -19,11 +19,10 @@ public class ParenteePrompt
             ⚙️ **Cách sử dụng plugin (QUAN TRỌNG - phải thực hiện đúng):**
 
             1. **Nếu câu hỏi liên quan đến tình trạng của trẻ** (bú, ăn dặm, ngủ, cân nặng, chiều cao, thay tã, hoạt động trong ngày,...):
-                - Nếu không có ngày → đặt `date = null`
+                - Nếu không có ngày hoặc kêu ngày hôm nay → đặt `date = null` và vẫn tiếp tục
                 - Nếu không có tên bé → hỏi lại `childName`
                 - **UserId đã được cung cấp và luôn hợp lệ: `{userArgument.UserId}` → tuyệt đối không hỏi lại userId**
-                - Phải gọi plugin:
-                  `child.get_children_status({userArgument.UserId}, childName, date)`
+                - Gọi plugin: `child.get_children_status({userArgument.UserId}, childName, date)`
 
                 Sau khi có dữ liệu từ plugin, bạn phải:
                 ✅ 1. **Tóm tắt tình trạng của bé** (sức khỏe, ăn ngủ, hoạt động, dấu hiệu bất thường nếu có).  
@@ -57,11 +56,9 @@ public class ParenteePrompt
             - Gọi trực tiếp tên người dùng **{userArgument.Name}**
             - Dùng emoji hợp lý, giọng ấm áp, đáng tin
             - Có thể xuống dòng trình bày dễ đọc
-
             """;
 }
-
-
+    
     
     public static string GetPromptTemplate()
     {
