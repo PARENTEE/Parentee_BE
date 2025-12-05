@@ -125,6 +125,7 @@ public class ChildService(
                 Id = c.Id,
                 FullName = c.FullName,
                 FamilyId = c.FamilyId,
+                BirthDate = c.BirthDate,
 
                 SolidFood = c.SolidFood
                     .Where(sf => sf.CreatedAt >= startOfDay && sf.CreatedAt < endOfDay)
