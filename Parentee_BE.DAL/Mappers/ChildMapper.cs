@@ -48,6 +48,18 @@ public class ChildMapper : Profile
             .ForMember(dest => dest.SolidFood, opt => opt.MapFrom(c => c.SolidFood))
             .ForMember(dest => dest.Sleep, opt => opt.MapFrom(c => c.Sleeps))
             .ForMember(dest => dest.DiaperChanges, opt => opt.MapFrom(c => c.DiaperChanges));
+        
+        CreateMap<DiaperChangeEntity, DiaperChangeResponse>();
+        CreateMap<FeedingEntity, FeedingResponse>();
+        CreateMap<SolidFoodEntity, SolidFoodResponse>();
+        CreateMap<SleepEntity, SleepResponse>();
+
+        CreateMap<ChildEntity, GetChildTodayForAiResponse>()
+            .ForMember(dest => dest.SolidFoods, opt => opt.MapFrom(c => c.SolidFood))
+            .ForMember(dest => dest.Feedings, opt => opt.MapFrom(c => c.Feedings))
+            .ForMember(dest => dest.DiaperChanges, opt => opt.MapFrom(c => c.DiaperChanges))
+            .ForMember(dest => dest.Sleeps, opt => opt.MapFrom(c => c.Sleeps));
+
     }
 
     private static string BuildDiaperMessage(DiaperChangeEntity c)

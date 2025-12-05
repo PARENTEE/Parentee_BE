@@ -7,6 +7,7 @@ using Parentee_BE.DAL.Data.Entities;
 using Parentee_BE.DAL.Data.Metadatas;
 using Parentee_BE.DAL.Data.RequestDTO.Children;
 using Parentee_BE.DAL.Data.ResponseDTO.Children;
+using GetChildTodayForAiResponse = Parentee_BE.DAL.Data.ResponseDTO.Children.GetChildTodayForAiResponse;
 
 namespace Parentee_BE.API.Controllers;
 

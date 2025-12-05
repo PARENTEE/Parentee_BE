@@ -15,7 +15,7 @@ public static class SeedingData
         {
             Id = Guid.NewGuid(),
             FullName = "Dad Tester",    
-            Email = "dadtester123@example.com",
+                Email = "dadtester123@example.com",
             Password = "Dadtester@123", 
             Gender = Gender.Male,
             IsPremium = true,
