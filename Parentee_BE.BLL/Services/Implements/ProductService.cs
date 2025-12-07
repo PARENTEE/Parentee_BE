@@ -35,53 +35,67 @@ public class ProductService(
     }
 
     public async Task<ProductDataPayment?> GetProductAndPriceAsync(
-    Guid productId, Guid? priceId = null, PriceType? priceType = null)
-{
-    var repo = _unitOfWork.GetRepository<ProductEntity>();
+        Guid productId, Guid? priceId = null, PriceType? priceType = null)
+    {
+        var productRepo = _unitOfWork.GetRepository<ProductEntity>();
+        var priceRepo = _unitOfWork.GetRepository<PriceEntity>();
 
-    return await repo.FirstOrDefaultAsync(
-        selector: p => new ProductDataPayment
+        // 1) Lấy product cơ bản
+        var product = await productRepo.FirstOrDefaultAsync(
+            selector: p => new { p.Id, p.Name },
+            predicate: p => p.Id == productId && p.IsActive && p.DeletedAt == null
+        );
+
+        if (product == null)
+            return null;
+
+        // 2) Chuẩn bị orderBy cho price dựa trên ưu tiên
+        Func<IQueryable<PriceEntity>, IOrderedQueryable<PriceEntity>> orderBy = q =>
         {
-            Id   = p.Id,
-            Name = p.Name,
+            if (priceId.HasValue)
+            {
+                // Đưa price có Id == priceId lên hàng đầu, sau đó lấy newest
+                return q.OrderBy(pr => pr.Id == priceId.Value ? 0 : 1)
+                        .ThenByDescending(pr => pr.CreatedAt);
+            }
 
-            PriceId = p.Prices
-                .Where(pr => pr.IsActive && pr.DeletedAt == null)
-                .OrderBy(pr =>
-                    priceId.HasValue   && pr.Id == priceId.Value          ? 0 :
-                    priceType.HasValue && pr.PriceType == priceType.Value ? 1 : 2)
-                .ThenByDescending(pr => pr.CreatedAt)
-                .Select(pr => pr.Id)
-                .FirstOrDefault(),
+            if (priceType.HasValue)
+            {
+                // Đưa price có PriceType trùng lên đầu, sau đó newest
+                return q.OrderBy(pr => pr.PriceType == priceType.Value ? 0 : 1)
+                        .ThenByDescending(pr => pr.CreatedAt);
+            }
 
-            PriceType = p.Prices
-                .Where(pr => pr.IsActive && pr.DeletedAt == null)
-                .OrderBy(pr =>
-                    priceId.HasValue   && pr.Id == priceId.Value          ? 0 :
-                    priceType.HasValue && pr.PriceType == priceType.Value ? 1 : 2)
-                .ThenByDescending(pr => pr.CreatedAt)
-                .Select(pr => pr.PriceType)
-                .FirstOrDefault(),
+            // Không có preference => newest
+            return q.OrderByDescending(pr => pr.CreatedAt);
+        };
 
-            Amount = p.Prices
-                .Where(pr => pr.IsActive && pr.DeletedAt == null)
-                .OrderBy(pr =>
-                    priceId.HasValue   && pr.Id == priceId.Value          ? 0 :
-                    priceType.HasValue && pr.PriceType == priceType.Value ? 1 : 2)
-                .ThenByDescending(pr => pr.CreatedAt)
-                .Select(pr => pr.Amount)
-                .FirstOrDefault(),
+        // 3) Lấy price phù hợp (chỉ 1 bản ghi)
+        var selectedPrice = await priceRepo.FirstOrDefaultAsync(
+            selector: pr => new
+            {
+                pr.Id,
+                pr.PriceType,
+                pr.Amount,
+                pr.Currency
+            },
+            predicate: pr => pr.ProductId == productId && pr.IsActive && pr.DeletedAt == null,
+            orderBy: orderBy
+        );
 
-            Currency = p.Prices
-                .Where(pr => pr.IsActive && pr.DeletedAt == null)
-                .OrderBy(pr =>
-                    priceId.HasValue   && pr.Id == priceId.Value          ? 0 :
-                    priceType.HasValue && pr.PriceType == priceType.Value ? 1 : 2)
-                .ThenByDescending(pr => pr.CreatedAt)
-                .Select(pr => pr.Currency)
-                .FirstOrDefault()
-        },
-        predicate: p => p.Id == productId && p.IsActive && p.DeletedAt == null
-    );
-}
+        // 4) Map ra ProductDataPayment
+        var result = new ProductDataPayment
+        {
+            Id = product.Id,
+            Name = product.Name,
+            PriceId =  selectedPrice.Id,
+            PriceType = selectedPrice.PriceType,
+            Amount = selectedPrice?.Amount ?? 0m,
+            Currency = selectedPrice?.Currency
+        };
+
+        return result;
+    }
+
+
 }

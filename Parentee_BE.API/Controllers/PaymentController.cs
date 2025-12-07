@@ -42,7 +42,7 @@ public class PaymentController(
             PriceId = priceId
         };
 
-        await _purchaseService.CreatePurchase(newPur);
+        // await _purchaseService.CreatePurchase(newPur);
         
 
         return Ok(
